@@ -23,4 +23,3 @@ using namespace std;
 #include "reasings.h"
 #include "DrawSections.h"
 #include "TimeManager.h"
-

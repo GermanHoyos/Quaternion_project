@@ -47,8 +47,8 @@ class myPlayer
    {
    public:
    // MODEL + BLENDER BAKE
-   Model ship = LoadModel("C:\\Users\\Hoyos\\Desktop\\C++ Runner\\raylib_quaternion_example\\home\\src\\include\\ship.obj");
-   Texture2D texture = LoadTexture("C:\\Users\\Hoyos\\Desktop\\C++ Runner\\raylib_quaternion_example\\home\\src\\include\\t1.png");
+   //Model ship = LoadModel("C:\\Users\\Hoyos\\Desktop\\C++ Runner\\raylib_quaternion_example\\home\\src\\include\\ship.obj");
+   //Texture2D texture = LoadTexture("C:\\Users\\Hoyos\\Desktop\\C++ Runner\\raylib_quaternion_example\\home\\src\\include\\t1.png");
    Vector3 ship_init_pos = {0.0f, 0.0f, 0.0f};
    float    x, y, z, dx, dy, dz, rx, ry, rz;
    float speed1 = 1.0f; float speed2 = 0.5f;
