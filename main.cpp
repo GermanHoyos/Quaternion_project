@@ -1,6 +1,7 @@
 
-// THE SOURCE / WHO WAS, WHO IS, WHO IS COMING: YHWH
-// German Adrian Hoyos // "Imagination + Willpower" -> the only two skills that matter. //https://x.com/EvangelizerH
+// THE SOURCE - WHO WAS, WHO IS, WHO IS COMING: YHWH
+// GERMAN HOYOS - IMAGINATION AND WILLPOWER ARE THE ONLY TWO CODING SKILLS THAT MATTER. TWITTER||X: //https://x.com/EvangelizerH
+
 // GAME START: [X][Y][Z] FROM THE PERSPECTIVE OF THE INIT SCREEN START, ZOOM AND ROTATE WITH "P" KEY 
 //                                [Y]              [Z] 
 //                                **              **
@@ -21,9 +22,7 @@
 //                  **            **
 //                **              **
 
-
 #include "include/masterHeader.h" // <- collection of standard c++ and custom headers // "pragma once"
-
 
 int main()
 {
@@ -81,57 +80,3 @@ int main()
 
    return 0;
 }
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// NOTES
-/*
-// ROTATE ABOUT 0 0 0 WORLD SPACE DESPITE INREMENTING X POSITION:
-void draw() 
-{
-   rlPushMatrix();
-   rlTranslatef(position.x, position.y, position.z);
-   Quaternion resultRotation = QuaternionMultiply(rotation, rotationDelta);
-   Matrix rotationMatrix = QuaternionToMatrix(resultRotation);
-   rlMultMatrixf(MatrixToFloat(rotationMatrix));
-   DrawCube({0, 0, 0}, 10.0f, 10.0f, 10.0f, RED);
-   rlPopMatrix();
-}
-
-// ROTATE ABOUT LOCAL SPACE VIA DIRECT MATRIX MANIPULATE AND DESCRIBING LOCAL SPACE
-void draw()
-{ 
-   pw1.x+=0.01f;
-   rlPushMatrix();                                                               // save current state of matrix untill ["pop"]
-   apply_rotation_axis();                                                        // apply quaternion math to rx,ry,rz; based on start point of 0 0 0
-   Quaternion resultRotation = QuaternionMultiply(rotation, collectRotations);   // store above quaternion in a variable
-   cubeSpace = QuaternionToMatrix(resultRotation);                               // calculate how to apply quaternion to this current matrix
-   //cubeSpace.m12 += pw1.x;                                                     // calculate how to apply movement to this current matrix [x]
-   //cubeSpace.m13 += pw1.x;                                                     // calculate how to apply movement to this current matrix [y]
-   //cubeSpace.m14 += pw1.x;                                                     // calculate how to apply movement to this current matrix [z]
-   rlMultMatrixf(MatrixToFloat(cubeSpace));                                      // apply all above culculations to this current matrix
-   DrawCube({0,0,0}, 5.0f, 5.0f, 5.0f, RED); DrawGrid(10, 1.0f);                 // draw object on current matrix
-   rlPopMatrix();                                                                // revert back to state before ["push"]
-   collectRotations = QuaternionIdentity();                                      // reset the collectRotations quaternion to 0 0 0
-}
-
-// SHAPES
-   DrawCube((Vector3){-4.0f, 0.0f, 2.0f}, 2.0f, 5.0f, 2.0f, RED);
-   DrawCubeWires((Vector3){-4.0f, 0.0f, 2.0f}, 2.0f, 5.0f, 2.0f, GOLD);
-   DrawCubeWires((Vector3){-4.0f, 0.0f, -2.0f}, 3.0f, 6.0f, 2.0f, MAROON);
-
-   DrawSphere((Vector3){-1.0f, 0.0f, -2.0f}, 1.0f, GREEN);
-   DrawSphereWires((Vector3){1.0f, 0.0f, 2.0f}, 2.0f, 16, 16, LIME);
-
-   DrawCylinder((Vector3){4.0f, 0.0f, -2.0f}, 1.0f, 2.0f, 3.0f, 4, SKYBLUE);
-   DrawCylinderWires((Vector3){4.0f, 0.0f, -2.0f}, 1.0f, 2.0f, 3.0f, 4, DARKBLUE);
-   DrawCylinderWires((Vector3){4.5f, -1.0f, 2.0f}, 1.0f, 1.0f, 2.0f, 6, BROWN);
-
-   DrawCylinder((Vector3){1.0f, 0.0f, -4.0f}, 0.0f, 1.5f, 3.0f, 8, GOLD);
-   DrawCylinderWires((Vector3){1.0f, 0.0f, -4.0f}, 0.0f, 1.5f, 3.0f, 8, PINK);
-
-   DrawCapsule     ((Vector3){-3.0f, 1.5f, -4.0f}, (Vector3){-4.0f, -1.0f, -4.0f}, 1.2f, 8, 8, VIOLET);
-   DrawCapsuleWires((Vector3){-3.0f, 1.5f, -4.0f}, (Vector3){-4.0f, -1.0f, -4.0f}, 1.2f, 8, 8, PURPLE);
-
-
-*/
