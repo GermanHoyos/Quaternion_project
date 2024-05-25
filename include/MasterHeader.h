@@ -21,5 +21,6 @@ using namespace std;
 // using dynamicList = vector<T>;
 #include "rlgl.h"
 #include "reasings.h"
-#include "DrawSections.h"
-#include "TimeManager.h"
+#include "timeManager.h"
+#include "../objects/myPlayer.h"
+#include "../objects/asteroids.h"
