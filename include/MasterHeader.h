@@ -16,11 +16,21 @@
    #include <raymath.h>
    using namespace std;
 
-// Custom
+// Globals
+   Vector3 playerDirection;
+   Quaternion playerRotation;
+
+// Customs
    // template <typename T>
    // using dynamicList = vector<T>;
    #include "rlgl.h"
    #include "reasings.h"
    #include "timeManager.h"
+   #include "../objects/lasers.h"
    #include "../objects/myPlayer.h"
    #include "../objects/asteroids.h"
+   #include "../objects/objectManager.h"
+
+
+
+
