@@ -29,14 +29,13 @@ public:
     Vector3 velocity;
     Color color = WHITE;
 
-    lasers(Vector3 startPos, Vector3 forwardDirection, float speed)
-        : startPos(startPos), endPos(Vector3Add(startPos, Vector3Scale(forwardDirection, 4.0f))), velocity(Vector3Scale(forwardDirection, speed)) {}
+   lasers(Vector3 startPos, Vector3 forwardDirection, float speed)
+   : startPos(startPos), endPos(Vector3Add(startPos, Vector3Scale(forwardDirection, 4.0f))), velocity(Vector3Scale(forwardDirection, speed)) {}
 
     void draw() {
-        // Update both startPos and endPos based on velocity
-        startPos = Vector3Add(startPos, velocity);
-        endPos = Vector3Add(endPos, velocity);
-        DrawSphere(startPos, 1.0f, WHITE);
-        DrawLine3D(startPos, endPos, color);
+      startPos = Vector3Add(startPos, velocity);
+      endPos = Vector3Add(endPos, velocity);
+      DrawSphere(startPos, 0.5f, WHITE);
+      //DrawLine3D(startPos, endPos, color);
     }
 };

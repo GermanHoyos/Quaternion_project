@@ -74,7 +74,7 @@ int main()
       rlDisableBackfaceCulling();
       rlPushMatrix();
       // Calculate the camera's position relative to the ship's transformation
-      Vector3 cameraOffset = {0.0f, 0.0f, 20.0f};  // 20 units behind the ship
+      Vector3 cameraOffset = {0.0f, 5.0f, 20.0f};  // 20 units behind the ship
       Vector3 transformedCameraOffset = Vector3Transform(cameraOffset, player.cubeSpace);
       camera.position = transformedCameraOffset;
       rlPopMatrix();

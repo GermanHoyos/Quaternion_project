@@ -30,7 +30,7 @@ class myPlayer
    float    x, y, z, dx, dy, dz, rx, ry, rz;
    float speed1 = 1.0f; float speed2 = 0.5f;
    float speed3 = 0.1f; float thrus1 = 0.0f;
-   float thrus2 = 0.2f; float thrus3 = 3.4f;
+   float thrus2 = 0.3f; float thrus3 = 3.4f;
    float radis1 = 0.3f; float radis2 = 0.0f;
    int cR = 255; int cG     = 255; 
    int cB = 255; int cAlpha = 255; 
@@ -50,7 +50,7 @@ class myPlayer
       /*sphere xy[Z]*/ random_device rd_2; mt19937 gen_2(rd_2()); uniform_real_distribution<float> dis_2(-0.1f, 0.1f); thrus1 = thrus1 + dis_2(gen_2);
       /*sphere x[Y]z*/ random_device rd_3; mt19937 gen_3(rd_3()); uniform_real_distribution<float> dis_3(-0.1f, 0.2f); thrus2 = thrus2 + dis_3(gen_2);
       /*sphere [X]yz*/ random_device rd_4; mt19937 gen_4(rd_4()); uniform_real_distribution<float> dis_4(-1.0f, 1.0f);
-      /*sphere radus*/ if (IsKeyDown(KEY_SPACE)) { if(radis1 < 0.5f){radis1 += 0.009f;}} else {radis1 = 0.01f;} 
+      /*sphere radus*/ if(radis1 < 0.2f){radis1 += 0.009f;} else {radis1 = 0.01f;} 
 
       // PUSH MATRIX // GEN LOCAL SPACE MATRIX
          loadTexture();
@@ -69,7 +69,7 @@ class myPlayer
          rlMultMatrixf(MatrixToFloat(cubeSpace));                                      // apply all above culculations to this current matrix
          DrawModel(ship, ship_init_pos, 3.0f,  WHITE);                                 // blender made model
          DrawSphere({thrus1,thrus2,thrus3}, radis1, {cR,cG,cB,cAlpha});
-         DrawGrid(5, 1.0f); // shifted matrix
+         //DrawGrid(5, 1.0f); // shifted matrix
          rlPopMatrix();                                                                // revert back to state before [push]
       // POP MATRIX // REVERT BACK TO WORLD SPACE MATRIX
 
@@ -77,7 +77,7 @@ class myPlayer
       rotationDelta    = QuaternionIdentity();
       collectRotations = QuaternionIdentity();                                      // reset the collectRotations quaternion to 0 0 0
       rotation         = QuaternionIdentity();
-      thrus1 = 0.0f; thrus2 = 0.0f;
+      thrus1 = 0.0f; thrus2 = 0.3f;
 
    }
 
@@ -106,15 +106,14 @@ class myPlayer
    }
 
    void shootLasers() {
-      if (IsKeyPressed(KEY_SPACE)) {
+      if (IsKeyPressed(KEY_SPACE)) 
+      {
         Vector3 shipWorldPos = {cubeSpace.m12, cubeSpace.m13, cubeSpace.m14};
-        
         // Calculate forward direction vector based on quaternions
         Vector3 forwardDirection = Vector3Transform({0.0f, 0.0f, -1.0f}, QuaternionToMatrix(collectRotations));
         forwardDirection = Vector3Normalize(forwardDirection);
-        
         // Create and store the laser with an initial speed (e.g., 0.5f)
-        float laserSpeed = 1.0f; // Set the desired speed of the laser
+        float laserSpeed = 1.5f; // Set the desired speed of the laser
         lasers laser = lasers(shipWorldPos, forwardDirection, laserSpeed);
         lasersList.push_back(laser);
       }
