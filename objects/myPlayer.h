@@ -27,6 +27,10 @@ class myPlayer
    Texture2D texture = LoadTexture("C:\\Users\\Hoyos\\Desktop\\C++ Runner\\raylib_quaternion_example\\home\\src\\assets\\t1.png");
    Vector3 ship_init_pos = {0.0f, 0.0f, 0.0f};
    Vector3 shipWorldPos;
+   double shotClock = 0;
+   double shotTimer = 0;
+   bool shot = false;
+
    float    x, y, z, dx, dy, dz, rx, ry, rz;
    float speed1 = 1.0f; float speed2 = 0.5f;
    float speed3 = 0.1f; float thrus1 = 0.0f;
@@ -68,7 +72,8 @@ class myPlayer
          cubeSpace.m14 += dz;                                                          // [z] axis acceleration
          rlMultMatrixf(MatrixToFloat(cubeSpace));                                      // apply all above culculations to this current matrix
          DrawModel(ship, ship_init_pos, 3.0f,  WHITE);                                 // blender made model
-         DrawSphere({thrus1,thrus2,thrus3}, radis1, {cR,cG,cB,cAlpha});
+         DrawSphere({thrus1, thrus2, thrus3}, radis1, {static_cast<unsigned char>(cR), static_cast<unsigned char>(cG), static_cast<unsigned char>(cB), static_cast<unsigned char>(cAlpha)});
+
          //DrawGrid(5, 1.0f); // shifted matrix
          rlPopMatrix();                                                                // revert back to state before [push]
       // POP MATRIX // REVERT BACK TO WORLD SPACE MATRIX
@@ -105,17 +110,21 @@ class myPlayer
       collectRotations = QuaternionMultiply(collectRotations, rotationDelta);
    }
 
-   void shootLasers() {
-      if (IsKeyPressed(KEY_SPACE)) 
+   void shootLasers() 
+   {
+      double elapsed = GetTime();
+
+      //START shots
+      if (IsKeyPressed(KEY_SPACE))
       {
-        Vector3 shipWorldPos = {cubeSpace.m12, cubeSpace.m13, cubeSpace.m14};
-        // Calculate forward direction vector based on quaternions
-        Vector3 forwardDirection = Vector3Transform({0.0f, 0.0f, -1.0f}, QuaternionToMatrix(collectRotations));
-        forwardDirection = Vector3Normalize(forwardDirection);
-        // Create and store the laser with an initial speed (e.g., 0.5f)
-        float laserSpeed = 1.5f; // Set the desired speed of the laser
-        lasers laser = lasers(shipWorldPos, forwardDirection, laserSpeed);
-        lasersList.push_back(laser);
+         Vector3 shipWorldPos = {cubeSpace.m12, cubeSpace.m13, cubeSpace.m14};
+         // Calculate forward direction vector based on quaternions
+         Vector3 forwardDirection = Vector3Transform({0.0f, 0.0f, -1.0f}, QuaternionToMatrix(collectRotations));
+         forwardDirection = Vector3Normalize(forwardDirection);
+         // Create and store the laser with an initial speed (e.g., 0.5f)
+         float laserSpeed = 1.5f; // Set the desired speed of the laser
+         lasers laser = lasers(shipWorldPos, forwardDirection, laserSpeed);
+         lasersList.push_back(laser);
       }
    }
 

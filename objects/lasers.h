@@ -23,19 +23,55 @@ class lasers;
 
 vector<lasers> lasersList;
 
-class lasers {
+Vector3  worldCenter = {0.0f,0.0f,0.0f};
+
+static int laserIds = 0;
+
+class lasers 
+{
 public:
-    Vector3 startPos, endPos;
-    Vector3 velocity;
-    Color color = WHITE;
 
-   lasers(Vector3 startPos, Vector3 forwardDirection, float speed)
-   : startPos(startPos), endPos(Vector3Add(startPos, Vector3Scale(forwardDirection, 4.0f))), velocity(Vector3Scale(forwardDirection, speed)) {}
+   int      myLaserId;
+   Vector3  currentPos; 
+   Vector3  startPos, endPos, velocity; // for shapes
+   Color    color    = WHITE;
+   Color    changed  = GREEN;
 
-    void draw() {
-      startPos = Vector3Add(startPos, velocity);
+   lasers(Vector3 currentPos, Vector3 forwardDirection, float speed)
+   : currentPos(currentPos), endPos(Vector3Add(currentPos, Vector3Scale(forwardDirection, 4.0f))), velocity(Vector3Scale(forwardDirection, speed)) 
+   {
+      myLaserId = laserIds++;
+      startPos = currentPos;
+   }
+
+   void selfDestruct()
+   {
+      // Calculate distance from world center
+      Vector3 distanceFromShotStart = Vector3Subtract(currentPos, startPos);
+      float distance = Vector3Length(distanceFromShotStart);
+  
+      if (distance > 600)
+      {
+         // Find the laser in the list by its ID and remove it
+         for (auto laser = lasersList.begin(); laser != lasersList.end(); ++laser)
+         {
+            if (laser->myLaserId == myLaserId)
+            {
+               lasersList.erase(laser);
+               break; // Exit the loop after erasing the laser
+            }
+         }
+      }
+   }
+
+   void draw() 
+   {
+      currentPos = Vector3Add(currentPos, velocity);
       endPos = Vector3Add(endPos, velocity);
-      DrawSphere(startPos, 0.5f, WHITE);
-      //DrawLine3D(startPos, endPos, color);
-    }
+      DrawSphere(currentPos, 0.5f, this->color);
+      selfDestruct();
+   }
+
 };
+
+

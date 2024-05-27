@@ -69,7 +69,9 @@ int main()
    {
       if (IsKeyDown(KEY_P)) UpdateCamera(&camera, CAMERA_THIRD_PERSON);
       BeginDrawing();
-      ClearBackground({ 0, 37, 51, 255 });
+      //ClearBackground({ 0, 37, 51, 255 });
+      ClearBackground(BLACK);
+
       BeginMode3D(camera);
       rlDisableBackfaceCulling();
       rlPushMatrix();
@@ -88,10 +90,9 @@ int main()
          laser.draw();
       }
 
-
       /////////////////////////////BITS/////////////////////////////////////////(-)
       rlPushMatrix();
-      rlTranslatef(0.0f,-20.0f,20.0f);
+      rlTranslatef(0.0f,-20.0f,0.0f);
       DrawGrid(100, 1.0f); // shifted matrix
       rlPopMatrix();
       
