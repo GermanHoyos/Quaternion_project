@@ -27,10 +27,10 @@ class myPlayer
    Texture2D texture = LoadTexture("C:\\Users\\Hoyos\\Desktop\\C++ Runner\\raylib_quaternion_example\\home\\src\\assets\\t1.png");
    Vector3 ship_init_pos = {0.0f, 0.0f, 0.0f};
    Vector3 shipWorldPos;
+   Vector3 forwardDirection;
    double shotClock = 0;
    double shotTimer = 0;
-   bool shot = false;
-
+   bool   shot = false;
    float    x, y, z, dx, dy, dz, rx, ry, rz;
    float speed1 = 1.0f; float speed2 = 0.5f;
    float speed3 = 0.1f; float thrus1 = 0.0f;
@@ -62,10 +62,6 @@ class myPlayer
          apply_rotation_axis();                                                        // apply quaternion math to [rx] [ry] [rz] based on start point of 0 0 0
          accelerate_foward();                                                          // apply acceleration maths to directional variable [dx] [dy] [dz]
          Quaternion resultRotation = QuaternionMultiply(rotation, collectRotations);   // store above quaternion in a variable
-         // SHARE ROTATIONS [START]
-         // playerRotation = resultRotation;
-
-         // SHARE ROTATIONS [END]
          cubeSpace = QuaternionToMatrix(resultRotation);                               // calculate how to apply quaternion to this current matrix
          cubeSpace.m12 += dx;                                                          // [x] axis acceleration
          cubeSpace.m13 += dy;                                                          // [y] axis acceleration
@@ -83,7 +79,7 @@ class myPlayer
       collectRotations = QuaternionIdentity();                                      // reset the collectRotations quaternion to 0 0 0
       rotation         = QuaternionIdentity();
       thrus1 = 0.0f; thrus2 = 0.3f;
-
+      makeGlobal();
    }
 
    void rotate_x_axis()
@@ -113,14 +109,15 @@ class myPlayer
    void shootLasers() 
    {
       double elapsed = GetTime();
+      forwardDirection = Vector3Transform({0.0f, 0.0f, -1.0f}, QuaternionToMatrix(collectRotations));
+      forwardDirection = Vector3Normalize(forwardDirection);
 
       //START shots
       if (IsKeyPressed(KEY_SPACE))
       {
          Vector3 shipWorldPos = {cubeSpace.m12, cubeSpace.m13, cubeSpace.m14};
          // Calculate forward direction vector based on quaternions
-         Vector3 forwardDirection = Vector3Transform({0.0f, 0.0f, -1.0f}, QuaternionToMatrix(collectRotations));
-         forwardDirection = Vector3Normalize(forwardDirection);
+
          // Create and store the laser with an initial speed (e.g., 0.5f)
          float laserSpeed = 1.5f; // Set the desired speed of the laser
          lasers laser = lasers(shipWorldPos, forwardDirection, laserSpeed);
@@ -131,7 +128,6 @@ class myPlayer
    void accelerate_foward()
    {
       Vector3 fowardDirection = Vector3Transform({0.0f, 0.0f, -1.0f}, QuaternionToMatrix(collectRotations));
-      playerDirection = fowardDirection;
       dx += fowardDirection.x * speed3; 
       dy += fowardDirection.y * speed3; 
       dz += fowardDirection.z * speed3; 
@@ -146,9 +142,16 @@ class myPlayer
    {
       // print to screen [x] [y] [z] world space coords
    }
+
    void loadTexture()
    {
       if(!textureLoaded){ ship.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = texture; textureLoaded = true;};
+   }
+
+   void makeGlobal()
+   {
+      playerPosition = {cubeSpace.m12, cubeSpace.m13, cubeSpace.m14};
+      playerRotation = forwardDirection;
    }
 
 };

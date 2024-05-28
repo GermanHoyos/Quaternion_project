@@ -66,12 +66,26 @@ public:
 
    void draw() 
    {
+      // For visuals
+      float laserLength = 20.0f;
+      Vector3 laserVisual = endPos;
+      Vector3 fwrdDirection = Vector3Normalize(velocity);
+
+      // For raw movement:
       currentPos = Vector3Add(currentPos, velocity);
       endPos = Vector3Add(endPos, velocity);
-      DrawSphere(currentPos, 0.5f, this->color);
+
+      // For visuals
+      laserVisual = Vector3Add(currentPos, Vector3Scale(fwrdDirection, laserLength));
+      DrawLine3D(currentPos, laserVisual, WHITE);
       selfDestruct();
    }
 
 };
 
 
+//DrawSphere(currentPos, 0.5f, this->color);
+//DrawCylinder((Vector3){1.0f, 0.0f, -4.0f}, 0.0f, 1.5f, 3.0f, 8, GOLD);
+
+//  DrawCylinder((Vector3){1.0f, 0.0f, -4.0f}, 0.0f, 1.5f, 3.0f, 8, GOLD);
+//  DrawCylinderWires((Vector3){1.0f, 0.0f, -4.0f}, 0.0f, 1.5f, 3.0f, 8, PINK);

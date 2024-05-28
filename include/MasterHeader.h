@@ -17,8 +17,9 @@
    using namespace std;
 
 // Globals
-   Vector3 playerDirection;
-   Quaternion playerRotation;
+   Vector3 playerPosition;
+   Vector3 playerRotation;
+
 
 // Customs
    // template <typename T>
