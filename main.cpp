@@ -101,7 +101,7 @@ int main()
       EndMode3D();
       // Debugs
       //DrawFPS(10, 10);
-      string player_xyz = "Ship position in realation to world Space:\nX = " + to_string(playerPosition.x) + "\nY = " +  to_string(playerPosition.y) + "\nZ = " + to_string(playerPosition.z);
+      string player_xyz = "Ship position in realation to world space:\nX = " + to_string(playerPosition.x) + "\nY = " +  to_string(playerPosition.y) + "\nZ = " + to_string(playerPosition.z);
       DrawText (player_xyz.c_str(), 2, 2, 10, GREEN);
       string player_rot = "Ship quaternion derived vector:\nX = " + to_string(playerRotation.x) + "\nY = " + to_string(playerRotation.y) + "\nZ = " + to_string(playerRotation.z);
       DrawText (player_rot.c_str(), 2, 60, 10, GREEN);
