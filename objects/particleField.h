@@ -19,24 +19,41 @@
 
 #include "../include/MasterHeader.h"
 
+class particleField;
+
+vector<particleField> pField;
+
 class particleField
 {
    public:
-   Vector3 position;
-   int pR = 255; // red
-   int pG = 255; // green
-   int pB = 255; // blue
-   int pA = 255; // alpha
-   Color  myRGB;
+   Vector3 position; // {0.0f,0.0f,0.0f}
+   int     pR = 255; // red
+   int     pG = 255; // green
+   int     pB = 255; // blue
+   int     pA = 255; // alpha
+   Color      myRGB; // {255,255,255,255}
 
    particleField()
    {
-      /*init code*/
+      // Randomize position
    }
 
    void draw()
    {
-
+      DrawSphere({0.0f,0.0f,0.0f},0.5f,WHITE);
    }
 
-}; 
+};
+
+void createField()
+{
+   // Load particles
+   particleField particle = particleField();
+   pField.push_back(particle);
+
+   for (int i = 0; i < 10; i++)
+   {
+      particleField particle = particleField();
+      pField.push_back(particle);
+   }
+}

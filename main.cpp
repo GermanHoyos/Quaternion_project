@@ -56,7 +56,8 @@ int main()
    camera.projection = CAMERA_PERSPECTIVE;                                // Camera mode type
 
    // Load game objects
-   myPlayer player = myPlayer(0.0f,0.0f,0.0f);
+   myPlayer player = myPlayer(0.0f,0.0f,0.0f); // Create user controlled actor
+   createField();                              // Create space particle field
 
    //OSCILLATER INITS
    float hover = 0.0f;
@@ -85,12 +86,9 @@ int main()
 
       player.draw();
 
-      for (auto& laser : lasersList)
-      {
-         laser.draw();
-      }
-
-      // Make global
+      // Draw all lasers && particles
+      for (auto& laser : lasersList){laser.draw();}
+      for (auto& particle : pField){particle.draw();}
 
       /////////////////////////////BITS/////////////////////////////////////////(-)
       rlPushMatrix();
