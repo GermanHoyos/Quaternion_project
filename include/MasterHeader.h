@@ -20,7 +20,6 @@
    Vector3 playerPosition;
    Vector3 playerRotation;
 
-
 // Customs
    // template <typename T>
    // using dynamicList = vector<T>;
@@ -31,6 +30,7 @@
    #include "../objects/myPlayer.h"
    #include "../objects/asteroids.h"
    #include "../objects/objectManager.h"
+   #include "../objects/particleField.h"
 
 
 
