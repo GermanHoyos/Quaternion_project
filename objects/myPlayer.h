@@ -23,8 +23,8 @@ class myPlayer
 {
    public:
    // MODEL + BLENDER BAKE
-   Model ship = LoadModel("C:\\Users\\Hoyos\\Desktop\\C++ Runner\\raylib_quaternion_example\\home\\src\\assets\\ship.obj");
-   Texture2D texture = LoadTexture("C:\\Users\\Hoyos\\Desktop\\C++ Runner\\raylib_quaternion_example\\home\\src\\assets\\t1.png");
+   Model ship = LoadModel("C:\\Users\\Hoyos\\OneDrive\\Desktop\\C++ Runner\\raylib_quaternion_example\\home\\src\\assets\\ship.obj");
+   Texture2D texture = LoadTexture("C:\\Users\\Hoyos\\OneDrive\\Desktop\\C++ Runner\\raylib_quaternion_example\\home\\src\\assets\\t1.png");
    Vector3 ship_init_pos = {0.0f, 0.0f, 0.0f};
    Vector3 shipWorldPos;
    Vector3 forwardDirection;
@@ -116,8 +116,8 @@ class myPlayer
 
    void strafe_y_axis() // slide up and down but mainain quaternion rotation
    {
-      if (IsKeyDown(KEY_UP))   dy += 0.1f;
-      if (IsKeyDown(KEY_DOWN)) dy -= 0.1f;
+      if (IsKeyDown(KEY_UP)  || IsGamepadButtonDown(gamepad, GAMEPAD_BUTTON_RIGHT_TRIGGER_1) > 0)   dy += 0.1f;
+      if (IsKeyDown(KEY_DOWN)|| IsGamepadButtonDown(gamepad, GAMEPAD_BUTTON_LEFT_TRIGGER_1) > 0) dy -= 0.1f;
    }
 
    void shootLasers() 
