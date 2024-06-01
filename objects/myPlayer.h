@@ -112,7 +112,6 @@ class myPlayer
    }
 
 
-
 void strafe_x_axis() // slide left and right but maintain quaternion rotation
 {
     // Determine strafe direction based on input
@@ -137,8 +136,6 @@ void strafe_x_axis() // slide left and right but maintain quaternion rotation
     dz += strafeOffset.z;
 }
 
-
-
    void strafe_y_axis() // slide up and down but mainain quaternion rotation
    {
 
@@ -146,14 +143,24 @@ void strafe_x_axis() // slide left and right but maintain quaternion rotation
       if (IsKeyDown(KEY_DOWN) || IsGamepadButtonDown(gamepad, GAMEPAD_BUTTON_LEFT_TRIGGER_1) > 0)  dy -= 0.1f;
    }
 
-
-
    void accelerate_foward()
    {
-      Vector3 fowardDirection = Vector3Transform({0.0f, 0.0f, -1.0f}, QuaternionToMatrix(collectRotations));
-      dx += fowardDirection.x * speed3; 
-      dy += fowardDirection.y * speed3; 
-      dz += fowardDirection.z * speed3; 
+      if ((float)(GetGamepadAxisMovement(gamepad,GAMEPAD_AXIS_LEFT_Y)) < 0.0f)
+      {
+         Vector3 fowardDirection = Vector3Transform({0.0f, 0.0f, -1.0f}, QuaternionToMatrix(collectRotations));
+         dx += fowardDirection.x * speed3; 
+         dy += fowardDirection.y * speed3; 
+         dz += fowardDirection.z * speed3; 
+      }
+
+      if ((float)(GetGamepadAxisMovement(gamepad,GAMEPAD_AXIS_LEFT_Y)) > 0.0f)
+      {
+         Vector3 fowardDirection = Vector3Transform({0.0f, 0.0f, 1.0f}, QuaternionToMatrix(collectRotations));
+         dx += fowardDirection.x * speed3; 
+         dy += fowardDirection.y * speed3; 
+         dz += fowardDirection.z * speed3; 
+      }
+
    }
 
    void apply_rotation_axis()
