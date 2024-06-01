@@ -33,9 +33,10 @@ class myPlayer
    bool   shot = false;
    float    x, y, z, dx, dy, dz, rx, ry, rz;
    float speed1 = 1.0f; float speed2 = 0.5f;
-   float speed3 = 0.1f; float thrus1 = 0.0f;
+   float speed3 = 0.0f; float thrus1 = 0.0f;
    float thrus2 = 0.3f; float thrus3 = 3.4f;
    float radis1 = 0.3f; float radis2 = 0.0f;
+   float negPos = -1.0f;
    int cR = 255; int cG     = 255; 
    int cB = 255; int cAlpha = 255; 
    Color      myRGB = {255,255,255,255};
@@ -58,22 +59,22 @@ class myPlayer
       /*sphere radus*/ if(radis1 < 0.2f){radis1 += 0.009f;} else {radis1 = 0.01f;} 
 
       // PUSH MATRIX // GEN LOCAL SPACE MATRIX
-         loadTexture();
-         rlPushMatrix();                                                               // save current state of matrix untill [pop]
-         apply_rotation_axis();                                                        // apply quaternion math to [rx] [ry] [rz] based on start point of 0 0 0
-         accelerate_foward();                                                          // apply acceleration maths to directional variable [dx] [dy] [dz]
-         Quaternion resultRotation = QuaternionMultiply(rotation, collectRotations);   // store above quaternion in a variable
-         cubeSpace = QuaternionToMatrix(resultRotation);                               // calculate how to apply quaternion to this current matrix
-         cubeSpace.m12 += dx;                                                          // [x] axis acceleration
-         cubeSpace.m13 += dy;                                                          // [y] axis acceleration
-         cubeSpace.m14 += dz;                                                          // [z] axis acceleration
+      loadTexture();
+      rlPushMatrix();                                                               // save current state of matrix untill [pop]
+      apply_rotation_axis();                                                        // apply quaternion math to [rx] [ry] [rz] based on start point of 0 0 0
+      accelerate_foward();                                                          // apply acceleration maths to directional variable [dx] [dy] [dz]
+      Quaternion resultRotation = QuaternionMultiply(rotation, collectRotations);   // store above quaternion in a variable
+      cubeSpace = QuaternionToMatrix(resultRotation);                               // calculate how to apply quaternion to this current matrix
+      cubeSpace.m12 += dx;                                                          // [x] axis acceleration
+      cubeSpace.m13 += dy;                                                          // [y] axis acceleration
+      cubeSpace.m14 += dz;                                                          // [z] axis acceleration
 
-         rlMultMatrixf(MatrixToFloat(cubeSpace));                                      // apply all above culculations to this current matrix
-         DrawModel(ship, ship_init_pos, 3.0f,  WHITE);                                 // blender made model
-         DrawSphere({thrus1, thrus2, thrus3}, radis1, {static_cast<unsigned char>(cR), static_cast<unsigned char>(cG), static_cast<unsigned char>(cB), static_cast<unsigned char>(cAlpha)});
+      rlMultMatrixf(MatrixToFloat(cubeSpace));                                      // apply all above culculations to this current matrix
+      DrawModel(ship, ship_init_pos, 3.0f,  WHITE);                                 // blender made model
+      DrawSphere({thrus1, thrus2, thrus3}, radis1, {static_cast<unsigned char>(cR), static_cast<unsigned char>(cG), static_cast<unsigned char>(cB), static_cast<unsigned char>(cAlpha)});
 
-         //DrawGrid(5, 1.0f); // shifted matrix
-         rlPopMatrix();                                                                // revert back to state before [push]
+      //DrawGrid(5, 1.0f); // shifted matrix
+      rlPopMatrix();                                                                // revert back to state before [push]
       // POP MATRIX // REVERT BACK TO WORLD SPACE MATRIX
 
       // RESETS
@@ -111,55 +112,56 @@ class myPlayer
       collectRotations = QuaternionMultiply(collectRotations, rotationDelta);
    }
 
+   void strafe_x_axis() // slide left and right but maintain quaternion rotation
+   {
+      // Determine strafe direction based on input
+      float strafe = 0.0f;
+      if (IsKeyDown(KEY_LEFT) || (float)(GetGamepadAxisMovement(gamepad, GAMEPAD_AXIS_LEFT_X)) < 0.0f )
+      {
+         strafe = 1.0f; // Strafe left
+      } 
+      if (IsKeyDown(KEY_RIGHT)|| (float)(GetGamepadAxisMovement(gamepad, GAMEPAD_AXIS_LEFT_X)) > 0.0f )
+      {
+         strafe = -1.0f; // Strafe right
+      } 
+      
+      // Calculate strafe offset based on ship's facing direction
+      Vector3 forwardDirection = Vector3Transform({0.0f, 0.0f, -1.0f}, QuaternionToMatrix(collectRotations));
+      Vector3 strafeOffset = {forwardDirection.z * strafe * 0.1f, 0.0f, -forwardDirection.x * strafe * 0.1f};
 
-void strafe_x_axis() // slide left and right but maintain quaternion rotation
-{
-    // Determine strafe direction based on input
-    float strafe = 0.0f;
-    if (IsKeyDown(KEY_LEFT) || (float)(GetGamepadAxisMovement(gamepad, GAMEPAD_AXIS_LEFT_X)) < 0.0f )
-    {
-        strafe = 1.0f; // Strafe left
-    } 
-    if (IsKeyDown(KEY_RIGHT)|| (float)(GetGamepadAxisMovement(gamepad, GAMEPAD_AXIS_LEFT_X)) > 0.0f )
-    {
-        strafe = -1.0f; // Strafe right
-    } 
-    
-    // Calculate strafe offset based on ship's facing direction
-    Vector3 forwardDirection = Vector3Transform({0.0f, 0.0f, -1.0f}, QuaternionToMatrix(collectRotations));
-    Vector3 strafeOffset = {forwardDirection.z * strafe * 0.1f, 0.0f, -forwardDirection.x * strafe * 0.1f};
-
-    // Apply strafe offset to ship's position
-    // By adjusting both the dx (x-coordinate) and dz (z-coordinate), we ensure that the ship moves correctly in the desired direction.
-    // This approach allows for fluid movement across the 3D space while maintaining the ship's orientation.
-    dx += strafeOffset.x;
-    dz += strafeOffset.z;
-}
+      // Apply strafe offset to ship's position
+      // By adjusting both the dx (x-coordinate) and dz (z-coordinate), we ensure that the ship moves correctly in the desired direction.
+      // This approach allows for fluid movement across the 3D space while maintaining the ship's orientation.
+      dx += strafeOffset.x;
+      dz += strafeOffset.z;
+   }
 
    void strafe_y_axis() // slide up and down but mainain quaternion rotation
    {
-
       if (IsKeyDown(KEY_UP)   || IsGamepadButtonDown(gamepad, GAMEPAD_BUTTON_RIGHT_TRIGGER_1) > 0) dy += 0.1f;
       if (IsKeyDown(KEY_DOWN) || IsGamepadButtonDown(gamepad, GAMEPAD_BUTTON_LEFT_TRIGGER_1) > 0)  dy -= 0.1f;
    }
 
    void accelerate_foward()
    {
-      if ((float)(GetGamepadAxisMovement(gamepad,GAMEPAD_AXIS_LEFT_Y)) < 0.0f)
+      
+      Vector3 fowardDirection = Vector3Transform({0.0f, 0.0f, negPos}, QuaternionToMatrix(collectRotations));
+
+      if ((float)(GetGamepadAxisMovement(gamepad, GAMEPAD_AXIS_LEFT_Y)) < 0.0f)
       {
-         Vector3 fowardDirection = Vector3Transform({0.0f, 0.0f, -1.0f}, QuaternionToMatrix(collectRotations));
-         dx += fowardDirection.x * speed3; 
-         dy += fowardDirection.y * speed3; 
-         dz += fowardDirection.z * speed3; 
+         speed3 += 0.01f;
+         //negPos = 1.0;
       }
 
-      if ((float)(GetGamepadAxisMovement(gamepad,GAMEPAD_AXIS_LEFT_Y)) > 0.0f)
+      if ((float)(GetGamepadAxisMovement(gamepad, GAMEPAD_AXIS_LEFT_Y)) > 0.0f)
       {
-         Vector3 fowardDirection = Vector3Transform({0.0f, 0.0f, 1.0f}, QuaternionToMatrix(collectRotations));
-         dx += fowardDirection.x * speed3; 
-         dy += fowardDirection.y * speed3; 
-         dz += fowardDirection.z * speed3; 
+         speed3 -= 0.01f;
+         //negPos = -1.0;
       }
+
+      dx += fowardDirection.x * speed3; 
+      dy += fowardDirection.y * speed3; 
+      dz += fowardDirection.z * speed3; 
 
    }
 
