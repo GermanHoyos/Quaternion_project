@@ -108,6 +108,18 @@ class myPlayer
       collectRotations = QuaternionMultiply(collectRotations, rotationDelta);
    }
 
+   void strafe_x_axis() // slide left and right but maintain quaternion rotation
+   {
+      if (IsKeyDown(KEY_LEFT) || (float)(GetGamepadAxisMovement(gamepad, GAMEPAD_AXIS_LEFT_X)) < 0.0f )  dx -= 0.1f;
+      if (IsKeyDown(KEY_RIGHT)|| (float)(GetGamepadAxisMovement(gamepad, GAMEPAD_AXIS_LEFT_X)) > 0.0f ) dx += 0.1f;
+   }
+
+   void strafe_y_axis() // slide up and down but mainain quaternion rotation
+   {
+      if (IsKeyDown(KEY_UP))   dy += 0.1f;
+      if (IsKeyDown(KEY_DOWN)) dy -= 0.1f;
+   }
+
    void shootLasers() 
    {
       double elapsed = GetTime();
@@ -115,7 +127,7 @@ class myPlayer
       forwardDirection = Vector3Normalize(forwardDirection);
 
       //START shots
-      if (IsKeyPressed(KEY_SPACE))
+      if (IsKeyPressed(KEY_SPACE) || IsGamepadButtonDown(gamepad, GAMEPAD_BUTTON_RIGHT_TRIGGER_2) > 0)
       {
          Vector3 shipWorldPos = {cubeSpace.m12, cubeSpace.m13, cubeSpace.m14};
          // Calculate forward direction vector based on quaternions
@@ -137,7 +149,7 @@ class myPlayer
 
    void apply_rotation_axis()
    {
-      rotate_z_axis(); rotate_x_axis(); rotate_y_axis(); shootLasers();
+      rotate_z_axis(); rotate_x_axis(); rotate_y_axis(); shootLasers(); strafe_x_axis(); strafe_y_axis();
    }
 
    void display_coord_data()

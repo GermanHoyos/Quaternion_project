@@ -45,7 +45,6 @@
 #define XBOX360_NAME_ID "Xbox 360 Controller"
 #define PS3_NAME_ID "PLAYSTATION(R)3 Controller"
 
-
 int main()
 {
    // INIT - [WINDOW] + [WORLD] + [CAMERA]
@@ -58,8 +57,6 @@ int main()
    camera.up = (Vector3){ 0.0f, 1.0f, 0.0f };                             // Camera up vector (rotation towards target)
    camera.fovy = 45.0f;                                                   // Camera field-of-view Y
    camera.projection = CAMERA_PERSPECTIVE;                                // Camera mode type
-
-
 
    // LOAD GAME OBJECTS
    myPlayer player = myPlayer(0.0f,0.0f,0.0f); // Create user controlled actor
