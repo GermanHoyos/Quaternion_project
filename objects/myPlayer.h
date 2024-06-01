@@ -41,6 +41,7 @@ class myPlayer
    Color      myRGB = {255,255,255,255};
    Quaternion rotation         = QuaternionIdentity();
    Quaternion rotationDelta    = QuaternionIdentity();
+   Quaternion strafeDelta      = QuaternionIdentity();
    Quaternion collectRotations = QuaternionIdentity();
    Matrix     cubeSpace        = MatrixIdentity();
    bool       textureLoaded    = false;
@@ -66,6 +67,7 @@ class myPlayer
          cubeSpace.m12 += dx;                                                          // [x] axis acceleration
          cubeSpace.m13 += dy;                                                          // [y] axis acceleration
          cubeSpace.m14 += dz;                                                          // [z] axis acceleration
+
          rlMultMatrixf(MatrixToFloat(cubeSpace));                                      // apply all above culculations to this current matrix
          DrawModel(ship, ship_init_pos, 3.0f,  WHITE);                                 // blender made model
          DrawSphere({thrus1, thrus2, thrus3}, radis1, {static_cast<unsigned char>(cR), static_cast<unsigned char>(cG), static_cast<unsigned char>(cB), static_cast<unsigned char>(cAlpha)});
@@ -78,6 +80,7 @@ class myPlayer
       rotationDelta    = QuaternionIdentity();
       collectRotations = QuaternionIdentity();                                      // reset the collectRotations quaternion to 0 0 0
       rotation         = QuaternionIdentity();
+      strafeDelta      = QuaternionIdentity();
       thrus1 = 0.0f; thrus2 = 0.3f;
       makeGlobal();
    }
@@ -108,16 +111,54 @@ class myPlayer
       collectRotations = QuaternionMultiply(collectRotations, rotationDelta);
    }
 
-   void strafe_x_axis() // slide left and right but maintain quaternion rotation
-   {
-      if (IsKeyDown(KEY_LEFT) || (float)(GetGamepadAxisMovement(gamepad, GAMEPAD_AXIS_LEFT_X)) < 0.0f )  dx -= 0.1f;
-      if (IsKeyDown(KEY_RIGHT)|| (float)(GetGamepadAxisMovement(gamepad, GAMEPAD_AXIS_LEFT_X)) > 0.0f ) dx += 0.1f;
-   }
+
+
+void strafe_x_axis() // slide left and right but maintain quaternion rotation
+{
+    // Determine strafe direction based on input
+    float strafe = 0.0f;
+    if (IsKeyDown(KEY_LEFT) || (float)(GetGamepadAxisMovement(gamepad, GAMEPAD_AXIS_LEFT_X)) < 0.0f )
+    {
+        strafe = 1.0f; // Strafe left
+    } 
+    if (IsKeyDown(KEY_RIGHT)|| (float)(GetGamepadAxisMovement(gamepad, GAMEPAD_AXIS_LEFT_X)) > 0.0f )
+    {
+        strafe = -1.0f; // Strafe right
+    } 
+    
+    // Calculate strafe offset based on ship's facing direction
+    Vector3 forwardDirection = Vector3Transform({0.0f, 0.0f, -1.0f}, QuaternionToMatrix(collectRotations));
+    Vector3 strafeOffset = {forwardDirection.z * strafe * 0.1f, 0.0f, -forwardDirection.x * strafe * 0.1f};
+
+    // Apply strafe offset to ship's position
+    // By adjusting both the dx (x-coordinate) and dz (z-coordinate), we ensure that the ship moves correctly in the desired direction.
+    // This approach allows for fluid movement across the 3D space while maintaining the ship's orientation.
+    dx += strafeOffset.x;
+    dz += strafeOffset.z;
+}
+
+
 
    void strafe_y_axis() // slide up and down but mainain quaternion rotation
    {
-      if (IsKeyDown(KEY_UP)  || IsGamepadButtonDown(gamepad, GAMEPAD_BUTTON_RIGHT_TRIGGER_1) > 0)   dy += 0.1f;
-      if (IsKeyDown(KEY_DOWN)|| IsGamepadButtonDown(gamepad, GAMEPAD_BUTTON_LEFT_TRIGGER_1) > 0) dy -= 0.1f;
+
+      if (IsKeyDown(KEY_UP)   || IsGamepadButtonDown(gamepad, GAMEPAD_BUTTON_RIGHT_TRIGGER_1) > 0) dy += 0.1f;
+      if (IsKeyDown(KEY_DOWN) || IsGamepadButtonDown(gamepad, GAMEPAD_BUTTON_LEFT_TRIGGER_1) > 0)  dy -= 0.1f;
+   }
+
+
+
+   void accelerate_foward()
+   {
+      Vector3 fowardDirection = Vector3Transform({0.0f, 0.0f, -1.0f}, QuaternionToMatrix(collectRotations));
+      dx += fowardDirection.x * speed3; 
+      dy += fowardDirection.y * speed3; 
+      dz += fowardDirection.z * speed3; 
+   }
+
+   void apply_rotation_axis()
+   {
+      rotate_z_axis(); rotate_x_axis(); rotate_y_axis(); shootLasers(); strafe_x_axis(); strafe_y_axis();
    }
 
    void shootLasers() 
@@ -137,19 +178,6 @@ class myPlayer
          lasers laser = lasers(shipWorldPos, forwardDirection, laserSpeed);
          lasersList.push_back(laser);
       }
-   }
-
-   void accelerate_foward()
-   {
-      Vector3 fowardDirection = Vector3Transform({0.0f, 0.0f, -1.0f}, QuaternionToMatrix(collectRotations));
-      dx += fowardDirection.x * speed3; 
-      dy += fowardDirection.y * speed3; 
-      dz += fowardDirection.z * speed3; 
-   }
-
-   void apply_rotation_axis()
-   {
-      rotate_z_axis(); rotate_x_axis(); rotate_y_axis(); shootLasers(); strafe_x_axis(); strafe_y_axis();
    }
 
    void display_coord_data()
