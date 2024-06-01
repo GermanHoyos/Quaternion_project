@@ -84,8 +84,9 @@ class myPlayer
 
    void rotate_x_axis()
    {
-      if (IsKeyDown(KEY_W)) rx += 0.5f;
-      if (IsKeyDown(KEY_S)) rx -= 0.5f;
+      // If a joystick max value is needed then convert it to int and check against a value of "1"
+      if (IsKeyDown(KEY_W) || (float)(GetGamepadAxisMovement(gamepad, GAMEPAD_AXIS_RIGHT_Y)) < 0.0f ) rx += 0.5f;
+      if (IsKeyDown(KEY_S) || (float)(GetGamepadAxisMovement(gamepad, GAMEPAD_AXIS_RIGHT_Y)) > 0.0f ) rx -= 0.5f;
       rotationDelta = QuaternionFromAxisAngle({ 1.0f, 0.0f, 0.0f }, DEG2RAD * rx );
       collectRotations = QuaternionMultiply(collectRotations, rotationDelta);
    }
@@ -100,8 +101,9 @@ class myPlayer
 
    void rotate_z_axis()
    {
-      if (IsKeyDown(KEY_A) || IsGamepadButtonDown(gamepad, GAMEPAD_BUTTON_RIGHT_FACE_LEFT)) rz -= 0.5f;
-      if (IsKeyDown(KEY_D)) rz += 0.5f;
+      // If a joystick max value is needed then convert it to int and check against a value of "1"
+      if (IsKeyDown(KEY_A) || (float)(GetGamepadAxisMovement(gamepad, GAMEPAD_AXIS_RIGHT_X)) < 0.0f ) rz -= 0.5f;
+      if (IsKeyDown(KEY_D) || (float)(GetGamepadAxisMovement(gamepad, GAMEPAD_AXIS_RIGHT_X)) > 0.0f ) rz += 0.5f;
       rotationDelta = QuaternionFromAxisAngle({ 0.0f, -1.0f, 0.0f }, DEG2RAD * rz );
       collectRotations = QuaternionMultiply(collectRotations, rotationDelta);
    }
