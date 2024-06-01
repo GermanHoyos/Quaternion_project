@@ -41,6 +41,10 @@
 // [14][Z] = (-)foward (+)back
 
 #include "include/masterHeader.h" // <- collection of standard c++ and custom headers // "pragma once"
+#define XBOX360_LEGACY_NAME_ID "Xbox Controller"
+#define XBOX360_NAME_ID "Xbox 360 Controller"
+#define PS3_NAME_ID "PLAYSTATION(R)3 Controller"
+
 
 int main()
 {
@@ -55,7 +59,9 @@ int main()
    camera.fovy = 45.0f;                                                   // Camera field-of-view Y
    camera.projection = CAMERA_PERSPECTIVE;                                // Camera mode type
 
-   // Load game objects
+
+
+   // LOAD GAME OBJECTS
    myPlayer player = myPlayer(0.0f,0.0f,0.0f); // Create user controlled actor
    createField();                              // Create space particle field
 
@@ -68,7 +74,9 @@ int main()
    // Main game loop
    while (!WindowShouldClose())    // Detect window close button or ESC key
    {
-      if (IsKeyDown(KEY_P)) UpdateCamera(&camera, CAMERA_THIRD_PERSON);
+      // remove test camera when ready
+      //if (IsKeyDown(KEY_P)) UpdateCamera(&camera, CAMERA_THIRD_PERSON);
+      
       BeginDrawing();
       //ClearBackground({ 0, 37, 51, 255 });
       ClearBackground(BLACK);

@@ -100,7 +100,7 @@ class myPlayer
 
    void rotate_z_axis()
    {
-      if (IsKeyDown(KEY_A)) rz -= 0.5f;
+      if (IsKeyDown(KEY_A) || IsGamepadButtonDown(gamepad, GAMEPAD_BUTTON_RIGHT_FACE_LEFT)) rz -= 0.5f;
       if (IsKeyDown(KEY_D)) rz += 0.5f;
       rotationDelta = QuaternionFromAxisAngle({ 0.0f, -1.0f, 0.0f }, DEG2RAD * rz );
       collectRotations = QuaternionMultiply(collectRotations, rotationDelta);

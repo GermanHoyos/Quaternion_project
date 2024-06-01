@@ -19,6 +19,8 @@
 // Globals
    Vector3 playerPosition;
    Vector3 playerRotation;
+   // CONTROLLER ENTRY POINT
+   int gamepad = 0;
 
 // Customs
    // template <typename T>
