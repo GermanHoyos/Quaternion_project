@@ -100,23 +100,6 @@ class myPlayer
       } 
       rotationDelta = QuaternionFromAxisAngle({ 1.0f, 0.0f, 0.0f }, DEG2RAD * rx );
       collectRotations = QuaternionMultiply(collectRotations, rotationDelta);
-
-      // //friction / brakes
-      // if ((float)(GetGamepadAxisMovement(gamepad, GAMEPAD_AXIS_RIGHT_Y)) == 0.0f)
-      // {
-      //    // if (rx > 0.05f) rx -= 0.01f;
-      //    // else if (rx < -0.05f) rx += 0.01f;
-      //    // else rx = 0.0f; // stop the vehicle if speed is within a small range around 0
-
-      //    if (rx > 0.03) rx  -= 0.01f;
-      //    if (rx < -0.03) rx += 0.01f;
-      //    if (rx < 0.03f && rx > -0.03f)
-      //    {
-      //       rx = 0.0f;
-      //       rotationDelta    = QuaternionIdentity();
-      //       //collectRotations = QuaternionIdentity();
-      //    }
-      // }
    }
 
    void rotate_y_axis()
@@ -137,23 +120,6 @@ class myPlayer
       } 
       rotationDelta = QuaternionFromAxisAngle({ 0.0f, -1.0f, 0.0f }, DEG2RAD * rz );
       collectRotations = QuaternionMultiply(collectRotations, rotationDelta);
-
-      // //friction / brakes
-      // if ((float)(GetGamepadAxisMovement(gamepad, GAMEPAD_AXIS_RIGHT_X)) == 0.0f)
-      // {
-      //    // if (rx > 0.05f) rx -= 0.01f;
-      //    // else if (rx < -0.05f) rx += 0.01f;
-      //    // else rx = 0.0f; // stop the vehicle if speed is within a small range around 0
-
-      //    if (rz > 0.03) rz  -= 0.01f;
-      //    if (rz < -0.03) rz += 0.01f;
-      //    if (rz < 0.03f && rz > -0.03f)
-      //    {
-      //       rz = 0.0f;
-      //       rotationDelta    = QuaternionIdentity();
-      //       //collectRotations = QuaternionIdentity();
-      //    }
-      // }
    }
 
    void strafe_x_axis() // slide left and right but maintain quaternion rotation
@@ -238,7 +204,7 @@ class myPlayer
       forwardDirection = Vector3Normalize(forwardDirection);
 
       //START shots
-      if (IsKeyPressed(KEY_SPACE) || IsGamepadButtonDown(gamepad, GAMEPAD_BUTTON_RIGHT_TRIGGER_2) > 0)
+      if (IsKeyPressed(KEY_SPACE) || IsGamepadButtonPressed(gamepad, GAMEPAD_BUTTON_RIGHT_TRIGGER_2) > 0)
       {
          Vector3 shipWorldPos = {cubeSpace.m12, cubeSpace.m13, cubeSpace.m14};
          // Calculate forward direction vector based on quaternions
