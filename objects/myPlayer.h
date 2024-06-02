@@ -36,7 +36,8 @@ class myPlayer
    float speed3 = 0.0f; float thrus1 = 0.0f;
    float thrus2 = 0.3f; float thrus3 = 3.4f;
    float radis1 = 0.3f; float radis2 = 0.0f;
-   float negPos = -1.0f;
+   float negPos =-1.0f; float strfSp = 0.0f;
+   float strafe = 0.0f;
    int cR = 255; int cG     = 255; 
    int cB = 255; int cAlpha = 255; 
    Color      myRGB = {255,255,255,255};
@@ -68,14 +69,14 @@ class myPlayer
       cubeSpace.m12 += dx;                                                          // [x] axis acceleration
       cubeSpace.m13 += dy;                                                          // [y] axis acceleration
       cubeSpace.m14 += dz;                                                          // [z] axis acceleration
-
+      strafe_x_axis(); 
+      strafe_y_axis();
       rlMultMatrixf(MatrixToFloat(cubeSpace));                                      // apply all above culculations to this current matrix
       DrawModel(ship, ship_init_pos, 3.0f,  WHITE);                                 // blender made model
       DrawSphere({thrus1, thrus2, thrus3}, radis1, {static_cast<unsigned char>(cR), static_cast<unsigned char>(cG), static_cast<unsigned char>(cB), static_cast<unsigned char>(cAlpha)});
 
-      //DrawGrid(5, 1.0f); // shifted matrix
-      rlPopMatrix();                                                                // revert back to state before [push]
       // POP MATRIX // REVERT BACK TO WORLD SPACE MATRIX
+      rlPopMatrix();                                                                // revert back to state before [push]
 
       // RESETS
       rotationDelta    = QuaternionIdentity();
@@ -89,45 +90,97 @@ class myPlayer
    void rotate_x_axis()
    {
       // If a joystick max value is needed then convert it to int and check against a value of "1"
-      if (IsKeyDown(KEY_W) || (float)(GetGamepadAxisMovement(gamepad, GAMEPAD_AXIS_RIGHT_Y)) < 0.0f ) rx += 0.5f;
-      if (IsKeyDown(KEY_S) || (float)(GetGamepadAxisMovement(gamepad, GAMEPAD_AXIS_RIGHT_Y)) > 0.0f ) rx -= 0.5f;
+      if (IsKeyDown(KEY_W) || (float)(GetGamepadAxisMovement(gamepad, GAMEPAD_AXIS_RIGHT_Y)) < 0.0f )
+      {
+         rx += 0.5f;
+      } 
+      if (IsKeyDown(KEY_S) || (float)(GetGamepadAxisMovement(gamepad, GAMEPAD_AXIS_RIGHT_Y)) > 0.0f )
+      {
+         rx -= 0.5f;
+      } 
       rotationDelta = QuaternionFromAxisAngle({ 1.0f, 0.0f, 0.0f }, DEG2RAD * rx );
       collectRotations = QuaternionMultiply(collectRotations, rotationDelta);
+
+      // //friction / brakes
+      // if ((float)(GetGamepadAxisMovement(gamepad, GAMEPAD_AXIS_RIGHT_Y)) == 0.0f)
+      // {
+      //    // if (rx > 0.05f) rx -= 0.01f;
+      //    // else if (rx < -0.05f) rx += 0.01f;
+      //    // else rx = 0.0f; // stop the vehicle if speed is within a small range around 0
+
+      //    if (rx > 0.03) rx  -= 0.01f;
+      //    if (rx < -0.03) rx += 0.01f;
+      //    if (rx < 0.03f && rx > -0.03f)
+      //    {
+      //       rx = 0.0f;
+      //       rotationDelta    = QuaternionIdentity();
+      //       //collectRotations = QuaternionIdentity();
+      //    }
+      // }
    }
 
    void rotate_y_axis()
    {
-      // if (IsKeyDown(KEY_Q)) ry += 0.5f;
-      // if (IsKeyDown(KEY_E)) ry -= 0.5f;
-      // rotationDelta = QuaternionFromAxisAngle({ 0.0f, 1.0f, 0.0f }, DEG2RAD * ry );
-      // collectRotations = QuaternionMultiply(collectRotations, rotationDelta);
+      // implement
    }
 
    void rotate_z_axis()
    {
       // If a joystick max value is needed then convert it to int and check against a value of "1"
-      if (IsKeyDown(KEY_A) || (float)(GetGamepadAxisMovement(gamepad, GAMEPAD_AXIS_RIGHT_X)) < 0.0f ) rz -= 0.5f;
-      if (IsKeyDown(KEY_D) || (float)(GetGamepadAxisMovement(gamepad, GAMEPAD_AXIS_RIGHT_X)) > 0.0f ) rz += 0.5f;
+      if (IsKeyDown(KEY_A) || (float)(GetGamepadAxisMovement(gamepad, GAMEPAD_AXIS_RIGHT_X)) < 0.0f )
+      {
+         rz -= 0.65f;
+      } 
+      if (IsKeyDown(KEY_D) || (float)(GetGamepadAxisMovement(gamepad, GAMEPAD_AXIS_RIGHT_X)) > 0.0f )
+      {
+          rz += 0.65f;
+      } 
       rotationDelta = QuaternionFromAxisAngle({ 0.0f, -1.0f, 0.0f }, DEG2RAD * rz );
       collectRotations = QuaternionMultiply(collectRotations, rotationDelta);
+
+      // //friction / brakes
+      // if ((float)(GetGamepadAxisMovement(gamepad, GAMEPAD_AXIS_RIGHT_X)) == 0.0f)
+      // {
+      //    // if (rx > 0.05f) rx -= 0.01f;
+      //    // else if (rx < -0.05f) rx += 0.01f;
+      //    // else rx = 0.0f; // stop the vehicle if speed is within a small range around 0
+
+      //    if (rz > 0.03) rz  -= 0.01f;
+      //    if (rz < -0.03) rz += 0.01f;
+      //    if (rz < 0.03f && rz > -0.03f)
+      //    {
+      //       rz = 0.0f;
+      //       rotationDelta    = QuaternionIdentity();
+      //       //collectRotations = QuaternionIdentity();
+      //    }
+      // }
    }
 
    void strafe_x_axis() // slide left and right but maintain quaternion rotation
    {
       // Determine strafe direction based on input
-      float strafe = 0.0f;
+
       if (IsKeyDown(KEY_LEFT) || (float)(GetGamepadAxisMovement(gamepad, GAMEPAD_AXIS_LEFT_X)) < 0.0f )
       {
-         strafe = 1.0f; // Strafe left
+         if (strafe < 0.9f)  strafe += 0.01f;
       } 
       if (IsKeyDown(KEY_RIGHT)|| (float)(GetGamepadAxisMovement(gamepad, GAMEPAD_AXIS_LEFT_X)) > 0.0f )
       {
-         strafe = -1.0f; // Strafe right
+         if (strafe > -0.9f) strafe -= 0.01f;
       } 
       
+      // friction / brakes
+      if ((float)(GetGamepadAxisMovement(gamepad, GAMEPAD_AXIS_LEFT_X)) == 0.0f)
+      {
+         if (strafe > 0.05f) strafe -= 0.01f;
+         else if (strafe < -0.05f) strafe += 0.01f;
+         else strafe = 0.0f; // stop the vehicle if speed is within a small range around 0
+      }
+
       // Calculate strafe offset based on ship's facing direction
       Vector3 forwardDirection = Vector3Transform({0.0f, 0.0f, -1.0f}, QuaternionToMatrix(collectRotations));
-      Vector3 strafeOffset = {forwardDirection.z * strafe * 0.1f, 0.0f, -forwardDirection.x * strafe * 0.1f};
+      forwardDirection = Vector3Normalize(forwardDirection);
+      Vector3 strafeOffset = {forwardDirection.z * strafe, 0.0f, -forwardDirection.x * strafe};
 
       // Apply strafe offset to ship's position
       // By adjusting both the dx (x-coordinate) and dz (z-coordinate), we ensure that the ship moves correctly in the desired direction.
@@ -147,16 +200,24 @@ class myPlayer
       
       Vector3 fowardDirection = Vector3Transform({0.0f, 0.0f, negPos}, QuaternionToMatrix(collectRotations));
 
+      // foward
       if ((float)(GetGamepadAxisMovement(gamepad, GAMEPAD_AXIS_LEFT_Y)) < 0.0f)
       {
          speed3 += 0.01f;
-         //negPos = 1.0;
       }
 
+      // reverse
       if ((float)(GetGamepadAxisMovement(gamepad, GAMEPAD_AXIS_LEFT_Y)) > 0.0f)
       {
          speed3 -= 0.01f;
-         //negPos = -1.0;
+      }
+
+      // friction / brakes
+      if ((float)(GetGamepadAxisMovement(gamepad, GAMEPAD_AXIS_LEFT_Y)) == 0.0f)
+      {
+         if (speed3 > 0.05f) speed3 -= 0.01f;
+         else if (speed3 < -0.05f) speed3 += 0.01f;
+         else speed3 = 0.0f; // stop the vehicle if speed is within a small range around 0
       }
 
       dx += fowardDirection.x * speed3; 
@@ -167,7 +228,7 @@ class myPlayer
 
    void apply_rotation_axis()
    {
-      rotate_z_axis(); rotate_x_axis(); rotate_y_axis(); shootLasers(); strafe_x_axis(); strafe_y_axis();
+      rotate_z_axis(); rotate_x_axis(); rotate_y_axis(); shootLasers(); 
    }
 
    void shootLasers() 
