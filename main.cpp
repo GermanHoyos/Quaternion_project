@@ -1,5 +1,5 @@
 
-// THE SOURCE   - WHO WAS, WHO IS, WHO IS COMING: YHWH
+// THE  SOURCE   - WHO WAS, WHO IS, WHO IS COMING: YHWH
 //
 // GERMAN HOYOS - IMAGINATION AND WILLPOWER ARE THE ONLY TWO CODING SKILLS THAT MATTER. TWITTER||X: //https://x.com/EvangelizerH
 //
@@ -94,6 +94,9 @@ int main()
       // Draw all lasers && particles
       for (auto& laser : lasersList){laser.draw();}
       for (auto& particle : pField){particle.draw();}
+
+      // Test game area
+      DrawCube({0,0,-50}, 20, 20, 20, {255, 255, 255, 255});
 
       /////////////////////////////BITS/////////////////////////////////////////(-)
       rlPushMatrix();

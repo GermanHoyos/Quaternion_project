@@ -77,7 +77,7 @@ public:
 
       // For visuals
       laserVisual = Vector3Add(currentPos, Vector3Scale(fwrdDirection, laserLength));
-      DrawLine3D(currentPos, laserVisual, WHITE);
+      DrawLine3D(currentPos, laserVisual, GREEN);
 
 
 
