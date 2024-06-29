@@ -95,6 +95,7 @@ int main()
    // LOAD GAME OBJECTS
    myPlayer player = myPlayer(0.0f,0.0f,0.0f); // Create user controlled actor
    createField();                              // Create space particle field
+   makeAsteroids();
 
    //OSCILLATER INITS
    float hover = 0.0f;

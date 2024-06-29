@@ -64,12 +64,6 @@
 class myPlayer 
 {
    public:
-   //camera cam;
- 
- 
- 
- 
- 
  
    // MODEL + BLENDER BAKE
    Model ship = LoadModel("C:\\Users\\Hoyos\\OneDrive\\Desktop\\C++ Runner\\raylib_quaternion_example\\home\\src\\assets\\ship.obj");
@@ -103,7 +97,6 @@ class myPlayer
    {
       // Anything that manipulates the player game state
    }
-
 
    void draw()
    { 
@@ -181,17 +174,32 @@ class myPlayer
    {
       // Determine strafe direction based on input
 
-      if (IsKeyDown(KEY_LEFT) || (float)(GetGamepadAxisMovement(gamepad, GAMEPAD_AXIS_LEFT_X)) < 0.0f )
+      if (IsKeyDown(KEY_LEFT))
+      {
+         strafe += 0.01f;
+      }
+
+      if (IsKeyDown(KEY_RIGHT))
+      {
+         strafe -= 0.01f;
+      }
+
+      if ((float)(GetGamepadAxisMovement(gamepad, GAMEPAD_AXIS_LEFT_X)) < 0.0f )
       {
          if (strafe < 0.9f)  strafe += 0.01f;
       } 
-      if (IsKeyDown(KEY_RIGHT)|| (float)(GetGamepadAxisMovement(gamepad, GAMEPAD_AXIS_LEFT_X)) > 0.0f )
+      if ((float)(GetGamepadAxisMovement(gamepad, GAMEPAD_AXIS_LEFT_X)) > 0.0f )
       {
          if (strafe > -0.9f) strafe -= 0.01f;
       } 
       
-      // friction / brakes
-      if ((float)(GetGamepadAxisMovement(gamepad, GAMEPAD_AXIS_LEFT_X)) == 0.0f)
+      // // friction / brakes
+      if 
+      (
+         (float)(GetGamepadAxisMovement(gamepad, GAMEPAD_AXIS_LEFT_X)) == 0.0f &&
+         IsKeyReleased(KEY_RIGHT) && 
+         IsKeyReleased(KEY_LEFT)                                      
+      )
       {
          if (strafe > 0.05f) strafe -= 0.01f;
          else if (strafe < -0.05f) strafe += 0.01f;
