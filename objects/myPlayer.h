@@ -19,9 +19,58 @@
 
 #include "../include/MasterHeader.h"
 
+// class camera
+// {
+//    public:
+//    Vector3 pos;
+//    Quaternion rot;
+
+//    void moveFwrd(float meters)
+//    {
+//       Vector3 fuv = rot.getFwrdUnitVec();
+//       fuv *= meters;
+
+//       pos += fuv;
+//    }
+
+//    void strafe(float meters)
+//    {
+//       Vector3 luv = rot.getLatUnitVec();
+//       luv *= meters;
+
+//       pos += luv;
+//    }
+
+//    void moveVert(float meters)
+//    {
+//       Vector3 uuv = rot.getUpUnitVec();
+//       uuv *= meters;
+
+//       pos += uuv;
+//    }
+
+//    // RMAPI Quaternion QuaternionFromEuler(float pitch, float yaw, float roll)
+//    void turnRight(float degrees)
+//    {
+//       Quaternion q = QuaternionFromEuler(0,degrees,0);
+//       rot = q * rot;
+//    }
+
+
+// };
+
+
+
 class myPlayer 
 {
    public:
+   //camera cam;
+ 
+ 
+ 
+ 
+ 
+ 
    // MODEL + BLENDER BAKE
    Model ship = LoadModel("C:\\Users\\Hoyos\\OneDrive\\Desktop\\C++ Runner\\raylib_quaternion_example\\home\\src\\assets\\ship.obj");
    Texture2D texture = LoadTexture("C:\\Users\\Hoyos\\OneDrive\\Desktop\\C++ Runner\\raylib_quaternion_example\\home\\src\\assets\\t1.png");
@@ -49,6 +98,12 @@ class myPlayer
    bool       textureLoaded    = false;
    myPlayer(float x, float y, float z, float dx = 0.0f, float dy = 0.0f, float dz = 0.0f, float rx = 0.0f, float ry = 0.0f, float rz = 0.0f)
    : x(x), y(y), z(z), dx(dx), dy(dy), dz(dz), rx(rx), ry(ry), rz(rz) {}
+
+   void idle()
+   {
+      // Anything that manipulates the player game state
+   }
+
 
    void draw()
    { 

@@ -45,6 +45,40 @@
 #define XBOX360_NAME_ID "Xbox 360 Controller"
 #define PS3_NAME_ID "PLAYSTATION(R)3 Controller"
 
+// struct gameState 
+// {
+//    // INIT - [WINDOW] + [WORLD] + [CAMERA]
+//    // const int screenWidth = 1200; const int screenHeight = 600;
+//    // InitWindow(screenWidth, screenHeight, ""); SetTargetFPS(60);
+//    // Camera3D camera = { 0 };
+//    // Vector3  cam_track = {0.0f, 0.0f, 0.0};
+//    // camera.position = (Vector3){ 0.0f, 12.0f, 20.0f };                     // Camera position
+//    // camera.target = (Vector3){cam_track.x, cam_track.y, cam_track.z};      // Camera looking at point
+//    // camera.up = (Vector3){ 0.0f, 1.0f, 0.0f };                             // Camera up vector (rotation towards target)
+//    // camera.fovy = 45.0f;                                                   // Camera field-of-view Y
+//    // camera.projection = CAMERA_PERSPECTIVE;                                // Camera mode type
+
+// };
+// gameState g; //Access with "g."
+
+// void idle(float dt) // Almost always has a time param since the last call
+// {
+//    // Seconds
+//    const float dt = 1.0f / 60.0f;
+
+//    // Input devices - handle all player movement
+//    player.idle(); // <- pass the dt to the player
+// };
+
+// void draw()
+// {
+//    // all draw code goes in here:
+//    player.draw();
+//    // and any other objects instantiated
+
+// };
+
+
 int main()
 {
    // INIT - [WINDOW] + [WORLD] + [CAMERA]
@@ -73,6 +107,9 @@ int main()
    {
       // remove test camera when ready
       //if (IsKeyDown(KEY_P)) UpdateCamera(&camera, CAMERA_THIRD_PERSON);
+      // idle();
+      // draw();
+
       
       BeginDrawing();
       //ClearBackground({ 0, 37, 51, 255 });
@@ -93,9 +130,10 @@ int main()
 
       // Draw all lasers && particles
       for (auto& laser : lasersList){laser.draw();}
-      for (auto& particle : pField){particle.draw();}
+      //for (auto& particle : pField){particle.draw();}
 
       // Test game area
+      // big white cube
       DrawCube({0,0,-50}, 20, 20, 20, {255, 255, 255, 255});
 
       /////////////////////////////BITS/////////////////////////////////////////(-)

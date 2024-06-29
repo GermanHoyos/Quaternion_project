@@ -16,3 +16,11 @@
 // [12][X] = (+)right  (-)left
 // [14][Z] = (-)foward (+)back
 ////////////////////////////////////////////////////////////////////////////////////
+
+#pragma once
+#include "../include/MasterHeader.h"
+
+void makeAsteroids()
+{
+    DrawCube({0,0,-50}, 20, 20, 20, {255, 255, 255, 255});
+};
