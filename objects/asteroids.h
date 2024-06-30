@@ -22,5 +22,6 @@
 
 void makeAsteroids()
 {
-    DrawCube({0,0,-50}, 20, 20, 20, {255, 255, 255, 255});
+    DrawSphere((Vector3){0.0f, 0.0f, 0.0f}, 1.0f, GREEN);
+    DrawSphereWires((Vector3){0.0f, 0.0f, 0.0f}, 2.0f, 6, 6, LIME);
 };

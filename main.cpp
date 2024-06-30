@@ -95,7 +95,7 @@ int main()
    // LOAD GAME OBJECTS
    myPlayer player = myPlayer(0.0f,0.0f,0.0f); // Create user controlled actor
    createField();                              // Create space particle field
-   makeAsteroids();
+
 
    //OSCILLATER INITS
    float hover = 0.0f;
@@ -135,7 +135,8 @@ int main()
 
       // Test game area
       // big white cube
-      DrawCube({0,0,-50}, 20, 20, 20, {255, 255, 255, 255});
+      //DrawCube({0,0,-50}, 20, 20, 20, {255, 255, 255, 255});
+      makeAsteroids();
 
       /////////////////////////////BITS/////////////////////////////////////////(-)
       rlPushMatrix();

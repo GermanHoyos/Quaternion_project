@@ -75,9 +75,14 @@ public:
       currentPos = Vector3Add(currentPos, velocity);
       endPos = Vector3Add(endPos, velocity);
 
-      // For visuals
+      // Visualize a laser by taking a starting point then getting a vector 
+      // representing direction and then adding a arbitrary length to the vector
+      // this gives you a start point and an end point in 3d space. With these
+      // two points you can create laser animations, or bullets etc.. etc..
       laserVisual = Vector3Add(currentPos, Vector3Scale(fwrdDirection, laserLength));
-      DrawLine3D(currentPos, laserVisual, GREEN);
+      DrawLine3D(currentPos, laserVisual, WHITE);
+      DrawSphere((Vector3){laserVisual.x, laserVisual.y, laserVisual.z}, 0.5f, WHITE);
+
 
 
 

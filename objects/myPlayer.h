@@ -193,13 +193,13 @@ class myPlayer
          if (strafe > -0.9f) strafe -= 0.01f;
       } 
       
-      // // friction / brakes
+      //Brakes for strafing on x axis 
       if 
       (
          (float)(GetGamepadAxisMovement(gamepad, GAMEPAD_AXIS_LEFT_X)) == 0.0f &&
          IsKeyReleased(KEY_RIGHT) && 
          IsKeyReleased(KEY_LEFT)                                      
-      )
+      ) 
       {
          if (strafe > 0.05f) strafe -= 0.01f;
          else if (strafe < -0.05f) strafe += 0.01f;
