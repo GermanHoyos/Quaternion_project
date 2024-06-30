@@ -95,6 +95,7 @@ int main()
    // LOAD GAME OBJECTS
    myPlayer player = myPlayer(0.0f,0.0f,0.0f); // Create user controlled actor
    createField();                              // Create space particle field
+   asteroids myAsteroids = asteroids({0.0f,0.0f,-20.0f});
 
 
    //OSCILLATER INITS
@@ -128,15 +129,22 @@ int main()
       /////////////////////////////JUICY////////////////////////////////////////(+)
 
       player.draw();
+      myAsteroids.draw();
 
       // Draw all lasers && particles
-      for (auto& laser : lasersList){laser.draw();}
+      for (auto& laser : lasersList)
+      {
+         laser.draw();
+         myAsteroids.detectCollisions(laser);
+      }
       //for (auto& particle : pField){particle.draw();}
 
       // Test game area
       // big white cube
       //DrawCube({0,0,-50}, 20, 20, 20, {255, 255, 255, 255});
       makeAsteroids();
+      // Instantiate asteroids
+
 
       /////////////////////////////BITS/////////////////////////////////////////(-)
       rlPushMatrix();

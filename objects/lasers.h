@@ -80,8 +80,11 @@ public:
       // this gives you a start point and an end point in 3d space. With these
       // two points you can create laser animations, or bullets etc.. etc..
       laserVisual = Vector3Add(currentPos, Vector3Scale(fwrdDirection, laserLength));
-      DrawLine3D(currentPos, laserVisual, WHITE);
-      DrawSphere((Vector3){laserVisual.x, laserVisual.y, laserVisual.z}, 0.5f, WHITE);
+      //DrawLine3D(currentPos, laserVisual, WHITE);
+      // Line Start:
+      DrawSphere((Vector3){currentPos.x, currentPos.y, currentPos.z}, 0.2f, YELLOW);
+      // Line End:
+      //DrawSphere((Vector3){laserVisual.x, laserVisual.y, laserVisual.z}, 0.5f, WHITE);
 
 
 
