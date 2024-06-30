@@ -29,24 +29,29 @@ void makeAsteroids()
 class asteroids 
 {
     public:
-    Vector3 myPosition;
-    Color   myRGB = { 0, 228, 48, 255 };
-    Color   myLime = { 0, 158, 47, 255 };
+    Vector3 myPositionSp;
+    float xShake;
+    float yShake;
+    float zShake;
+    Vector3 myPositionWr;
+    int     myAlpha = 255;
+    Color   myRGB = { 0, 228, 48, myAlpha };
+    Color   myLime = { 0, 158, 47, myAlpha };
     float   sphereRad = 1.0f;
     float   wiresRad = 2.0f;
     bool    hitAnim = false;
     int     hitTime;
 
     asteroids(Vector3 position) 
-    : myPosition(position)
+    : myPositionSp(position)
     {
-        // some init code
+        myPositionWr = myPositionSp;
     }
 
     void draw()
     {
-        DrawSphere((Vector3){myPosition.x, myPosition.y, myPosition.z}, sphereRad, myRGB);
-        DrawSphereWires((Vector3){myPosition.x, myPosition.y, myPosition.z}, wiresRad, 6, 6, myLime);
+        DrawSphere((Vector3){myPositionSp.x, myPositionSp.y, myPositionSp.z}, sphereRad, myRGB);
+        DrawSphereWires((Vector3){myPositionWr.x, myPositionWr.y, myPositionWr.z}, wiresRad, 6, 6, myLime);
         if (hitAnim == true)
         {
             hitAnimation();
@@ -61,15 +66,15 @@ class asteroids
         // Calculate distance between laser and asteroid
         float distance = std::sqrt(
             //(x2 - x1)^2 = x axis distance
-            (laser.currentPos.x - myPosition.x) * (laser.currentPos.x - myPosition.x) +
+            (laser.currentPos.x - myPositionSp.x) * (laser.currentPos.x - myPositionSp.x) +
             //(y2 - y1)^2 = y axis distance
-            (laser.currentPos.y - myPosition.y) * (laser.currentPos.y - myPosition.y) +
+            (laser.currentPos.y - myPositionSp.y) * (laser.currentPos.y - myPositionSp.y) +
             //(z2 - z1)^2 = z axis distance
-            (laser.currentPos.z - myPosition.z) * (laser.currentPos.z - myPosition.z)
+            (laser.currentPos.z - myPositionSp.z) * (laser.currentPos.z - myPositionSp.z)
         );
 
         // Check if distance is less than radius of asteroid (assuming radius = 1.0f)
-        if (distance < 2.0f)
+        if (distance < 2.0f && hitAnim == false)
         {
             hitAnimationDetect();
         }
@@ -78,7 +83,7 @@ class asteroids
     void hitAnimationDetect()
     {
         // Develop a timer that increases radius for X amount of time 
-        if (hitAnim == false)
+        if (!hitAnim)
         {
             hitTime = GetTime();
             hitAnim = true;
@@ -89,17 +94,49 @@ class asteroids
     {   
         int latestTime = GetTime();
 
-        // If this conditional returns true, then the scopes animation will run
-        if(latestTime < hitTime + 1)
+        if (hitAnim)
         {
-            myRGB = { 255, 255, 255, 255 };
-            sphereRad += 0.01;
-        } 
-        if (latestTime >= hitTime + 1) 
-        {
-            hitAnim = false;
+            // If this conditional returns true, then this scopes animation will run
+            if(latestTime <= hitTime + 2)
+            {
+                // Animate hit here:
+                //if (sphereRad < 1.60f) sphereRad += 0.05f;
+                myRGB = { 255, 155, 155, myAlpha };
+
+                xShake = 0.0f;
+                yShake = 0.0f;
+                zShake = 0.0f;
+                myPositionSp.x = myPositionWr.x;
+                myPositionSp.y = myPositionWr.y;
+                myPositionSp.z = myPositionWr.z;
+
+                // RANDOM NUMS
+                ///*sphere color*/ random_device rd_1; mt19937 gen_1(rd_1()); uniform_int_distribution<int>    dis_1(1, 255);      cG = dis_1(gen_1); cB = dis_1(gen_1); cAlpha = dis_1(gen_1);
+                random_device rd_2; mt19937 gen_2(rd_2()); uniform_real_distribution<float> dis_2(-0.6f, 0.6f); xShake = xShake + dis_2(gen_2);//thrus1 = thrus1 + dis_2(gen_2);
+                random_device rd_3; mt19937 gen_3(rd_3()); uniform_real_distribution<float> dis_3(-0.6f, 0.6f); yShake = yShake + dis_3(gen_3);//thrus2 = thrus2 + dis_3(gen_2);
+                random_device rd_4; mt19937 gen_4(rd_4()); uniform_real_distribution<float> dis_4(-0.6f, 0.6f); zShake = zShake + dis_4(gen_4);
+
+                myPositionSp.x = myPositionSp.x + xShake;
+                myPositionSp.y = myPositionSp.y + yShake;
+                myPositionSp.z = myPositionSp.z + zShake;
+                
+            }
+
+            if (latestTime >= hitTime + 2) 
+            {
+                sphereRad = 1.0f;
+                myAlpha = 255;
+                myRGB = { 0, 255, 0, myAlpha };
+                hitAnim = false;
+                myPositionSp.x = myPositionWr.x;
+                myPositionSp.y = myPositionWr.y;
+                myPositionSp.z = myPositionWr.z;
+                xShake = 0.0f;
+                yShake = 0.0f;
+                zShake = 0.0f;
+
+            }
         }
     }
-
 
 };
