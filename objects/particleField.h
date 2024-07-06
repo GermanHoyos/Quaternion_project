@@ -49,7 +49,7 @@ class particleField
    void draw()
    {
       //Alpha will be based on distance from player:
-      DrawSphere({position.x,position.y,position.z}, 0.02f, WHITE);
+      DrawSphere({position.x,position.y,position.z}, 0.2f, WHITE);
    }
 
 };
@@ -73,5 +73,11 @@ void createFieldTwo()
 {
    particleField particle = particleField();
    pField.push_back(particle);
+
+   // If list is greater than X length, remove first element from the list
+   if (pField.size() > 9)
+   {
+      pField.erase(pField.begin());
+   }
 }
 

@@ -103,7 +103,7 @@ int main()
       myAsteroids_3.draw();
 
       // Make particles when player moves
-      if (positionSnapshot.x != playerPosition.x)
+      if (positionSnapshot.x != playerPosition.x || positionSnapshot.y != playerPosition.y || positionSnapshot.z != playerPosition.z)
       {
          createFieldTwo();
          positionSnapshot = playerPosition;
@@ -116,7 +116,16 @@ int main()
          myAsteroids.detectCollisions(laser);
          myAsteroids_2.detectCollisions(laser);
          myAsteroids_3.detectCollisions(laser);
-         for (auto& particle : pField){particle.draw();}
+         
+      }
+
+      // If a particle exists, draw it
+      if (!pField.empty()) 
+      {
+         for (auto& particle : pField)
+         {
+            particle.draw();
+         }
       }
 
       // Instantiate asteroids
