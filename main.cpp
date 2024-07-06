@@ -45,43 +45,9 @@
 #define XBOX360_NAME_ID "Xbox 360 Controller"
 #define PS3_NAME_ID "PLAYSTATION(R)3 Controller"
 
-// struct gameState 
-// {
-//    // INIT - [WINDOW] + [WORLD] + [CAMERA]
-//    // const int screenWidth = 1200; const int screenHeight = 600;
-//    // InitWindow(screenWidth, screenHeight, ""); SetTargetFPS(60);
-//    // Camera3D camera = { 0 };
-//    // Vector3  cam_track = {0.0f, 0.0f, 0.0};
-//    // camera.position = (Vector3){ 0.0f, 12.0f, 20.0f };                     // Camera position
-//    // camera.target = (Vector3){cam_track.x, cam_track.y, cam_track.z};      // Camera looking at point
-//    // camera.up = (Vector3){ 0.0f, 1.0f, 0.0f };                             // Camera up vector (rotation towards target)
-//    // camera.fovy = 45.0f;                                                   // Camera field-of-view Y
-//    // camera.projection = CAMERA_PERSPECTIVE;                                // Camera mode type
-
-// };
-// gameState g; //Access with "g."
-
-// void idle(float dt) // Almost always has a time param since the last call
-// {
-//    // Seconds
-//    const float dt = 1.0f / 60.0f;
-
-//    // Input devices - handle all player movement
-//    player.idle(); // <- pass the dt to the player
-// };
-
-// void draw()
-// {
-//    // all draw code goes in here:
-//    player.draw();
-//    // and any other objects instantiated
-
-// };
-
-
 int main()
 {
-   // INIT - [WINDOW] + [WORLD] + [CAMERA]
+   // Raylibs camera and 3d world inits
    const int screenWidth = 1200; const int screenHeight = 600;
    InitWindow(screenWidth, screenHeight, ""); SetTargetFPS(60);
    Camera3D camera = { 0 };
@@ -92,50 +58,56 @@ int main()
    camera.fovy = 45.0f;                                                   // Camera field-of-view Y
    camera.projection = CAMERA_PERSPECTIVE;                                // Camera mode type
 
-   // LOAD GAME OBJECTS
+   //  Instantiate actors
    myPlayer player = myPlayer(0.0f,0.0f,0.0f); // Create user controlled actor
-   createField();                              // Create space particle field
    asteroids myAsteroids = asteroids({-10.0f,0.0f,-20.0f});
    asteroids myAsteroids_2 = asteroids({0.0f,0.0f,-20.0f});
    asteroids myAsteroids_3 = asteroids({10.0f,0.0f,-20.0f});
 
-
-
-   //OSCILLATER INITS
+   // Oscillator inits
    float hover = 0.0f;
    float time = 0.0f;
    float amplitude = 2.0f;
    float frequency = 1.0f;
 
+   // Special effects inits
+   Vector3 positionSnapshot = playerPosition;   
+
    // Main game loop
    while (!WindowShouldClose())    // Detect window close button or ESC key
    {
-      // remove test camera when ready
-      //if (IsKeyDown(KEY_P)) UpdateCamera(&camera, CAMERA_THIRD_PERSON);
-      // idle();
-      // draw();
 
-      
+      // Call raylibs drawing context      
       BeginDrawing();
-      //ClearBackground({ 0, 37, 51, 255 });
+
+      // ClearBackground({ 0, 37, 51, 255 });
       ClearBackground(BLACK);
 
       BeginMode3D(camera);
       rlDisableBackfaceCulling();
       rlPushMatrix();
+
       // Calculate the camera's position relative to the ship's transformation
       Vector3 cameraOffset = {0.0f, 5.0f, 20.0f};  // 20 units behind the ship
       Vector3 transformedCameraOffset = Vector3Transform(cameraOffset, player.cubeSpace);
       camera.position = transformedCameraOffset;
       rlPopMatrix();
       camera.target = (Vector3){player.cubeSpace.m12, player.cubeSpace.m13, player.cubeSpace.m14};
+
       /////////////////////////////JUICY////////////////////////////////////////(+)
 
+      // Instantiate actors
       player.draw();
       myAsteroids.draw();
       myAsteroids_2.draw();
       myAsteroids_3.draw();
 
+      // Make particles when player moves
+      if (positionSnapshot.x != playerPosition.x)
+      {
+         createFieldTwo();
+         positionSnapshot = playerPosition;
+      }
 
       // Draw all lasers && particles
       for (auto& laser : lasersList)
@@ -144,16 +116,11 @@ int main()
          myAsteroids.detectCollisions(laser);
          myAsteroids_2.detectCollisions(laser);
          myAsteroids_3.detectCollisions(laser);
-
+         for (auto& particle : pField){particle.draw();}
       }
-      //for (auto& particle : pField){particle.draw();}
 
-      // Test game area
-      // big white cube
-      //DrawCube({0,0,-50}, 20, 20, 20, {255, 255, 255, 255});
-      makeAsteroids();
       // Instantiate asteroids
-
+      makeAsteroids();
 
       /////////////////////////////BITS/////////////////////////////////////////(-)
       rlPushMatrix();
@@ -163,12 +130,11 @@ int main()
       
       EndMode3D();
       // Debugs
-      //DrawFPS(10, 10);
+      // DrawFPS(10, 10);
       string player_xyz = "Ship position in realation to world space:\nX = " + to_string(playerPosition.x) + "\nY = " +  to_string(playerPosition.y) + "\nZ = " + to_string(playerPosition.z);
       DrawText (player_xyz.c_str(), 2, 2, 10, GREEN);
       string player_rot = "Ship quaternion derived vector:\nX = " + to_string(playerRotation.x) + "\nY = " + to_string(playerRotation.y) + "\nZ = " + to_string(playerRotation.z);
       DrawText (player_rot.c_str(), 2, 60, 10, GREEN);
-
 
       EndDrawing();
    }

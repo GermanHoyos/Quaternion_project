@@ -19,48 +19,6 @@
 
 #include "../include/MasterHeader.h"
 
-// class camera
-// {
-//    public:
-//    Vector3 pos;
-//    Quaternion rot;
-
-//    void moveFwrd(float meters)
-//    {
-//       Vector3 fuv = rot.getFwrdUnitVec();
-//       fuv *= meters;
-
-//       pos += fuv;
-//    }
-
-//    void strafe(float meters)
-//    {
-//       Vector3 luv = rot.getLatUnitVec();
-//       luv *= meters;
-
-//       pos += luv;
-//    }
-
-//    void moveVert(float meters)
-//    {
-//       Vector3 uuv = rot.getUpUnitVec();
-//       uuv *= meters;
-
-//       pos += uuv;
-//    }
-
-//    // RMAPI Quaternion QuaternionFromEuler(float pitch, float yaw, float roll)
-//    void turnRight(float degrees)
-//    {
-//       Quaternion q = QuaternionFromEuler(0,degrees,0);
-//       rot = q * rot;
-//    }
-
-
-// };
-
-
-
 class myPlayer 
 {
    public:

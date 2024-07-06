@@ -134,7 +134,6 @@ class asteroids
                 xShake = 0.0f;
                 yShake = 0.0f;
                 zShake = 0.0f;
-
             }
         }
     }
