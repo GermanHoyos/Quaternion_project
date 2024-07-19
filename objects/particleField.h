@@ -40,9 +40,13 @@ class particleField
       // /*[y]*/ random_device rd_2; mt19937 gen_2(rd_2()); uniform_real_distribution<float> dis_2(-40.0f, 40.0f); position.y = dis_2(gen_2);
       // /*[z]*/ random_device rd_3; mt19937 gen_3(rd_3()); uniform_real_distribution<float> dis_3(-40.0f, 40.0f); position.z = dis_3(gen_3);
 
-      position.x = playerPosition.x;
-      position.y = playerPosition.y;
-      position.z = playerPosition.z + 2.0f;
+      // position.x = playerPosition.x;
+      // position.y = playerPosition.y;
+      // position.z = playerPosition.z + 2.0f;
+
+      // Randomize positions based on player position
+      
+
 
    }
 
@@ -81,3 +85,8 @@ void createFieldTwo()
    }
 }
 
+// Attempt at random particles in space
+void createRandomField()
+{
+
+}

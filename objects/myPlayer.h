@@ -92,6 +92,7 @@ class myPlayer
       thrus1 = 0.0f; thrus2 = 0.3f;
       makeGlobal();
    }
+   
 
    void rotate_x_axis()
    {

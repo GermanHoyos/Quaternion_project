@@ -71,7 +71,9 @@ int main()
    float frequency = 1.0f;
 
    // Special effects inits
-   Vector3 positionSnapshot = playerPosition;   
+   Vector3 positionSnapshot = playerPosition;
+   bool gameStarted = false;
+
 
    // Main game loop
    while (!WindowShouldClose())    // Detect window close button or ESC key
@@ -102,11 +104,17 @@ int main()
       myAsteroids_2.draw();
       myAsteroids_3.draw();
 
-      // Make particles when player moves
-      if (positionSnapshot.x != playerPosition.x || positionSnapshot.y != playerPosition.y || positionSnapshot.z != playerPosition.z)
+      // Make trail particles when player moves
+      // if (positionSnapshot.x != playerPosition.x || positionSnapshot.y != playerPosition.y || positionSnapshot.z != playerPosition.z)
+      // {
+      //    createFieldTwo();
+      //    positionSnapshot = playerPosition;
+      // }
+
+      // Make space particles with opacity based on speed
+      if (!gameStarted)
       {
-         createFieldTwo();
-         positionSnapshot = playerPosition;
+         
       }
 
       // Draw all lasers && particles
