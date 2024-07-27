@@ -71,37 +71,69 @@ class myPlayer
 
       // PUSH MATRIX // GEN LOCAL SPACE MATRIX
       loadTexture();
-      tiltMatrix = MatrixRotate(rotationAxis, rotAng);
-    
+      tiltMatrix = MatrixRotate(rotationAxis, rotAng);                              // Calculate a tilt that will be applied to the matrix that quaternions are applied to.
       rlPushMatrix();                                                               // save current state of matrix untill [pop]
       apply_rotation_axis();                                                        // apply quaternion math to [rx] [ry] [rz] based on start point of 0 0 0
       accelerate_foward();                                                          // apply acceleration maths to directional variable [dx] [dy] [dz]
       Quaternion resultRotation = QuaternionMultiply(rotation, collectRotations);   // store above quaternion in a variable
       cubeSpace = QuaternionToMatrix(resultRotation);                               // calculate how to apply quaternion to this current matrix
 
+      // Tilt conditional
       if ((float)(GetGamepadAxisMovement(gamepad, GAMEPAD_AXIS_LEFT_X)) > 0.0f )
       {
-         rotationIncrementer -= 1.0f;
-         rotAng = rotationIncrementer * (3.1415f / 180.0f);
+         if (rotationIncrementer > -15.0f)
+         {
+            rotationIncrementer -= 1.0f;
+            rotAng = rotationIncrementer * (3.1415f / 180.0f);
+         }
+
       }
 
+      // Tilt conditional
       if ((float)(GetGamepadAxisMovement(gamepad, GAMEPAD_AXIS_LEFT_X)) < 0.0f )
       {
-         rotationIncrementer += 1.0f;
+         if (rotationIncrementer < 15.0f)
+         {
+            rotationIncrementer += 1.0f;
+            rotAng = rotationIncrementer * (3.1415f / 180.0f);
+         }
 
-         rotAng = rotationIncrementer * (3.1415f / 180.0f);
       }
 
+      // friction / brakes
+      if ((float)(GetGamepadAxisMovement(gamepad, GAMEPAD_AXIS_LEFT_X)) == 0.0f)
+      {
+         if (rotationIncrementer < 0.0f)
+         {
+            rotationIncrementer += 0.1f;
+            rotAng = rotationIncrementer * (3.1415f / 180.0f);
+         }
+         if (rotationIncrementer > 0.0f)
+         {
+            rotationIncrementer += -0.1f;
+            rotAng = rotationIncrementer * (3.1415f / 180.0f);
+         }
+      }
+
+
+
+      // 1) apply rotation calculations 2) apply acceleration calculations 3) apply quaternion rotation applications
       cubeSpace.m12 += dx;                                                          // [x] axis acceleration
       cubeSpace.m13 += dy;                                                          // [y] axis acceleration
       cubeSpace.m14 += dz;                                                          // [z] axis acceleration
+
+      // apply strafing
       strafe_x_axis(); 
       strafe_y_axis();
 
+      // apply tilts
       cubeSpace = MatrixMultiply(tiltMatrix, cubeSpace);
+      
+      // take all above calculations and finally apply to matrix
       rlMultMatrixf(MatrixToFloat(cubeSpace));                                      // apply all above culculations to this current matrix
       
-      DrawModel(ship, ship_init_pos, 3.0f,  WHITE);                               // blender made model
+      // draw models and thruster effects
+      DrawModel(ship, ship_init_pos, 3.0f,  WHITE);                                 // blender made model
       DrawSphere({thrus1, thrus2, thrus3}, radis1, {static_cast<unsigned char>(cR), static_cast<unsigned char>(cG), static_cast<unsigned char>(cB), static_cast<unsigned char>(cAlpha)});
 
       // POP MATRIX // REVERT BACK TO WORLD SPACE MATRIX
@@ -176,16 +208,10 @@ class myPlayer
       } 
       
       //Brakes for strafing on x axis 
-      if 
-      (
-         (float)(GetGamepadAxisMovement(gamepad, GAMEPAD_AXIS_LEFT_X)) == 0.0f &&
-         IsKeyReleased(KEY_RIGHT) && 
-         IsKeyReleased(KEY_LEFT)                                      
-      ) 
+      if ((float)(GetGamepadAxisMovement(gamepad, GAMEPAD_AXIS_LEFT_X)) == 0.0f) 
       {
-         if (strafe > 0.05f) strafe -= 0.01f;
-         else if (strafe < -0.05f) strafe += 0.01f;
-         else strafe = 0.0f; // stop the vehicle if speed is within a small range around 0
+         if (strafe > 0.00f) strafe -= 0.002f;
+         if (strafe < 0.00f) strafe += 0.002f;   
       }
 
       // Calculate strafe offset based on ship's facing direction
