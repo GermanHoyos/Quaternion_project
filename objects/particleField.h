@@ -36,24 +36,22 @@ class particleField
    particleField()
    {
       // Randomize position
-      // /*[x]*/ random_device rd_1; mt19937 gen_1(rd_1()); uniform_real_distribution<float> dis_1(-40.0f, 40.0f); position.x = dis_1(gen_1);
-      // /*[y]*/ random_device rd_2; mt19937 gen_2(rd_2()); uniform_real_distribution<float> dis_2(-40.0f, 40.0f); position.y = dis_2(gen_2);
-      // /*[z]*/ random_device rd_3; mt19937 gen_3(rd_3()); uniform_real_distribution<float> dis_3(-40.0f, 40.0f); position.z = dis_3(gen_3);
-
-      // position.x = playerPosition.x;
-      // position.y = playerPosition.y;
-      // position.z = playerPosition.z + 2.0f;
+      /*[x]*/ random_device rd_1; mt19937 gen_1(rd_1()); uniform_real_distribution<float> dis_1(-100.0f, 100.0f); 
+      /*[y]*/ random_device rd_2; mt19937 gen_2(rd_2()); uniform_real_distribution<float> dis_2(-100.0f, 100.0f); 
+      /*[z]*/ random_device rd_3; mt19937 gen_3(rd_3()); uniform_real_distribution<float> dis_3(-100.0f, 100.0f); 
 
       // Randomize positions based on player position
+      position.x = dis_1(gen_1) + playerPosition.x;
+      position.y = dis_2(gen_2) + playerPosition.y;
+      position.z = dis_3(gen_3) + playerPosition.z;
       
-
-
    }
 
    void draw()
    {
       //Alpha will be based on distance from player:
-      DrawSphere({position.x,position.y,position.z}, 0.2f, WHITE);
+      //DrawSphere({position.x,position.y,position.z}, 0.90f, WHITE);
+      DrawCube({position.x,position.y,position.z}, 0.08f, 0.08f, 0.08f, WHITE);
    }
 
 };
@@ -61,11 +59,15 @@ class particleField
 // Attempt at autonomous particles
 void createFieldOne()
 {
-   // Load particles
-   particleField particle = particleField();
-   pField.push_back(particle);
 
-   for (int i = 0; i < 10; i++)
+   // If the list is not empty, empty it
+   // this can be commented out though to simply generate more and more
+   // particles (kinda like a trail)
+   if (!pField.empty()) {
+      pField.clear();
+   }
+
+   for (int i = 0; i < 200; i++)
    {
       particleField particle = particleField();
       pField.push_back(particle);
@@ -85,8 +87,4 @@ void createFieldTwo()
    }
 }
 
-// Attempt at random particles in space
-void createRandomField()
-{
 
-}

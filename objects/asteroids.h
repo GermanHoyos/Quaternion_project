@@ -51,7 +51,7 @@ class asteroids
     void draw()
     {
         DrawSphere((Vector3){myPositionSp.x, myPositionSp.y, myPositionSp.z}, sphereRad, myRGB);
-        DrawSphereWires((Vector3){myPositionWr.x, myPositionWr.y, myPositionWr.z}, wiresRad, 6, 6, myLime);
+        DrawSphereWires((Vector3){myPositionWr.x, myPositionWr.y, myPositionWr.z}, wiresRad, 6, 6, DARKGREEN);
         if (hitAnim == true)
         {
             hitAnimation();

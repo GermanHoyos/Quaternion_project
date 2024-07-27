@@ -105,16 +105,30 @@ int main()
       myAsteroids_3.draw();
 
       // Make trail particles when player moves
-      // if (positionSnapshot.x != playerPosition.x || positionSnapshot.y != playerPosition.y || positionSnapshot.z != playerPosition.z)
-      // {
-      //    createFieldTwo();
-      //    positionSnapshot = playerPosition;
-      // }
-
-      // Make space particles with opacity based on speed
+         // if (positionSnapshot.x != playerPosition.x || positionSnapshot.y != playerPosition.y || positionSnapshot.z != playerPosition.z)
+         // {
+         //    createFieldTwo();
+         //    positionSnapshot = playerPosition;
+         // }
+      //
+      
+      // Create initial particle field only once
       if (!gameStarted)
       {
-         
+         createFieldOne();
+         positionSnapshot = playerPosition;
+         gameStarted = true;
+      }
+
+      // Get the distance of the ship from a snapshot of its vector
+      // if the distance is > than X then delete the particle field
+      // and create a new one
+      Vector3 distanceFromSnapshot = Vector3Subtract(positionSnapshot, playerPosition);
+      float derivedDistance = Vector3Length(distanceFromSnapshot);
+      if (derivedDistance > 200)
+      {
+         createFieldOne();
+         positionSnapshot = playerPosition;
       }
 
       // Draw all lasers && particles
@@ -124,7 +138,6 @@ int main()
          myAsteroids.detectCollisions(laser);
          myAsteroids_2.detectCollisions(laser);
          myAsteroids_3.detectCollisions(laser);
-         
       }
 
       // If a particle exists, draw it
@@ -136,22 +149,34 @@ int main()
          }
       }
 
-      // Instantiate asteroids
+      // Asteroids (currently represented by GREEN 3d wire spheres)
       makeAsteroids();
 
-      /////////////////////////////BITS/////////////////////////////////////////(-)
+      // Create a create a cylinder
+      DrawCylinder((Vector3){0.0f,-20.0f,0.0f},4.0f,6.0f,6.0f,4,GREEN);
+      DrawCylinderWires((Vector3){0.0f,-21.0f,0.0f},4.0f,8.0f,8.0f,4,DARKGREEN);
+
+
+      
       rlPushMatrix();
       rlTranslatef(0.0f,-20.0f,0.0f);
-      DrawGrid(100, 1.0f); // shifted matrix
+      //DrawGrid(100, 1.0f); // shifted matrix
       rlPopMatrix();
       
       EndMode3D();
+      /////////////////////////////BITS/////////////////////////////////////////(-)
+            
       // Debugs
       // DrawFPS(10, 10);
       string player_xyz = "Ship position in realation to world space:\nX = " + to_string(playerPosition.x) + "\nY = " +  to_string(playerPosition.y) + "\nZ = " + to_string(playerPosition.z);
       DrawText (player_xyz.c_str(), 2, 2, 10, GREEN);
       string player_rot = "Ship quaternion derived vector:\nX = " + to_string(playerRotation.x) + "\nY = " + to_string(playerRotation.y) + "\nZ = " + to_string(playerRotation.z);
       DrawText (player_rot.c_str(), 2, 60, 10, GREEN);
+      string distString = "Distance from snapshot:\n[x][y][z] = " + to_string(derivedDistance); 
+      DrawText (distString.c_str(), 2, 118, 10, GREEN);
+
+
+
 
       EndDrawing();
    }
