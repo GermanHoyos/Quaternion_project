@@ -74,7 +74,6 @@ int main()
    Vector3 positionSnapshot = playerPosition;
    bool gameStarted = false;
 
-
    // Main game loop
    while (!WindowShouldClose())    // Detect window close button or ESC key
    {
@@ -93,11 +92,10 @@ int main()
       Vector3 cameraOffset = {0.0f, 5.0f, 20.0f};  // 20 units behind the ship
       Vector3 transformedCameraOffset = Vector3Transform(cameraOffset, player.cubeSpace);
       camera.position = transformedCameraOffset;
-      rlPopMatrix();
       camera.target = (Vector3){player.cubeSpace.m12, player.cubeSpace.m13, player.cubeSpace.m14};
+      rlPopMatrix();
 
       /////////////////////////////JUICY////////////////////////////////////////(+)
-
       // Instantiate actors
       player.draw();
       myAsteroids.draw();
@@ -155,8 +153,6 @@ int main()
       // Create a create a cylinder
       DrawCylinder((Vector3){0.0f,-20.0f,0.0f},4.0f,6.0f,6.0f,4,GREEN);
       DrawCylinderWires((Vector3){0.0f,-21.0f,0.0f},4.0f,8.0f,8.0f,4,DARKGREEN);
-
-
       
       rlPushMatrix();
       rlTranslatef(0.0f,-20.0f,0.0f);

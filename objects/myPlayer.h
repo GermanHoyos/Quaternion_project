@@ -29,6 +29,7 @@ class myPlayer
    Vector3 ship_init_pos = {0.0f, 0.0f, 0.0f};
    Vector3 shipWorldPos;
    Vector3 forwardDirection;
+   Vector3 rotationAxis = {0.0f, 0.0f, 1.0f}; // Z axis rot
    double shotClock = 0;
    double shotTimer = 0;
    bool   shot = false;
@@ -38,7 +39,8 @@ class myPlayer
    float thrus2 = 0.3f; float thrus3 = 3.4f;
    float radis1 = 0.3f; float radis2 = 0.0f;
    float negPos =-1.0f; float strfSp = 0.0f;
-   float strafe = 0.0f;
+   float strafe = 0.0f; float rotAng = 0.0f * (3.1415f / 180.0f);
+   float rotationIncrementer = 0.0f;
    int cR = 255; int cG     = 255; 
    int cB = 255; int cAlpha = 255; 
    Color      myRGB = {255,255,255,255};
@@ -47,6 +49,8 @@ class myPlayer
    Quaternion strafeDelta      = QuaternionIdentity();
    Quaternion collectRotations = QuaternionIdentity();
    Matrix     cubeSpace        = MatrixIdentity();
+   Matrix     animMatrx        = MatrixIdentity();
+   Matrix     tiltMatrix       = MatrixIdentity();
    bool       textureLoaded    = false;
    myPlayer(float x, float y, float z, float dx = 0.0f, float dy = 0.0f, float dz = 0.0f, float rx = 0.0f, float ry = 0.0f, float rz = 0.0f)
    : x(x), y(y), z(z), dx(dx), dy(dy), dz(dz), rx(rx), ry(ry), rz(rz) {}
@@ -67,18 +71,37 @@ class myPlayer
 
       // PUSH MATRIX // GEN LOCAL SPACE MATRIX
       loadTexture();
+      tiltMatrix = MatrixRotate(rotationAxis, rotAng);
+    
       rlPushMatrix();                                                               // save current state of matrix untill [pop]
       apply_rotation_axis();                                                        // apply quaternion math to [rx] [ry] [rz] based on start point of 0 0 0
       accelerate_foward();                                                          // apply acceleration maths to directional variable [dx] [dy] [dz]
       Quaternion resultRotation = QuaternionMultiply(rotation, collectRotations);   // store above quaternion in a variable
       cubeSpace = QuaternionToMatrix(resultRotation);                               // calculate how to apply quaternion to this current matrix
+
+      if ((float)(GetGamepadAxisMovement(gamepad, GAMEPAD_AXIS_LEFT_X)) > 0.0f )
+      {
+         rotationIncrementer -= 1.0f;
+         rotAng = rotationIncrementer * (3.1415f / 180.0f);
+      }
+
+      if ((float)(GetGamepadAxisMovement(gamepad, GAMEPAD_AXIS_LEFT_X)) < 0.0f )
+      {
+         rotationIncrementer += 1.0f;
+
+         rotAng = rotationIncrementer * (3.1415f / 180.0f);
+      }
+
       cubeSpace.m12 += dx;                                                          // [x] axis acceleration
       cubeSpace.m13 += dy;                                                          // [y] axis acceleration
       cubeSpace.m14 += dz;                                                          // [z] axis acceleration
       strafe_x_axis(); 
       strafe_y_axis();
+
+      cubeSpace = MatrixMultiply(tiltMatrix, cubeSpace);
       rlMultMatrixf(MatrixToFloat(cubeSpace));                                      // apply all above culculations to this current matrix
-      DrawModel(ship, ship_init_pos, 3.0f,  WHITE);                                 // blender made model
+      
+      DrawModel(ship, ship_init_pos, 3.0f,  WHITE);                               // blender made model
       DrawSphere({thrus1, thrus2, thrus3}, radis1, {static_cast<unsigned char>(cR), static_cast<unsigned char>(cG), static_cast<unsigned char>(cB), static_cast<unsigned char>(cAlpha)});
 
       // POP MATRIX // REVERT BACK TO WORLD SPACE MATRIX
@@ -168,7 +191,7 @@ class myPlayer
       // Calculate strafe offset based on ship's facing direction
       Vector3 forwardDirection = Vector3Transform({0.0f, 0.0f, -1.0f}, QuaternionToMatrix(collectRotations));
       forwardDirection = Vector3Normalize(forwardDirection);
-      Vector3 strafeOffset = {forwardDirection.z * strafe, 0.0f, -forwardDirection.x * strafe};
+      Vector3 strafeOffset = {forwardDirection.z * strafe, 0.0f, -forwardDirection.x * strafe}; // This is what calculates the strafe
 
       // Apply strafe offset to ship's position
       // By adjusting both the dx (x-coordinate) and dz (z-coordinate), we ensure that the ship moves correctly in the desired direction.
