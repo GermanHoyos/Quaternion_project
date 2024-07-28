@@ -80,3 +80,16 @@
 
 // };
 
+
+
+
+
+
+
+    // Make trail particles when player moves
+        // if (positionSnapshot.x != playerPosition.x || positionSnapshot.y != playerPosition.y || positionSnapshot.z != playerPosition.z)
+        // {
+        //    createFieldTwo();
+        //    positionSnapshot = playerPosition;
+        // }
+    //

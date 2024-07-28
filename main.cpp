@@ -58,11 +58,23 @@ int main()
    camera.fovy = 45.0f;                                                   // Camera field-of-view Y
    camera.projection = CAMERA_PERSPECTIVE;                                // Camera mode type
 
-   //  Instantiate actors
-   myPlayer player = myPlayer(0.0f,0.0f,0.0f); // Create user controlled actor
+   // Instantiate actors
+   myPlayer  player = myPlayer(0.0f,0.0f,0.0f); // Create user controlled actor
    asteroids myAsteroids = asteroids({-10.0f,0.0f,-20.0f});
    asteroids myAsteroids_2 = asteroids({0.0f,0.0f,-20.0f});
    asteroids myAsteroids_3 = asteroids({10.0f,0.0f,-20.0f});
+
+   // Instantiate walls
+   float spacing = 5.0f; // Define the spacing between each panel
+   for (int i = 0; i < 10; i++)
+   {
+      float offsetX = i * spacing;
+      panel newPanel = panel({20.0f + offsetX, 0.0f, -20.0f});
+      // Store or use newPanel as needed
+      panelList.push_back(newPanel);
+   };
+
+
 
    // Oscillator inits
    float hover = 0.0f;
@@ -101,15 +113,14 @@ int main()
       myAsteroids.draw();
       myAsteroids_2.draw();
       myAsteroids_3.draw();
-      newPlane();
 
-      // Make trail particles when player moves
-         // if (positionSnapshot.x != playerPosition.x || positionSnapshot.y != playerPosition.y || positionSnapshot.z != playerPosition.z)
-         // {
-         //    createFieldTwo();
-         //    positionSnapshot = playerPosition;
-         // }
-      //
+      // Instantiate planes with wave functions
+      for (auto& panel : panelList)
+      {
+         panel.draw();
+      }
+
+
       
       // Create initial particle field only once
       if (!gameStarted)
