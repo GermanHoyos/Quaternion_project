@@ -79,25 +79,23 @@ class myPlayer
       cubeSpace = QuaternionToMatrix(resultRotation);                               // calculate how to apply quaternion to this current matrix
 
       // Tilt conditional
-      if ((float)(GetGamepadAxisMovement(gamepad, GAMEPAD_AXIS_LEFT_X)) > 0.0f )
+      if ((float)(GetGamepadAxisMovement(gamepad, GAMEPAD_AXIS_LEFT_X)) > 0.2f )
       {
          if (rotationIncrementer > -15.0f)
          {
             rotationIncrementer -= 1.0f;
             rotAng = rotationIncrementer * (3.1415f / 180.0f);
          }
-
       }
 
       // Tilt conditional
-      if ((float)(GetGamepadAxisMovement(gamepad, GAMEPAD_AXIS_LEFT_X)) < 0.0f )
+      if ((float)(GetGamepadAxisMovement(gamepad, GAMEPAD_AXIS_LEFT_X)) < -0.2f )
       {
          if (rotationIncrementer < 15.0f)
          {
             rotationIncrementer += 1.0f;
             rotAng = rotationIncrementer * (3.1415f / 180.0f);
          }
-
       }
 
       // friction / brakes
@@ -210,8 +208,8 @@ class myPlayer
       //Brakes for strafing on x axis 
       if ((float)(GetGamepadAxisMovement(gamepad, GAMEPAD_AXIS_LEFT_X)) == 0.0f) 
       {
-         if (strafe > 0.00f) strafe -= 0.002f;
-         if (strafe < 0.00f) strafe += 0.002f;   
+         if (strafe > 0.00f) strafe -= 0.01f;
+         if (strafe < 0.00f) strafe += 0.01f;   
       }
 
       // Calculate strafe offset based on ship's facing direction
@@ -240,13 +238,19 @@ class myPlayer
       // foward
       if ((float)(GetGamepadAxisMovement(gamepad, GAMEPAD_AXIS_LEFT_Y)) < 0.0f)
       {
-         speed3 += 0.01f;
+         if (speed3 < 1.0f)
+         {
+            speed3 += 0.01f;
+         }
       }
 
       // reverse
       if ((float)(GetGamepadAxisMovement(gamepad, GAMEPAD_AXIS_LEFT_Y)) > 0.0f)
       {
-         speed3 -= 0.01f;
+         if (speed3 > -1.0f )
+         {
+            speed3 -= 0.01f;
+         }
       }
 
       // friction / brakes

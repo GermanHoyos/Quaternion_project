@@ -50,7 +50,7 @@ int main()
    // Raylibs camera and 3d world inits
    const int screenWidth = 1200; const int screenHeight = 600;
    InitWindow(screenWidth, screenHeight, ""); SetTargetFPS(60);
-   Camera3D camera = { 0 };
+   //Camera3D camera = { 0 }; // Declared in master header
    Vector3  cam_track = {0.0f, 0.0f, 0.0};
    camera.position = (Vector3){ 0.0f, 12.0f, 20.0f };                     // Camera position
    camera.target = (Vector3){cam_track.x, cam_track.y, cam_track.z};      // Camera looking at point
@@ -101,6 +101,7 @@ int main()
       myAsteroids.draw();
       myAsteroids_2.draw();
       myAsteroids_3.draw();
+      newPlane();
 
       // Make trail particles when player moves
          // if (positionSnapshot.x != playerPosition.x || positionSnapshot.y != playerPosition.y || positionSnapshot.z != playerPosition.z)
@@ -123,7 +124,7 @@ int main()
       // and create a new one
       Vector3 distanceFromSnapshot = Vector3Subtract(positionSnapshot, playerPosition);
       float derivedDistance = Vector3Length(distanceFromSnapshot);
-      if (derivedDistance > 200)
+      if (derivedDistance > 1000)
       {
          createFieldOne();
          positionSnapshot = playerPosition;

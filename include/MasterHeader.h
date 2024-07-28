@@ -19,6 +19,7 @@
 // Globals
    Vector3 playerPosition;
    Vector3 playerRotation;
+   Camera camera = { 0 };
    // CONTROLLER ENTRY POINT
    int gamepad = 0;
 
@@ -33,6 +34,8 @@
    #include "../objects/asteroids.h"
    #include "../objects/objectManager.h"
    #include "../objects/particleField.h"
+   #include "../objects/boundery.h"
+
 
 
 

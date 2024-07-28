@@ -19,6 +19,19 @@
 
 #include "../include/MasterHeader.h"
 
+
+float lerp(float a, float b, float t)
+{
+   return a + t * (b - a);
+}
+
+float normalizedLerp(float a, float b, float t, float minT, float maxT)
+{
+   float normalizedT = (t -minT) / (maxT - minT);
+   return lerp(a, b, normalizedT);
+}
+
+
 class particleField;
 
 vector<particleField> pField;
@@ -32,13 +45,16 @@ class particleField
    int     pB = 255; // blue
    int     pA = 255; // alpha
    Color      myRGB; // {255,255,255,255}
+   Texture2D texture_p = LoadTexture("C:\\Users\\Hoyos\\OneDrive\\Desktop\\C++ Runner\\raylib_quaternion_example\\home\\src\\assets\\particle_sprite.png");
+   int alpha = 90;
+   Color my_tint = {255, 255, 255, alpha};
 
    particleField()
    {
       // Randomize position
-      /*[x]*/ random_device rd_1; mt19937 gen_1(rd_1()); uniform_real_distribution<float> dis_1(-100.0f, 100.0f); 
-      /*[y]*/ random_device rd_2; mt19937 gen_2(rd_2()); uniform_real_distribution<float> dis_2(-100.0f, 100.0f); 
-      /*[z]*/ random_device rd_3; mt19937 gen_3(rd_3()); uniform_real_distribution<float> dis_3(-100.0f, 100.0f); 
+      /*[x]*/ random_device rd_1; mt19937 gen_1(rd_1()); uniform_real_distribution<float> dis_1(-1000.0f, 1000.0f); 
+      /*[y]*/ random_device rd_2; mt19937 gen_2(rd_2()); uniform_real_distribution<float> dis_2(-1000.0f, 1000.0f); 
+      /*[z]*/ random_device rd_3; mt19937 gen_3(rd_3()); uniform_real_distribution<float> dis_3(-1000.0f, 1000.0f); 
 
       // Randomize positions based on player position
       position.x = dis_1(gen_1) + playerPosition.x;
@@ -49,9 +65,26 @@ class particleField
 
    void draw()
    {
-      //Alpha will be based on distance from player:
-      //DrawSphere({position.x,position.y,position.z}, 0.90f, WHITE);
-      DrawCube({position.x,position.y,position.z}, 0.08f, 0.08f, 0.08f, WHITE);
+      // Get distance from ship
+      Vector3 distanceFromShip = Vector3Subtract({position.x, position.y, position.z}, {playerPosition.x, playerPosition.y, playerPosition.z});
+      float distance_p = Vector3Length(distanceFromShip);
+
+      // Calculate the alpha value based on the distance
+      float minDistance = 1000.0f; // Minimum distance for alpha calculation
+      float maxDistance = 0.0f; // Maximum distance for alpha calculation
+      float minAlpha = 0.0f; // Minimum alpha value (fully transparent)
+      float maxAlpha = 155.0f; // Maximum alpha value (fully opaque)
+      float alpha = normalizedLerp(minAlpha, maxAlpha, distance_p, minDistance, maxDistance);
+
+      if (distance_p < 350.0f)
+      {
+         alpha = 0.0f;
+      }      
+
+      // Update the tint color with the new alpha value
+      my_tint.a = static_cast<unsigned char>(alpha);
+
+      DrawBillboard(camera, texture_p, {position.x,position.y,position.z}, 1.0f, my_tint);
    }
 
 };
@@ -67,7 +100,7 @@ void createFieldOne()
       pField.clear();
    }
 
-   for (int i = 0; i < 200; i++)
+   for (int i = 0; i < 1000; i++)
    {
       particleField particle = particleField();
       pField.push_back(particle);
