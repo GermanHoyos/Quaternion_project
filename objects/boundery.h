@@ -1,26 +1,21 @@
 #include "../include/MasterHeader.h"
 
-// functional programming attempt
-// Matrix wallPlane_a = MatrixIdentity();
-// Color yoWHITE = {255,255,255,255};
-// Vector3 wallPlane_aV;
-// float wave_y = 0.0f;
-
 class panel;
 
-vector<panel> panelList; 
+vector<panel> panelList;
 
 class panel
 {
     public:
-    Matrix  myPlane = MatrixIdentity(); // matrix of draw context
-    Color   myColor = {255,255,255,255};
     Vector3 myPosition; // passed position from invoker
     Vector3 planesPos; // actual plane position within matrix
+    Matrix  myPlane = MatrixIdentity(); // matrix of draw context
+    Color   myColor = {255,255,255,255};
     bool    wasHit = false;
     bool    animActive = false;
-    float   amplitude = 2.0f;
-    float wave_y = 0.0f;
+    float   amplitude = 3.5f;
+    float   tuneAmplitude = 3.5f;
+    float   waveYAxis = 0.0f;
 
     panel(Vector3 passedPosition) 
     : myPosition(passedPosition)
@@ -37,7 +32,7 @@ class panel
     {
         rlPushMatrix();
 
-        DrawSphereWires(myPosition, 2.0f, 8, 8, GREEN);
+        //DrawSphereWires(myPosition, 2.0f, 8, 8, GREEN); // radial hit box
 
         rlRotatef(90, 1.0f, 0.0f, 0.0f);
 
@@ -56,7 +51,7 @@ class panel
     {
         for (auto& laser : lasersList)
         {
-            float distance = std::sqrt
+            float distanceOfLaser = std::sqrt
             (
                 (laser.currentPos.x - myPosition.x) * (laser.currentPos.x - myPosition.x) +
                 (laser.currentPos.y - myPosition.y) * (laser.currentPos.y - myPosition.y) +
@@ -65,10 +60,54 @@ class panel
             
             if (laser.currentPos.z < -19.0f && laser.currentPos.z > -21.0f) // this is a slice of  3d world space
             {
-                if (distance < 2.0f)
+                if (distanceOfLaser < 2.0f)
                 {
+
+                    if (!wasHit)
+                    {
+                        wasHit = true;
+                    }
+
+                    if (wasHit) // reset if struck again, basicly the latest wave wins and start anim over again
+                    {
+                        waveYAxis = 0.0f;
+                        amplitude = tuneAmplitude;
+                        myColor.g = 255;
+                        myColor.b = 255;
+                    }
+
+                    //wasHit = true;
                     myColor = {255,0,0,255}; // change red
+                    wave newWave = wave(myPosition);
+                    waveList.push_back(newWave);
+                }
+            }
+        }
+
+        for (auto& wave : waveList)
+        {
+            // Calculate the distance between the current position and the center of the wave sphere
+            float distanceOfWave = std::sqrt
+            (
+                (myPosition.x - wave.myPosition.x) * (myPosition.x - wave.myPosition.x) +
+                (myPosition.y - wave.myPosition.y) * (myPosition.y - wave.myPosition.y) +
+                (myPosition.z - wave.myPosition.z) * (myPosition.z - wave.myPosition.z)
+            );
+
+            // Check if the current position is within the wave's radius
+            if (distanceOfWave < wave.myRadius && distanceOfWave > wave.innerSphereRadius)
+            {
+                if (!wasHit)
+                {
                     wasHit = true;
+                }
+
+                if (wasHit) // reset if struck again, basically the latest wave wins and start anim over again
+                {
+                    waveYAxis = 0.0f;
+                    amplitude = tuneAmplitude;
+                    myColor.g = 255;
+                    myColor.b = 255;
                 }
             }
         }
@@ -78,79 +117,30 @@ class panel
     {
         if (wasHit)
         {
-            // wave_y was declared in the class as (float wave_y = 0.0f;)
-            wave_y -= 0.10f;
-            planesPos.y = amplitude * sinf(wave_y);
+            // tune color
+            // myColor.r += 0; // keep the same (red)
+
+            /*if (myColor.g <= 255)*/ myColor.g += 1;
+            /*if (myColor.b <= 255)*/ myColor.b += 1;
+        
+
+
+            // waveYAxis was declared in the class as (float waveYAxis = 0.0f;)
+            waveYAxis -= 0.10f;
+            planesPos.y = amplitude * sinf(waveYAxis);
 
             // tune the animation down and reset all inputs
             amplitude -= 0.01f;
             if (amplitude <= 0.0f)
             {
-                wasHit = false;
-                wave_y = 0.0f;
-                myColor = {255,225,225,255};
-                amplitude = 2.0f;
+                // myColor.r += 0; // keep the same (red)
+                myColor.g = 255;
+                myColor.b = 255;
+                wasHit    = false;
+                waveYAxis = 0.0f;
+                amplitude = tuneAmplitude;
             }
         }
     }
 
 };
-
-//planesPos.y -= 1.0;
-
-
-// // basic plane
-// void newPlane()
-// {
-//     rlPushMatrix();
-
-//     // move to a new x y z
-//     wallPlane_a.m12 = 20.0f;
-//     wallPlane_a.m13 = 0.0f;
-//     wallPlane_a.m14 = -20.0f;
-//     wallPlane_aV.x  = wallPlane_a.m12;
-//     wallPlane_aV.y  = wallPlane_a.m13;
-//     wallPlane_aV.z  = wallPlane_a.m14;
-//     DrawSphereWires(wallPlane_aV, 2.0f, 8, 8, GREEN);
-
-//     // make flat on the y plane rotate to y plane
-//     rlRotatef(90, 1.0f, 0.0f, 0.0f);
-
-//     // apply wallPlane to current matrix
-//     rlMultMatrixf(MatrixToFloat(wallPlane_a));
-
-//     // draw plane within plane
-//     //DrawGrid(10, 1.0f);
-//     DrawPlane({0.0f, 0.0f, 0.0f}, {4.0f,4.0f}, yoWHITE);
-
-//     // detect laser hit
-//     for (auto& laser : lasersList)
-//     {
-
-//         float distance = std::sqrt
-//         (
-//             (laser.currentPos.x - wallPlane_aV.x) * (laser.currentPos.x - wallPlane_aV.x) + 
-//             (laser.currentPos.y - wallPlane_aV.y) * (laser.currentPos.y - wallPlane_aV.y) + 
-//             (laser.currentPos.z - wallPlane_aV.z) * (laser.currentPos.z - wallPlane_aV.z)
-//         );
-
-//         if (laser.currentPos.z < -20.0f && distance < 2.0f)
-//         {
-//             yoWHITE = {255,0,0,255};
-//         }
-//     }
-
-//     rlPopMatrix();
-// }
-
-
-
-
-
-
-
-
-
-// A point in space like any other. Plus x and plus y
-// void DrawPlane(Vector3 centerPos, Vector2 size, Color color);                                      // Draw a plane XZ
-//vector<lasers> lasersList;

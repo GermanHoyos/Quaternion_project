@@ -65,15 +65,52 @@ int main()
    asteroids myAsteroids_3 = asteroids({10.0f,0.0f,-20.0f});
 
    // Instantiate walls
-   float spacing = 5.0f; // Define the spacing between each panel
-   for (int i = 0; i < 10; i++)
-   {
-      float offsetX = i * spacing;
-      panel newPanel = panel({20.0f + offsetX, 0.0f, -20.0f});
-      // Store or use newPanel as needed
-      panelList.push_back(newPanel);
-   };
+   // float spacing = 5.0f; // Define the spacing between each panel
+   // float gridX   = 20.0f;
+   // float gridY   = 0.0f;
+   // float gridZ   = -20.0f;
+   // for (int i = 0; i < 100; i++)
+   // {
+   //    if (i <= 9)
+   //    {
+   //       gridY = 0.0f;
+   //       float offsetX = i * spacing;
+   //       panel newPanel = panel({gridX + offsetX, gridY, -20.0f});
+   //       // Store or use newPanel as needed
+   //       panelList.push_back(newPanel);
+   //    }
+   //    if (i > 9 && i <=19)
+   //    {
+   //       gridY = -8.0f;
+   //       gridX = 0.0f;
+   //       float offsetX = i * spacing;
+   //       panel newPanel = panel({gridX + offsetX, gridY, -20.0f});
+   //       // Store or use newPanel as needed
+   //       panelList.push_back(newPanel);
+   //    }
+   // };
 
+   const int rows = 100;
+   const int cols = 100;
+   const float spacing = 4.5f;
+   float startX = 20.0f;
+   float startY = -20.0f;
+   float startZ = -20.0f;
+   // Vector to hold the panels
+   std::vector<panel> panelList;
+
+   for (int row = 0; row < rows; ++row)
+   {
+      for (int col = 0; col < cols; ++col)
+      {
+         float x = col * spacing;
+         float y = row * spacing;
+
+         // Create a new panel at (x, y, 0.0f) and add to the list
+         panel newPanel = panel({x + startX, y + startY, 0.0f + startZ});
+         panelList.push_back(newPanel);
+      }
+   }
 
 
    // Oscillator inits
@@ -119,8 +156,6 @@ int main()
       {
          panel.draw();
       }
-
-
       
       // Create initial particle field only once
       if (!gameStarted)
@@ -159,12 +194,18 @@ int main()
          }
       }
 
+      // If wave exists draw it
+      for (auto& wave : waveList)
+      {
+         wave.draw();
+      }
+
       // Asteroids (currently represented by GREEN 3d wire spheres)
       makeAsteroids();
 
       // Create a create a cylinder
-      DrawCylinder((Vector3){0.0f,-20.0f,0.0f},4.0f,6.0f,6.0f,4,GREEN);
-      DrawCylinderWires((Vector3){0.0f,-21.0f,0.0f},4.0f,8.0f,8.0f,4,DARKGREEN);
+      // DrawCylinder((Vector3){0.0f,-20.0f,0.0f},4.0f,6.0f,6.0f,4,GREEN);
+      // DrawCylinderWires((Vector3){0.0f,-21.0f,0.0f},4.0f,8.0f,8.0f,4,DARKGREEN);
       
       rlPushMatrix();
       rlTranslatef(0.0f,-20.0f,0.0f);

@@ -34,7 +34,10 @@
    #include "../objects/asteroids.h"
    #include "../objects/objectManager.h"
    #include "../objects/particleField.h"
+   #include "../objects/wave.h"
    #include "../objects/boundery.h"
+
+
 
 
 
