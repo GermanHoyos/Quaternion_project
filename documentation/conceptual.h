@@ -1,3 +1,21 @@
+/*
+7/28/2024 devlog
+
+[*] modified strafing to have brakes
+[*] modified strafing to have visual tilt in direction of strafe
+[*] create an auto lever once joy stick is released
+[*] modified particle field to be larger and to check for distance to ship
+    if to close to ship, the particle disapears
+    uses lerp to get brighter as ship aproaches
+[*] particle field uses an asperite made PNG
+[*] create a matrix that is tilted by 90%
+[*] draws rect objects to titled matrix via loop
+[*] detects collision between laser and rect objects
+[*] collision uses both radius and plan e intersect
+[*] wave object instantiates 2 spheres
+[*] both the inner and the outer sphere are used in hit animation
+[*] it animation uses sin to change color of rect obj 
+
 // THE  SOURCE   - WHO WAS, WHO IS, WHO IS COMING: YHWH
 //
 // GERMAN HOYOS - IMAGINATION AND WILLPOWER ARE THE ONLY TWO CODING SKILLS THAT MATTER. TWITTER||X: //https://x.com/EvangelizerH
