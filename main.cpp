@@ -102,7 +102,7 @@ int main()
    Texture2D texture_z = LoadTexture("C:\\Users\\Hoyos\\OneDrive\\Desktop\\C++ Runner\\raylib_quaternion_example\\home\\src\\assets\\z_axis.png");
 
    // Reflective cube inits
-   reflectiveCube refCube = reflectiveCube({-15.0f,0.0f,-70.0f});
+   reflectiveCube refCube = reflectiveCube({-17.0f,0.0f,-70.0f});
 
    // Main game loop
    while (!WindowShouldClose())    // Detect window close button or ESC key
