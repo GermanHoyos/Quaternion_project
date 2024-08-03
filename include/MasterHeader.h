@@ -36,6 +36,8 @@
    #include "../objects/particleField.h"
    #include "../objects/wave.h"
    #include "../objects/boundery.h"
+   #include "../objects/reflectiveCube.h"
+
 
 
 

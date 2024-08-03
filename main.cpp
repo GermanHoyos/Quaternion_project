@@ -64,34 +64,8 @@ int main()
    asteroids myAsteroids_2 = asteroids({0.0f,0.0f,-20.0f});
    asteroids myAsteroids_3 = asteroids({10.0f,0.0f,-20.0f});
 
-   // Instantiate walls
-   // float spacing = 5.0f; // Define the spacing between each panel
-   // float gridX   = 20.0f;
-   // float gridY   = 0.0f;
-   // float gridZ   = -20.0f;
-   // for (int i = 0; i < 100; i++)
-   // {
-   //    if (i <= 9)
-   //    {
-   //       gridY = 0.0f;
-   //       float offsetX = i * spacing;
-   //       panel newPanel = panel({gridX + offsetX, gridY, -20.0f});
-   //       // Store or use newPanel as needed
-   //       panelList.push_back(newPanel);
-   //    }
-   //    if (i > 9 && i <=19)
-   //    {
-   //       gridY = -8.0f;
-   //       gridX = 0.0f;
-   //       float offsetX = i * spacing;
-   //       panel newPanel = panel({gridX + offsetX, gridY, -20.0f});
-   //       // Store or use newPanel as needed
-   //       panelList.push_back(newPanel);
-   //    }
-   // };
-
-   const int rows = 100;
-   const int cols = 100;
+   const int rows = 50;
+   const int cols = 50;
    const float spacing = 4.5f;
    float startX = 20.0f;
    float startY = -20.0f;
@@ -112,7 +86,6 @@ int main()
       }
    }
 
-
    // Oscillator inits
    float hover = 0.0f;
    float time = 0.0f;
@@ -122,6 +95,14 @@ int main()
    // Special effects inits
    Vector3 positionSnapshot = playerPosition;
    bool gameStarted = false;
+
+   // Axis visualization inits
+   Texture2D texture_x = LoadTexture("C:\\Users\\Hoyos\\OneDrive\\Desktop\\C++ Runner\\raylib_quaternion_example\\home\\src\\assets\\x_axis.png");
+   Texture2D texture_y = LoadTexture("C:\\Users\\Hoyos\\OneDrive\\Desktop\\C++ Runner\\raylib_quaternion_example\\home\\src\\assets\\y_axis.png");
+   Texture2D texture_z = LoadTexture("C:\\Users\\Hoyos\\OneDrive\\Desktop\\C++ Runner\\raylib_quaternion_example\\home\\src\\assets\\z_axis.png");
+
+   // Reflective cube inits
+   reflectiveCube refCube = reflectiveCube({-15.0f,0.0f,-70.0f});
 
    // Main game loop
    while (!WindowShouldClose())    // Detect window close button or ESC key
@@ -203,10 +184,19 @@ int main()
       // Asteroids (currently represented by GREEN 3d wire spheres)
       makeAsteroids();
 
-      // Create a create a cylinder
-      // DrawCylinder((Vector3){0.0f,-20.0f,0.0f},4.0f,6.0f,6.0f,4,GREEN);
-      // DrawCylinderWires((Vector3){0.0f,-21.0f,0.0f},4.0f,8.0f,8.0f,4,DARKGREEN);
-      
+      // Axis visualizations
+      DrawLine3D({-30.0f,0.0f,-20.0f},{-20.0f,0.0f,-20.0f},RED);
+      DrawBillboard(camera, texture_x, {-18.0f,0.0f,-20.0f}, 2, {255, 255, 255, 255});
+      DrawLine3D({-30.0f,0.0f,-20.0f},{-30.0f,10.0f,-20.0f},GREEN);
+      DrawBillboard(camera, texture_y, {-30.0f,12.0f,-20.0f}, 2, {255, 255, 255, 255});
+      DrawLine3D({-30.0f,0.0f,-20.0f},{-30.0f,0.0f,-30.0f},BLUE);
+      DrawBillboard(camera, texture_z, {-30.0f,0.0f,-32.0f}, 2, {255, 255, 255, 255});
+
+      // Draw reflective cube
+      refCube.draw();
+
+
+
       rlPushMatrix();
       rlTranslatef(0.0f,-20.0f,0.0f);
       //DrawGrid(100, 1.0f); // shifted matrix
@@ -221,7 +211,7 @@ int main()
       DrawText (player_xyz.c_str(), 2, 2, 10, GREEN);
       string player_rot = "Ship quaternion derived vector:\nX = " + to_string(playerRotation.x) + "\nY = " + to_string(playerRotation.y) + "\nZ = " + to_string(playerRotation.z);
       DrawText (player_rot.c_str(), 2, 60, 10, GREEN);
-      string distString = "Distance from snapshot:\n[x][y][z] = " + to_string(derivedDistance); 
+      string distString = "Distance from snapshot:\nVector3 dist = " + to_string(derivedDistance); 
       DrawText (distString.c_str(), 2, 118, 10, GREEN);
 
 

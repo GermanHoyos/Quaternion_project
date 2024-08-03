@@ -28,7 +28,7 @@ class wave
     {
         myRadius += 0.8f;
         innerSphereRadius += 0.8f;
-        DrawSphereWires(myPosition, myRadius, 8, 8, GREEN); // radial hit box
+        //DrawSphereWires(myPosition, myRadius, 8, 8, GREEN); // radial hit box
         //DrawSphere(myPosition, innerSphereRadius, RED); // radial hit box
         deathCheck();
         removeWaveIfDead();
