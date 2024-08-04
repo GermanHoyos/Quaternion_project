@@ -17,11 +17,26 @@
    using namespace std;
 
 // Globals
+   Vector3 cubeNormals[12] = {
+      { 00.0f, 00.0f, 00.0f},  //0  Top       face normal start
+      { 00.0f, 00.0f, 00.0f},  //1  Top       face normal end
+      { 00.0f, 00.0f, 00.0f},  //2  Bottom    face normal start
+      { 00.0f, 00.0f, 00.0f},  //3  Bottom    face normal end
+      { 00.0f, 00.0f, 00.0f},  //4  Left      face normal start
+      { 00.0f, 00.0f, 00.0f},  //5  Left      face normal end
+      { 00.0f, 00.0f, 00.0f},  //6  Right     face normal start
+      { 00.0f, 00.0f, 00.0f},  //7  Right     face normal end
+      { 00.0f, 00.0f, 00.0f},  //8  Forward   face normal start
+      { 00.0f, 00.0f, 00.0f},  //9  Forward   face normal end
+      { 00.0f, 00.0f, 00.0f},  //10 Back      face normal start
+      { 00.0f, 00.0f, 00.0f}   //11 Back      face normal end
+   };
+   class lasers;
+   vector<lasers> lasersList;
    Vector3 playerPosition;
    Vector3 playerRotation;
    Camera camera = { 0 };
-   // CONTROLLER ENTRY POINT
-   int gamepad = 0;
+   int gamepad = 0; // Controller entry point
 
 // Customs
    // template <typename T>
@@ -29,6 +44,7 @@
    #include "rlgl.h"
    #include "reasings.h"
    #include "timeManager.h"
+   #include "../objects/reflectiveCube.h"
    #include "../objects/lasers.h"
    #include "../objects/myPlayer.h"
    #include "../objects/asteroids.h"
@@ -36,7 +52,7 @@
    #include "../objects/particleField.h"
    #include "../objects/wave.h"
    #include "../objects/boundery.h"
-   #include "../objects/reflectiveCube.h"
+
 
 
 

@@ -113,8 +113,6 @@ class myPlayer
          }
       }
 
-
-
       // 1) apply rotation calculations 2) apply acceleration calculations 3) apply quaternion rotation applications
       cubeSpace.m12 += dx;                                                          // [x] axis acceleration
       cubeSpace.m13 += dy;                                                          // [y] axis acceleration
@@ -145,7 +143,6 @@ class myPlayer
       thrus1 = 0.0f; thrus2 = 0.3f;
       makeGlobal();
    }
-   
 
    void rotate_x_axis()
    {
