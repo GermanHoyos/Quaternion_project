@@ -24,7 +24,7 @@ public:
    Color      changed     = GREEN;
    int        myLaserId;
    float      laserLength = 20.0f;
-
+   bool       collidedWithObject = false;
 
    // Arugments passed at invokation
    lasers(Vector3 currentPos, Vector3 forwardDirection, float speed)
@@ -57,13 +57,12 @@ public:
       }
    }
 
-   void changeDirection()
+   void changeDirection(Vector3 startOfLine, Vector3 endOfLine)
    {
-      // Iether check for collision or receive a signal that a collision has occured
-      if (IsKeyDown(KEY_K))
+      if (!collidedWithObject)
       {
          // Calculate the new forward direction vector
-         Vector3 newForwardDirection = Vector3Subtract(cubeNormals[0], cubeNormals[1]);
+         Vector3 newForwardDirection = Vector3Subtract(endOfLine, startOfLine);
          
          // Normalize the new forward direction vector
          newForwardDirection = Vector3Normalize(newForwardDirection);
@@ -73,7 +72,12 @@ public:
          
          // Update the end position based on the new forward direction
          endPos = Vector3Add(currentPos, Vector3Scale(newForwardDirection, laserLength));
+
+         //Stop listening for collisions
+         collidedWithObject = true;
       }
+
+
    }
 
    void draw() 
@@ -84,10 +88,10 @@ public:
       endPos = Vector3Add(endPos, velocity);         // Get the end point of the 3d line
 
       // Check for direction change
-      changeDirection(); 
+      //changeDirection(); 
 
       // Draw a 3D line
-      DrawLine3D(currentPos, endPos, WHITE);
+      //DrawLine3D(currentPos, endPos, WHITE);
 
       // Draw a 3D sphere at the start point
       DrawSphereWires(currentPos, 0.4f, 4, 4, myColor);
