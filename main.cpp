@@ -64,8 +64,8 @@ int main()
    asteroids myAsteroids_2 = asteroids({0.0f,0.0f,-20.0f});
    asteroids myAsteroids_3 = asteroids({10.0f,0.0f,-20.0f});
 
-   const int rows = 50;
-   const int cols = 50;
+   const int rows = 10;
+   const int cols = 10;
    const float spacing = 4.5f;
    float startX = 20.0f;
    float startY = -20.0f;

@@ -40,9 +40,9 @@ class reflectiveCube
 
     void calcRotations()
     {
-        rotateX += 1.0f;  rlRotatef(rotateX, 1.0f, 0.0f, 0.0f);
-        rotateY += 1.0f;  rlRotatef(rotateY, 0.0f, 1.0f, 0.0f);
-        rotateZ += 1.0f;  rlRotatef(rotateZ, 0.0f, 0.0f, 1.0f);
+        rotateX += 0.01f;  rlRotatef(rotateX, 1.0f, 0.0f, 0.0f);
+        rotateY += 0.01f;  rlRotatef(rotateY, 0.0f, 1.0f, 0.0f);
+        rotateZ += 0.01f;  rlRotatef(rotateZ, 0.0f, 0.0f, 1.0f);
         Matrix rotationMatrix = MatrixRotateXYZ({DEG2RAD * rotateX, DEG2RAD * rotateY, DEG2RAD * rotateZ});
         getTopFaceCenter = Vector3Transform(topFaceCenter, rotationMatrix); getTopFaceNormal = Vector3Transform(topFaceNormal, rotationMatrix);
         getBotFaceCenter = Vector3Transform(botFaceCenter, rotationMatrix); getBotFaceNormal = Vector3Transform(botFaceNormal, rotationMatrix);
@@ -67,7 +67,7 @@ class reflectiveCube
         fwdFaceCenterInWorldSpace = Vector3Transform(getFwdFaceCenter, cubeMatrix); fwdFaceNormalInWorldSpace = Vector3Transform(getFwdFaceNormal, cubeMatrix);
         bckFaceCenterInWorldSpace = Vector3Transform(getBckFaceCenter, cubeMatrix); bckFaceNormalInWorldSpace = Vector3Transform(getBckFaceNormal, cubeMatrix);
         rlPopMatrix();
-        // DrawSphere(topFaceCenterInWorldSpace,1.0f,PURPLE);    DrawSphere(topFaceNormalInWorldSpace,1.0f,PURPLE);
+        // DrawSphere(topFaceCenterInWorldSpace,1.0f,PURPLE);   DrawSphere(topFaceNormalInWorldSpace,1.0f,PURPLE);
         // DrawSphere(botFaceCenterInWorldSpace,1.0f,GREEN);    DrawSphere(botFaceNormalInWorldSpace,1.0f,GREEN);
         // DrawSphere(lefFaceCenterInWorldSpace,1.0f,RED);      DrawSphere(lefFaceNormalInWorldSpace,1.0f,RED);
         // DrawSphere(ritFaceCenterInWorldSpace,1.0f,RED);      DrawSphere(ritFaceNormalInWorldSpace,1.0f,RED);
@@ -85,7 +85,7 @@ class reflectiveCube
         cubeNormals[9].x  = fwdFaceNormalInWorldSpace.x; cubeNormals[9].y  = fwdFaceNormalInWorldSpace.y; cubeNormals[9].z  = fwdFaceNormalInWorldSpace.z; // Foward    face normal end
         cubeNormals[10].x = bckFaceCenterInWorldSpace.x; cubeNormals[10].y = bckFaceCenterInWorldSpace.y; cubeNormals[10].z = bckFaceCenterInWorldSpace.z; // Back      face normal start
         cubeNormals[11].x = bckFaceNormalInWorldSpace.x; cubeNormals[11].y = bckFaceNormalInWorldSpace.y; cubeNormals[11].z = bckFaceNormalInWorldSpace.z; // Back      face normal end
-        // DrawSphereWires(myPosition, hitSphereRadius, 10, 10, DARKGREEN);                                                                                   // Sphere representing hit box
+        // DrawSphereWires(myPosition, hitSphereRadius, 10, 10, DARKGREEN);                                                                                // Sphere representing hit box
         detectCollisions();                                                                                                                                // Determine which face was hit
     }
 
@@ -119,15 +119,12 @@ class reflectiveCube
                         shortestDistance = distanceFromNormalStart;
                         indexOfShortestD = i;
                     }
-
-
                 }
-
+                // The vector passed here will be the travel vector of the laser
                 laser.changeDirection(cubeNormals[indexOfShortestD], cubeNormals[indexOfShortestD + 1]);
             }
         }
     }
-    
 };
 
 // Vector3 cubeNormals[12] = {

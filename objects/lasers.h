@@ -57,35 +57,65 @@ public:
       }
    }
 
+   // THE BELOW ONLY SENDS THE BULLET IN THE SURFACE NORMALS DIRECTION AND DOES NO HAVE A REFLECTION VECTOR
+   // void changeDirection(Vector3 startOfLine, Vector3 endOfLine)
+   // {
+   //    if (!collidedWithObject)
+   //    {
+   //       // Calculate the new forward direction vector
+   //       Vector3 newForwardDirection = Vector3Subtract(endOfLine, startOfLine);
+         
+   //       // Normalize the new forward direction vector
+   //       newForwardDirection = Vector3Normalize(newForwardDirection);
+         
+   //       // Update the laser's velocity with the new forward direction
+   //       velocity = Vector3Scale(newForwardDirection, Vector3Length(velocity));
+         
+   //       // Update the end position based on the new forward direction
+   //       endPos = Vector3Add(currentPos, Vector3Scale(newForwardDirection, laserLength));
+
+   //       //Stop listening for collisions
+   //       collidedWithObject = true;
+   //    }
+   // }
+
+   // THE BELOW TAKES INTO ACCOUNT REFLECTION VECTORS
    void changeDirection(Vector3 startOfLine, Vector3 endOfLine)
    {
       if (!collidedWithObject)
       {
-         // Calculate the new forward direction vector
-         Vector3 newForwardDirection = Vector3Subtract(endOfLine, startOfLine);
-         
-         // Normalize the new forward direction vector
-         newForwardDirection = Vector3Normalize(newForwardDirection);
-         
+         // My current vector of travel, otherwise known as (a)
+         // Velocity is the direction vector, line 115
+         Vector3 a = velocity; 
+
+         // The surface normal of the vector the bullet collided with, otherwise known as (b)
+         Vector3 b = Vector3Normalize(Vector3Subtract(endOfLine, startOfLine));
+
+         // Calculate the dot product a * b
+         float dotProduct = Vector3DotProduct(a, b);
+
+         // Calculate the reflection vector r = a - 2(a * b)b
+         // "Scale" can be interpreted as "multiply by"
+         Vector3 scaledNormal = Vector3Scale(b, 2.0f * dotProduct);
+         Vector3 r = Vector3Subtract(a, scaledNormal);
+
+         // Normalize the reflection vector
+         newForwardDirection = Vector3Normalize(r);
+
          // Update the laser's velocity with the new forward direction
          velocity = Vector3Scale(newForwardDirection, Vector3Length(velocity));
-         
-         // Update the end position based on the new forward direction
-         endPos = Vector3Add(currentPos, Vector3Scale(newForwardDirection, laserLength));
 
-         //Stop listening for collisions
+         // Stop listening for collisions. (if this is left false then the ball will be trapped)
          collidedWithObject = true;
       }
-
-
    }
 
    void draw() 
    {
 
       // Get 3D line points
-      currentPos = Vector3Add(currentPos, velocity); // Get the start point of the 3d line
-      endPos = Vector3Add(endPos, velocity);         // Get the end point of the 3d line
+      currentPos = Vector3Add(currentPos, velocity);   // Ultimatly velocity is the direction vector
+      //endPos = Vector3Add(endPos, velocity);         // Get the end point of the 3d line
 
       // Check for direction change
       //changeDirection(); 
@@ -94,7 +124,7 @@ public:
       //DrawLine3D(currentPos, endPos, WHITE);
 
       // Draw a 3D sphere at the start point
-      DrawSphereWires(currentPos, 0.4f, 4, 4, myColor);
+      DrawSphere(currentPos, 0.4f, myColor);
 
       // Check for self destruct
       selfDestruct();
