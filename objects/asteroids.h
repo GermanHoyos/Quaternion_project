@@ -35,8 +35,8 @@ class asteroids
     float zShake;
     Vector3 myPositionWr;
     int     myAlpha = 255;
-    Color   myRGB = { 0, 228, 48, myAlpha };
-    Color   myLime = { 0, 158, 47, myAlpha };
+    Color   myRGB = { 0, 228, 48, static_cast<unsigned char>(myAlpha) };
+    Color   myLime = { 0, 158, 47, static_cast<unsigned char>(myAlpha) };
     float   sphereRad = 1.0f;
     float   wiresRad = 2.0f;
     bool    hitAnim = false;
@@ -101,7 +101,7 @@ class asteroids
             {
                 // Animate hit here:
                 //if (sphereRad < 1.60f) sphereRad += 0.05f;
-                myRGB = { 255, 155, 155, myAlpha };
+                myRGB = { 255, 155, 155, static_cast<unsigned char>(myAlpha) };
 
                 xShake = 0.0f;
                 yShake = 0.0f;
@@ -126,7 +126,7 @@ class asteroids
             {
                 sphereRad = 1.0f;
                 myAlpha = 255;
-                myRGB = { 0, 255, 0, myAlpha };
+                myRGB = { 0, 255, 0, static_cast<unsigned char>(myAlpha) };
                 hitAnim = false;
                 myPositionSp.x = myPositionWr.x;
                 myPositionSp.y = myPositionWr.y;

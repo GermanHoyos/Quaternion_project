@@ -30,19 +30,27 @@ class reflectiveCube
 
     void drawNormals()
     {
-        // DrawLine3D(topFaceCenter,topFaceNormal,GREEN);
-        // DrawLine3D(botFaceCenter,botFaceNormal,GREEN);
-        // DrawLine3D(lefFaceCenter,lefFaceNormal,RED);
-        // DrawLine3D(ritFaceCenter,ritFaceNormal,RED);
-        // DrawLine3D(fwdFaceCenter,fwdFaceNormal,BLUE);
-        // DrawLine3D(bckFaceCenter,bckFaceNormal,BLUE);
+        /*******************
+        **                **
+        ** Visualizations **
+        ** for reflect    **
+        ** math           **
+        **                **
+        **                **
+        *******************/
+        DrawLine3D(topFaceCenter,topFaceNormal,GREEN);
+        DrawLine3D(botFaceCenter,botFaceNormal,PURPLE);
+        DrawLine3D(lefFaceCenter,lefFaceNormal,RED);
+        DrawLine3D(ritFaceCenter,ritFaceNormal,RED);
+        DrawLine3D(fwdFaceCenter,fwdFaceNormal,BLUE);
+        DrawLine3D(bckFaceCenter,bckFaceNormal,BLUE);
     }
 
     void calcRotations()
     {
-        rotateX += 0.01f;  rlRotatef(rotateX, 1.0f, 0.0f, 0.0f);
-        rotateY += 0.01f;  rlRotatef(rotateY, 0.0f, 1.0f, 0.0f);
-        rotateZ += 0.01f;  rlRotatef(rotateZ, 0.0f, 0.0f, 1.0f);
+        rotateX += 0.8f;  rlRotatef(rotateX, 1.0f, 0.0f, 0.0f);
+        rotateY += 0.8f;  rlRotatef(rotateY, 0.0f, 1.0f, 0.0f);
+        rotateZ += 0.8f;  rlRotatef(rotateZ, 0.0f, 0.0f, 1.0f);
         Matrix rotationMatrix = MatrixRotateXYZ({DEG2RAD * rotateX, DEG2RAD * rotateY, DEG2RAD * rotateZ});
         getTopFaceCenter = Vector3Transform(topFaceCenter, rotationMatrix); getTopFaceNormal = Vector3Transform(topFaceNormal, rotationMatrix);
         getBotFaceCenter = Vector3Transform(botFaceCenter, rotationMatrix); getBotFaceNormal = Vector3Transform(botFaceNormal, rotationMatrix);
@@ -67,12 +75,20 @@ class reflectiveCube
         fwdFaceCenterInWorldSpace = Vector3Transform(getFwdFaceCenter, cubeMatrix); fwdFaceNormalInWorldSpace = Vector3Transform(getFwdFaceNormal, cubeMatrix);
         bckFaceCenterInWorldSpace = Vector3Transform(getBckFaceCenter, cubeMatrix); bckFaceNormalInWorldSpace = Vector3Transform(getBckFaceNormal, cubeMatrix);
         rlPopMatrix();
-        // DrawSphere(topFaceCenterInWorldSpace,1.0f,PURPLE);   DrawSphere(topFaceNormalInWorldSpace,1.0f,PURPLE);
-        // DrawSphere(botFaceCenterInWorldSpace,1.0f,GREEN);    DrawSphere(botFaceNormalInWorldSpace,1.0f,GREEN);
-        // DrawSphere(lefFaceCenterInWorldSpace,1.0f,RED);      DrawSphere(lefFaceNormalInWorldSpace,1.0f,RED);
-        // DrawSphere(ritFaceCenterInWorldSpace,1.0f,RED);      DrawSphere(ritFaceNormalInWorldSpace,1.0f,RED);
-        // DrawSphere(fwdFaceCenterInWorldSpace,1.0f,BLUE);     DrawSphere(fwdFaceNormalInWorldSpace,1.0f,BLUE);
-        // DrawSphere(bckFaceCenterInWorldSpace,1.0f,BLUE);     DrawSphere(bckFaceNormalInWorldSpace,1.0f,BLUE);
+        /*******************
+        **                **
+        ** Visualizations **
+        ** for reflect    **
+        ** math           **
+        **                **
+        **                **
+        *******************/
+        DrawSphere(topFaceCenterInWorldSpace,1.0f,PURPLE);   DrawSphere(topFaceNormalInWorldSpace,1.0f,PURPLE);
+        DrawSphere(botFaceCenterInWorldSpace,1.0f,GREEN);    DrawSphere(botFaceNormalInWorldSpace,1.0f,GREEN);
+        DrawSphere(lefFaceCenterInWorldSpace,1.0f,RED);      DrawSphere(lefFaceNormalInWorldSpace,1.0f,RED);
+        DrawSphere(ritFaceCenterInWorldSpace,1.0f,RED);      DrawSphere(ritFaceNormalInWorldSpace,1.0f,RED);
+        DrawSphere(fwdFaceCenterInWorldSpace,1.0f,BLUE);     DrawSphere(fwdFaceNormalInWorldSpace,1.0f,BLUE);
+        DrawSphere(bckFaceCenterInWorldSpace,1.0f,BLUE);     DrawSphere(bckFaceNormalInWorldSpace,1.0f,BLUE);
         cubeNormals[0].x  = topFaceCenterInWorldSpace.x; cubeNormals[0].y  = topFaceCenterInWorldSpace.y; cubeNormals[0].z  = topFaceCenterInWorldSpace.z; // Top       face normal start
         cubeNormals[1].x  = topFaceNormalInWorldSpace.x; cubeNormals[1].y  = topFaceNormalInWorldSpace.y; cubeNormals[1].z  = topFaceNormalInWorldSpace.z; // Top       face normal end
         cubeNormals[2].x  = botFaceCenterInWorldSpace.x; cubeNormals[2].y  = botFaceCenterInWorldSpace.y; cubeNormals[2].z  = botFaceCenterInWorldSpace.z; // Bottom    face normal start
@@ -85,7 +101,15 @@ class reflectiveCube
         cubeNormals[9].x  = fwdFaceNormalInWorldSpace.x; cubeNormals[9].y  = fwdFaceNormalInWorldSpace.y; cubeNormals[9].z  = fwdFaceNormalInWorldSpace.z; // Foward    face normal end
         cubeNormals[10].x = bckFaceCenterInWorldSpace.x; cubeNormals[10].y = bckFaceCenterInWorldSpace.y; cubeNormals[10].z = bckFaceCenterInWorldSpace.z; // Back      face normal start
         cubeNormals[11].x = bckFaceNormalInWorldSpace.x; cubeNormals[11].y = bckFaceNormalInWorldSpace.y; cubeNormals[11].z = bckFaceNormalInWorldSpace.z; // Back      face normal end
-        // DrawSphereWires(myPosition, hitSphereRadius, 10, 10, DARKGREEN);                                                                                // Sphere representing hit box
+        /*******************
+        **                **
+        ** Visualizations **
+        ** for reflect    **
+        ** math           **
+        **                **
+        **                **
+        *******************/
+        DrawSphereWires(myPosition, hitSphereRadius, 10, 10, DARKGREEN);                                                                                // Sphere representing hit box
         detectCollisions();                                                                                                                                // Determine which face was hit
     }
 

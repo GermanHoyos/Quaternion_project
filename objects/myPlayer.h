@@ -137,7 +137,8 @@ class myPlayer
 
       // RESETS
       rotationDelta    = QuaternionIdentity();
-      collectRotations = QuaternionIdentity();                                      // reset the collectRotations quaternion to 0 0 0
+      //collectRotations = QuaternionIdentity();                                      // reset the collectRotations quaternion to 0 0 0
+      quaternion_brakes();
       rotation         = QuaternionIdentity();
       strafeDelta      = QuaternionIdentity();
       thrus1 = 0.0f; thrus2 = 0.3f;
@@ -149,10 +150,18 @@ class myPlayer
       // If a joystick max value is needed then convert it to int and check against a value of "1"
       if (IsKeyDown(KEY_W) || (float)(GetGamepadAxisMovement(gamepad, GAMEPAD_AXIS_RIGHT_Y)) < 0.0f )
       {
+         // if (rx < 1.4)
+         // {
+         //    rx += 0.3f;
+         // }
          rx += 0.5f;
       } 
       if (IsKeyDown(KEY_S) || (float)(GetGamepadAxisMovement(gamepad, GAMEPAD_AXIS_RIGHT_Y)) > 0.0f )
       {
+         // if (rx > -1.4)
+         // {
+         //    rx -= 0.3f;
+         // }
          rx -= 0.5f;
       } 
       rotationDelta = QuaternionFromAxisAngle({ 1.0f, 0.0f, 0.0f }, DEG2RAD * rx );
@@ -169,15 +178,52 @@ class myPlayer
       // If a joystick max value is needed then convert it to int and check against a value of "1"
       if (IsKeyDown(KEY_A) || (float)(GetGamepadAxisMovement(gamepad, GAMEPAD_AXIS_RIGHT_X)) < 0.0f )
       {
-         rz -= 0.65f;
+         // if (rz > -1.4f) 
+         // {
+         //    rz -= 0.03f;
+         // }
+         rz -= 0.5f;
       } 
       if (IsKeyDown(KEY_D) || (float)(GetGamepadAxisMovement(gamepad, GAMEPAD_AXIS_RIGHT_X)) > 0.0f )
       {
-          rz += 0.65f;
+         // if (rz < 1.4f)
+         // {
+         //    rz += 0.03f;
+         // }
+         rz += 0.5f;
       } 
       rotationDelta = QuaternionFromAxisAngle({ 0.0f, -1.0f, 0.0f }, DEG2RAD * rz );
       collectRotations = QuaternionMultiply(collectRotations, rotationDelta);
    }
+
+   void quaternion_brakes()
+   {
+      collectRotations = QuaternionIdentity();
+
+      // if ((float)(GetGamepadAxisMovement(gamepad, GAMEPAD_AXIS_RIGHT_X)) == 0.0f)
+      // {
+      //    if (rz > 0.01f) {
+      //       rz -= 0.01f;
+      //    } else if (rz < -0.01f) {
+      //       rz += 0.01f;
+      //    } else {
+      //       rz = 0.0f;
+      //    }
+      // }
+
+      // // if ((float)(GetGamepadAxisMovement(gamepad, GAMEPAD_AXIS_RIGHT_Y)) == 0.0f)
+      // // {
+      // //    if (rx > 0.01f) {
+      // //       rx -= 0.01f;
+      // //    } else if (rx < -0.01f) {
+      // //       rx += 0.01f;
+      // //    } else {
+      // //       rx = 0.0f;
+      // //    }
+      // // }
+      // collectRotations.x = 0.0f;
+   }
+
 
    void strafe_x_axis() // slide left and right but maintain quaternion rotation
    {
@@ -205,8 +251,13 @@ class myPlayer
       //Brakes for strafing on x axis 
       if ((float)(GetGamepadAxisMovement(gamepad, GAMEPAD_AXIS_LEFT_X)) == 0.0f) 
       {
-         if (strafe > 0.00f) strafe -= 0.01f;
-         if (strafe < 0.00f) strafe += 0.01f;   
+         if (strafe > 0.01f) {
+            strafe -= 0.01f;
+         } else if (strafe < -0.01f) {
+            strafe += 0.01f;
+         } else {
+            strafe = 0.0f;
+         }
       }
 
       // Calculate strafe offset based on ship's facing direction

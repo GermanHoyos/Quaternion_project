@@ -67,8 +67,8 @@ int main()
    const int rows = 10;
    const int cols = 10;
    const float spacing = 4.5f;
-   float startX = 20.0f;
-   float startY = -20.0f;
+   float startX = 22.0f;
+   float startY = -22.0f;
    float startZ = -20.0f;
    // Vector to hold the panels
    std::vector<panel> panelList;

@@ -47,7 +47,7 @@ class particleField
    Color      myRGB; // {255,255,255,255}
    Texture2D texture_p = LoadTexture("C:\\Users\\Hoyos\\OneDrive\\Desktop\\C++ Runner\\raylib_quaternion_example\\home\\src\\assets\\particle_sprite.png");
    int alpha = 90;
-   Color my_tint = {255, 255, 255, alpha};
+   Color my_tint = {255, 255, 255, static_cast<unsigned char>(alpha)};
 
    particleField()
    {
