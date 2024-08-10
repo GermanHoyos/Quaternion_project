@@ -19,13 +19,13 @@ class reflectiveCube
     bool    toggleMySkin = false;
     bool    textureLoaded = false;
     bool    hit = false;
+    int     hitCount = 0;
+    bool    timeToDie = false;
     Color   rockColor = {255,255,255,255};
 
     Model rock = LoadModel("C:\\Users\\Hoyos\\OneDrive\\Desktop\\C++ Runner\\raylib_quaternion_example\\home\\src\\assets\\rock_2.obj");
     Texture2D rockTexture = LoadTexture("C:\\Users\\Hoyos\\OneDrive\\Desktop\\C++ Runner\\raylib_quaternion_example\\home\\src\\assets\\rock_2.png");
     Texture2D rockTexture_hit = LoadTexture("C:\\Users\\Hoyos\\OneDrive\\Desktop\\C++ Runner\\raylib_quaternion_example\\home\\src\\assets\\rock_2_hit.png");
-
- 
 
     reflectiveCube(Vector3 passedPosition, bool skinToggle)
     : myPosition(passedPosition), toggleMySkin(skinToggle)
@@ -88,7 +88,7 @@ class reflectiveCube
         bckFaceCenterInWorldSpace = Vector3Transform(getBckFaceCenter, cubeMatrix); bckFaceNormalInWorldSpace = Vector3Transform(getBckFaceNormal, cubeMatrix);
         toggleSkin();                                                                                                                                // Determine which face was hit
         hitAnimation();
-        cubeMatrix.m14 -= 0.05f;
+        cubeMatrix.m14 -= 0.9f;
         myPosition.z = cubeMatrix.m14;
         rlPopMatrix();
         /*******************
@@ -127,7 +127,7 @@ class reflectiveCube
         *******************/
         //DrawSphereWires(myPosition, hitSphereRadius, 10, 10, DARKGREEN);                                                                                // Sphere representing hit box
         detectCollisions();
-        //toggleSkin();                                                                                                                                // Determine which face was hit
+        selfDestruct();                                                                                                                   // Determine which face was hit
     }
 
     void detectCollisions()
@@ -205,8 +205,33 @@ class reflectiveCube
         if (hit)
         {
             rock.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = rockTexture_hit;
+            hitCount++;
         }
+
         hit = false;
+
+        if (hitCount > 20)
+        {
+            timeToDie = true;
+        }
+
+        if (myPosition.z  <= -20.0f)
+        {
+            timeToDie = true;
+        }
+
+    }
+
+    void selfDestruct()
+    {
+        for (auto cube = cubeList.begin(); cube != cubeList.end(); ++cube)
+        {
+            if (cube->timeToDie == true)
+            {
+                cubeList.erase(cube);
+                break;
+            }
+        }
     }
 
 };

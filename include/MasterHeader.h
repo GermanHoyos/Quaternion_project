@@ -31,8 +31,21 @@
       { 00.0f, 00.0f, 00.0f},  //10 Back      face normal start
       { 00.0f, 00.0f, 00.0f}   //11 Back      face normal end
    };
+
+float lerp(float a, float b, float t)
+{
+   return a + t * (b - a);
+}
+
+float normalizedLerp(float a, float b, float t, float minT, float maxT)
+{
+   float normalizedT = (t -minT) / (maxT - minT);
+   return lerp(a, b, normalizedT);
+}
    class lasers;
    vector<lasers> lasersList;
+   class reflectiveCube;
+   vector<reflectiveCube> cubeList;
    Vector3 playerPosition;
    Vector3 playerRotation;
    Camera camera = { 0 };
@@ -53,6 +66,7 @@
    #include "../objects/particleField.h"
    #include "../objects/wave.h"
    #include "../objects/boundery.h"
+   #include "../objects/arenaStrip.h"
 
 
 

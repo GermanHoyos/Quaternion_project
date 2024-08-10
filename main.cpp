@@ -55,7 +55,9 @@
 int main()
 {
    // Raylibs camera and 3d world inits
-   const int screenWidth = 1600; const int screenHeight = 800;
+   //const int screenWidth = 1600; const int screenHeight = 800;
+   const int screenWidth = 1200; const int screenHeight = 600;
+
    InitWindow(screenWidth, screenHeight, ""); SetTargetFPS(60);
    //Camera3D camera = { 0 }; // Declared in master header
    Vector3  cam_track = {0.0f, 0.0f, 0.0};
@@ -71,8 +73,8 @@ int main()
    asteroids myAsteroids_2 = asteroids({0.0f,0.0f,-20.0f});
    asteroids myAsteroids_3 = asteroids({10.0f,0.0f,-20.0f});
 
-   const int rows = 80;
-   const int cols = 80;
+   const int rows = 10;
+   const int cols = 10;
    const float spacing = 4.5f;
    float startX = 22.0f;
    float startY = -22.0f;
@@ -109,7 +111,8 @@ int main()
    Texture2D texture_z = LoadTexture("C:\\Users\\Hoyos\\OneDrive\\Desktop\\C++ Runner\\raylib_quaternion_example\\home\\src\\assets\\z_axis.png");
 
    // Reflective cube inits
-   reflectiveCube refCube = reflectiveCube({0.0f, 15.0f, -20.0f},true);
+   // reflectiveCube refCube = reflectiveCube({120.0f, 15.0f, 800.0f},true);
+   // cubeList.push_back(refCube);
 
    // Main game loop
    while (!WindowShouldClose())    // Detect window close button or ESC key
@@ -200,8 +203,14 @@ int main()
       DrawBillboard(camera, texture_z, {-30.0f,0.0f,-32.0f}, 2, {255, 255, 255, 255});
 
       // Draw reflective cube
-      refCube.draw();
+      for(auto& cube : cubeList)
+      {
+         cube.draw();
+      }
+      //refCube.draw();
 
+      // Draw arenas
+      drawStrip();
 
 
       rlPushMatrix();

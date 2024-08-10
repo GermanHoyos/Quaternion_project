@@ -274,8 +274,8 @@ class myPlayer
 
    void strafe_y_axis() // slide up and down but mainain quaternion rotation
    {
-      if (IsKeyDown(KEY_UP)   || IsGamepadButtonDown(gamepad, GAMEPAD_BUTTON_RIGHT_TRIGGER_1) > 0) dy += 0.1f;
-      if (IsKeyDown(KEY_DOWN) || IsGamepadButtonDown(gamepad, GAMEPAD_BUTTON_LEFT_TRIGGER_1) > 0)  dy -= 0.1f;
+      if (IsKeyDown(KEY_UP)   || IsGamepadButtonDown(gamepad, GAMEPAD_BUTTON_RIGHT_TRIGGER_1) > 0) dy += 0.3f;
+      if (IsKeyDown(KEY_DOWN) || IsGamepadButtonDown(gamepad, GAMEPAD_BUTTON_LEFT_TRIGGER_1) > 0)  dy -= 0.3f;
    }
 
    void accelerate_foward()

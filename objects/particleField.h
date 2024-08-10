@@ -20,16 +20,7 @@
 #include "../include/MasterHeader.h"
 
 
-float lerp(float a, float b, float t)
-{
-   return a + t * (b - a);
-}
 
-float normalizedLerp(float a, float b, float t, float minT, float maxT)
-{
-   float normalizedT = (t -minT) / (maxT - minT);
-   return lerp(a, b, normalizedT);
-}
 
 
 class particleField;
