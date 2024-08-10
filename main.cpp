@@ -40,6 +40,13 @@
 // [12][X] = (+)right  (-)left
 // [14][Z] = (-)foward (+)back
 
+// Propogation waves across tile sheet
+// Particle noise using 
+   // fluid wave mechanics which for games 
+   // fluid dynamics
+
+
+
 #include "include/masterHeader.h" // <- collection of standard c++ and custom headers // "pragma once"
 #define XBOX360_LEGACY_NAME_ID "Xbox Controller"
 #define XBOX360_NAME_ID "Xbox 360 Controller"
@@ -48,7 +55,7 @@
 int main()
 {
    // Raylibs camera and 3d world inits
-   const int screenWidth = 1200; const int screenHeight = 600;
+   const int screenWidth = 1600; const int screenHeight = 800;
    InitWindow(screenWidth, screenHeight, ""); SetTargetFPS(60);
    //Camera3D camera = { 0 }; // Declared in master header
    Vector3  cam_track = {0.0f, 0.0f, 0.0};
@@ -64,8 +71,8 @@ int main()
    asteroids myAsteroids_2 = asteroids({0.0f,0.0f,-20.0f});
    asteroids myAsteroids_3 = asteroids({10.0f,0.0f,-20.0f});
 
-   const int rows = 10;
-   const int cols = 10;
+   const int rows = 80;
+   const int cols = 80;
    const float spacing = 4.5f;
    float startX = 22.0f;
    float startY = -22.0f;
@@ -102,7 +109,7 @@ int main()
    Texture2D texture_z = LoadTexture("C:\\Users\\Hoyos\\OneDrive\\Desktop\\C++ Runner\\raylib_quaternion_example\\home\\src\\assets\\z_axis.png");
 
    // Reflective cube inits
-   reflectiveCube refCube = reflectiveCube({-17.0f,0.0f,-70.0f});
+   reflectiveCube refCube = reflectiveCube({0.0f, 15.0f, -20.0f},true);
 
    // Main game loop
    while (!WindowShouldClose())    // Detect window close button or ESC key

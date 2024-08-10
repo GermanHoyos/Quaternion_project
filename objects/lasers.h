@@ -20,7 +20,7 @@ public:
    Vector3    newForwardDirection;
    Vector3    distanceFromShotStart;
    Vector3    laserVisual;
-   Color      myColor     = RED;
+   Color      myColor     = GREEN;
    Color      changed     = GREEN;
    int        myLaserId;
    float      laserLength = 20.0f;
