@@ -1,5 +1,7 @@
 #include "../include/MasterHeader.h"
 
+
+
 //class lasers;
 
 //vector<lasers> lasersList;
@@ -25,6 +27,11 @@ public:
    int        myLaserId;
    float      laserLength = 20.0f;
    bool       collidedWithObject = false;
+
+   //LIGHT BEGIN
+
+   //LIGHT END
+
 
    // Arugments passed at invokation
    lasers(Vector3 currentPos, Vector3 forwardDirection, float speed)
@@ -133,23 +140,88 @@ public:
 
 };
 
+/*
 
 
+#include "raylib.h"
+#include "raymath.h"
+
+#define RLIGHTS_IMPLEMENTATION
+#include "rlights.h"
+
+#if defined(PLATFORM_DESKTOP)
+    #define GLSL_VERSION            330
+#else   // PLATFORM_ANDROID, PLATFORM_WEB
+    #define GLSL_VERSION            100
+#endif
+
+int main(void)
+{
+    const int screenWidth = 800;
+    const int screenHeight = 450;
+
+    SetConfigFlags(FLAG_MSAA_4X_HINT);  // Enable Multi Sampling Anti Aliasing 4x (if available)
+    InitWindow(screenWidth, screenHeight, "raylib [shaders] example - single blue light");
+
+    Camera camera = { 0 };
+    camera.position = (Vector3){ 2.0f, 4.0f, 6.0f };
+    camera.target = (Vector3){ 0.0f, 0.5f, 0.0f };
+    camera.up = (Vector3){ 0.0f, 1.0f, 0.0f };
+    camera.fovy = 45.0f;
+    camera.projection = CAMERA_PERSPECTIVE;
+
+    Shader shader = LoadShader(TextFormat("resources/shaders/glsl%i/lighting.vs", GLSL_VERSION),
+                               TextFormat("resources/shaders/glsl%i/lighting.fs", GLSL_VERSION));
+    shader.locs[SHADER_LOC_VECTOR_VIEW] = GetShaderLocation(shader, "viewPos");
+
+    int ambientLoc = GetShaderLocation(shader, "ambient");
+    SetShaderValue(shader, ambientLoc, (float[4]){ 0.1f, 0.1f, 0.1f, 1.0f }, SHADER_UNIFORM_VEC4);
+
+    // Create a single blue light
+    Light blueLight = CreateLight(LIGHT_POINT, (Vector3){ 2, 1, -2 }, Vector3Zero(), BLUE, shader);
+
+    SetTargetFPS(60);
+
+    while (!WindowShouldClose())
+    {
+        UpdateCamera(&camera, CAMERA_ORBITAL);
+
+        float cameraPos[3] = { camera.position.x, camera.position.y, camera.position.z };
+        SetShaderValue(shader, shader.locs[SHADER_LOC_VECTOR_VIEW], cameraPos, SHADER_UNIFORM_VEC3);
+
+        // Update light values (in case of any changes)
+        UpdateLightValues(shader, blueLight);
+
+        BeginDrawing();
+
+            ClearBackground(RAYWHITE);
+
+            BeginMode3D(camera);
+
+                BeginShaderMode(shader);
+
+                    DrawPlane(Vector3Zero(), (Vector2){ 10.0, 10.0 }, WHITE);
+                    DrawCube(Vector3Zero(), 2.0, 4.0, 2.0, WHITE);
+
+                EndShaderMode();
+
+                // Draw the blue sphere where the light is
+                DrawSphereEx(blueLight.position, 0.2f, 8, 8, blueLight.color);
+
+                DrawGrid(10, 1.0f);
+
+            EndMode3D();
+
+            DrawFPS(10, 10);
+
+        EndDrawing();
+    }
+
+    UnloadShader(shader);
+    CloseWindow();
+
+    return 0;
+}
 
 
-// rotationDelta = QuaternionFromAxisAngle({ 1.0f, 0.0f, 0.0f }, DEG2RAD * 90 );
-// collectRotations = QuaternionMultiply(collectRotations, rotationDelta);
-// velocity = Vector3Transform({0.0f, 0.0f, -1.0f}, QuaternionToMatrix(collectRotations));  
-
-
-// Visualize a laser by taking a starting point then getting a vector 
-// representing direction and then adding a arbitrary length to the vector
-// this gives you a start point and an end point in 3d space. With these
-// two points you can create laser animations, or bullets etc.. etc..
-// laserVisual = Vector3Add(currentPos, Vector3Scale(fwrdDirection, laserLength));
-// DrawLine3D(currentPos, laserVisual, WHITE);
-// Line Start:
-// DrawSphere((Vector3){currentPos.x, currentPos.y, currentPos.z}, 0.2f, RED);
-
-// Line End:
-// DrawSphere((Vector3){laserVisual.x, laserVisual.y, laserVisual.z}, 0.5f, WHITE);
+*/

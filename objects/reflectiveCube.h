@@ -1,8 +1,6 @@
 #include "../include/MasterHeader.h"
 #define DARKRED    CLITERAL(Color){ 160, 41, 55, 255 } 
 
-
-
 class reflectiveCube
 {
     public:
@@ -21,12 +19,14 @@ class reflectiveCube
     bool    toggleMySkin = false;
     bool    textureLoaded = false;
     bool    hit = false;
+    Color   rockColor = {255,255,255,255};
 
-    Model rock = LoadModel("C:\\Users\\Hoyos\\OneDrive\\Desktop\\C++ Runner\\raylib_quaternion_example\\home\\src\\assets\\rock_1.obj");
-    Texture2D rockTexture = LoadTexture("C:\\Users\\Hoyos\\OneDrive\\Desktop\\C++ Runner\\raylib_quaternion_example\\home\\src\\assets\\t2.png");
-
+    Model rock = LoadModel("C:\\Users\\Hoyos\\OneDrive\\Desktop\\C++ Runner\\raylib_quaternion_example\\home\\src\\assets\\rock_2.obj");
+    Texture2D rockTexture = LoadTexture("C:\\Users\\Hoyos\\OneDrive\\Desktop\\C++ Runner\\raylib_quaternion_example\\home\\src\\assets\\rock_2.png");
+    Texture2D rockTexture_hit = LoadTexture("C:\\Users\\Hoyos\\OneDrive\\Desktop\\C++ Runner\\raylib_quaternion_example\\home\\src\\assets\\rock_2_hit.png");
 
  
+
     reflectiveCube(Vector3 passedPosition, bool skinToggle)
     : myPosition(passedPosition), toggleMySkin(skinToggle)
     {
@@ -59,9 +59,9 @@ class reflectiveCube
 
     void calcRotations()
     {
-        rotateX += 1.0f;  rlRotatef(rotateX, 1.0f, 0.0f, 0.0f);
-        rotateY += 1.0;  rlRotatef(rotateY, 0.0f, 1.0f, 0.0f);
-        rotateZ += 1.0f;  rlRotatef(rotateZ, 0.0f, 0.0f, 1.0f);
+         rotateX -= 1.0f;  rlRotatef(rotateX, 1.0f, 0.0f, 0.0f);  if (rotateX <= -360 || rotateX >= 360) { rotateX = 0; }
+        //rotateY -= 1.0;  rlRotatef(rotateY, 0.0f, 1.0f, 0.0f);  if (rotateY <= -360 || rotateX >= 360) { rotateY = 0; }
+        //rotateZ -= 1.0f;  rlRotatef(rotateZ, 0.0f, 0.0f, 1.0f); if (rotateZ <= -360 || rotateX >= 360) { rotateZ = 0; }
         Matrix rotationMatrix = MatrixRotateXYZ({DEG2RAD * rotateX, DEG2RAD * rotateY, DEG2RAD * rotateZ});
         getTopFaceCenter = Vector3Transform(topFaceCenter, rotationMatrix); getTopFaceNormal = Vector3Transform(topFaceNormal, rotationMatrix);
         getBotFaceCenter = Vector3Transform(botFaceCenter, rotationMatrix); getBotFaceNormal = Vector3Transform(botFaceNormal, rotationMatrix);
@@ -88,6 +88,8 @@ class reflectiveCube
         bckFaceCenterInWorldSpace = Vector3Transform(getBckFaceCenter, cubeMatrix); bckFaceNormalInWorldSpace = Vector3Transform(getBckFaceNormal, cubeMatrix);
         toggleSkin();                                                                                                                                // Determine which face was hit
         hitAnimation();
+        cubeMatrix.m14 -= 0.05f;
+        myPosition.z = cubeMatrix.m14;
         rlPopMatrix();
         /*******************
         **                **
@@ -97,12 +99,12 @@ class reflectiveCube
         **                **
         **                **
         *******************/
-        DrawSphere(topFaceCenterInWorldSpace,1.0f,GREEN);   //DrawSphere(topFaceNormalInWorldSpace,1.0f,PURPLE);
-        DrawSphere(botFaceCenterInWorldSpace,1.0f,DARKGREEN);    //DrawSphere(botFaceNormalInWorldSpace,1.0f,GREEN);
-        DrawSphere(lefFaceCenterInWorldSpace,1.0f,DARKRED);      //DrawSphere(lefFaceNormalInWorldSpace,1.0f,RED);
-        DrawSphere(ritFaceCenterInWorldSpace,1.0f,RED);      //DrawSphere(ritFaceNormalInWorldSpace,1.0f,RED);
-        DrawSphere(fwdFaceCenterInWorldSpace,1.0f,DARKBLUE);     //DrawSphere(fwdFaceNormalInWorldSpace,1.0f,BLUE);
-        DrawSphere(bckFaceCenterInWorldSpace,1.0f,BLUE);     //DrawSphere(bckFaceNormalInWorldSpace,1.0f,BLUE);
+        // DrawSphere(topFaceCenterInWorldSpace,1.0f,GREEN);   //DrawSphere(topFaceNormalInWorldSpace,1.0f,PURPLE);
+        // DrawSphere(botFaceCenterInWorldSpace,1.0f,DARKGREEN);    //DrawSphere(botFaceNormalInWorldSpace,1.0f,GREEN);
+        // DrawSphere(lefFaceCenterInWorldSpace,1.0f,DARKRED);      //DrawSphere(lefFaceNormalInWorldSpace,1.0f,RED);
+        // DrawSphere(ritFaceCenterInWorldSpace,1.0f,RED);      //DrawSphere(ritFaceNormalInWorldSpace,1.0f,RED);
+        // DrawSphere(fwdFaceCenterInWorldSpace,1.0f,DARKBLUE);     //DrawSphere(fwdFaceNormalInWorldSpace,1.0f,BLUE);
+        // DrawSphere(bckFaceCenterInWorldSpace,1.0f,BLUE);     //DrawSphere(bckFaceNormalInWorldSpace,1.0f,BLUE);
         cubeNormals[0].x  = topFaceCenterInWorldSpace.x; cubeNormals[0].y  = topFaceCenterInWorldSpace.y; cubeNormals[0].z  = topFaceCenterInWorldSpace.z; // Top       face normal start
         cubeNormals[1].x  = topFaceNormalInWorldSpace.x; cubeNormals[1].y  = topFaceNormalInWorldSpace.y; cubeNormals[1].z  = topFaceNormalInWorldSpace.z; // Top       face normal end
         cubeNormals[2].x  = botFaceCenterInWorldSpace.x; cubeNormals[2].y  = botFaceCenterInWorldSpace.y; cubeNormals[2].z  = botFaceCenterInWorldSpace.z; // Bottom    face normal start
@@ -185,7 +187,11 @@ class reflectiveCube
             // void DrawModelWires(Model model, Vector3 position, float scale, Color tint);          // Draw a model wires (with texture if set)
             // void DrawModelWiresEx(Model model, Vector3 position, Vector3 rotationAxis, float rotationAngle, Vector3 scale, Color tint); // Draw a model wires (with texture if set) with extended parameters
             //DrawSphereWires({0.0f,0.0f,0.0f}, hitSphereRadius, 10, 10, DARKGREEN);
-            DrawModel(rock,{0.0f,0.0f,0.0f}, 8.0f, WHITE);
+            DrawModel(rock, {0.0f,0.0f,0.0f}, 8.0f, rockColor);
+            if (!hit || !textureLoaded)
+            {
+               rock.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = rockTexture;
+            }
         }
     }
 
@@ -198,7 +204,7 @@ class reflectiveCube
     {
         if (hit)
         {
-            DrawSphere({0.0f,0.0f,0.0f},8.3f,WHITE);
+            rock.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = rockTexture_hit;
         }
         hit = false;
     }
@@ -219,74 +225,3 @@ class reflectiveCube
 //     { 00.0f, 00.0f, 00.0f},  //10 Back      face normal start [distance checked]
 //     { 00.0f, 00.0f, 00.0f}   //11 Back      face normal end
 // };
-
-
-/*
-#include "raylib.h"
-
-int main(void)
-{
-    // Initialization
-    const int screenWidth = 800;
-    const int screenHeight = 600;
-
-    InitWindow(screenWidth, screenHeight, "Raylib - Texture on Sphere Example");
-
-    // Load texture
-    Texture2D texture = LoadTexture("resources/earth_texture.png");
-
-    // Define the camera to look into our 3D world
-    Camera camera = { 0 };
-    camera.position = (Vector3){ 4.0f, 4.0f, 4.0f };  // Camera position
-    camera.target = (Vector3){ 0.0f, 0.0f, 0.0f };    // Camera looking at point
-    camera.up = (Vector3){ 0.0f, 1.0f, 0.0f };        // Camera up vector (rotation towards target)
-    camera.fovy = 45.0f;                              // Camera field-of-view Y
-    camera.type = CAMERA_PERSPECTIVE;                 // Camera mode type
-
-    SetCameraMode(camera, CAMERA_FREE);               // Set a free camera mode
-
-    SetTargetFPS(60);                                 // Set the game to run at 60 frames-per-second
-
-    while (!WindowShouldClose())                      // Detect window close button or ESC key
-    {
-        // Update
-        UpdateCamera(&camera);                        // Update camera
-
-        // Draw
-        BeginDrawing();
-
-            ClearBackground(RAYWHITE);
-
-            BeginMode3D(camera);
-
-                // Draw sphere with texture
-                DrawSphereEx((Vector3){ 0.0f, 0.0f, 0.0f }, 2.0f, 32, 32, WHITE);
-                DrawSphereWires((Vector3){ 0.0f, 0.0f, 0.0f }, 2.0f, 32, 32, BLACK);
-
-                // Apply the texture
-                rlPushMatrix();
-                rlTranslatef(0.0f, 0.0f, 0.0f);        // Translate to the sphere's position
-                rlRotatef(0, 0, 1, 0);                 // Rotate sphere if needed
-                rlScalef(2.0f, 2.0f, 2.0f);            // Scale sphere to the right size
-                rlEnableTexture(texture.id);           // Enable texture
-                DrawSphere((Vector3){ 0.0f, 0.0f, 0.0f }, 1.0f, WHITE); // Draw the sphere with texture
-                rlDisableTexture();
-                rlPopMatrix();
-
-            EndMode3D();
-
-            DrawText("Texture mapped to a sphere", 10, 10, 20, DARKGRAY);
-
-        EndDrawing();
-    }
-
-    // De-Initialization
-    UnloadTexture(texture);      // Unload texture
-    CloseWindow();               // Close window and OpenGL context
-
-    return 0;
-}
-
-
-
-*/

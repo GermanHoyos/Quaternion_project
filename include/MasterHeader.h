@@ -42,6 +42,7 @@
    // template <typename T>
    // using dynamicList = vector<T>;
    #include "rlgl.h"
+   #include "rlights.h"
    #include "reasings.h"
    #include "timeManager.h"
    #include "../objects/lasers.h"
