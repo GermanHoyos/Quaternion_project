@@ -111,8 +111,10 @@ int main()
    Texture2D texture_z = LoadTexture("C:\\Users\\Hoyos\\OneDrive\\Desktop\\C++ Runner\\raylib_quaternion_example\\home\\src\\assets\\z_axis.png");
 
    // Reflective cube inits
-   // reflectiveCube refCube = reflectiveCube({120.0f, 15.0f, 800.0f},true);
-   // cubeList.push_back(refCube);
+   reflectiveCube refCube_plane = reflectiveCube({-25.0f, 20.0f, -20.0f}, false, true, false, true);
+   reflectiveCube refCube_all_Normals = reflectiveCube({-5.0f, 20.0f, -20.0f}, false, true, true, true);
+   reflectiveCube refCube_all_skin = reflectiveCube({-15.0f, 40.0f, -40.0f}, true, false, false, true);
+
 
    // Main game loop
    while (!WindowShouldClose())    // Detect window close button or ESC key
@@ -207,7 +209,9 @@ int main()
       {
          cube.draw();
       }
-      //refCube.draw();
+      refCube_plane.draw();
+      refCube_all_Normals.draw();
+      refCube_all_skin.draw();
 
       // Draw arenas
       drawStrip();

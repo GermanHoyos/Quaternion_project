@@ -11,24 +11,38 @@ class reflectiveCube
     Vector3 ritFaceCenter, ritFaceNormal; Vector3 getRitFaceCenter; Vector3 getRitFaceNormal; Vector3 ritFaceCenterInWorldSpace; Vector3 ritFaceNormalInWorldSpace;
     Vector3 fwdFaceCenter, fwdFaceNormal; Vector3 getFwdFaceCenter; Vector3 getFwdFaceNormal; Vector3 fwdFaceCenterInWorldSpace; Vector3 fwdFaceNormalInWorldSpace;
     Vector3 bckFaceCenter, bckFaceNormal; Vector3 getBckFaceCenter; Vector3 getBckFaceNormal; Vector3 bckFaceCenterInWorldSpace; Vector3 bckFaceNormalInWorldSpace;
-    float   rotateX    = 0.0f; float   rotateY = 0.0f; float   rotateZ = 0.0f;
+    float   rotateX         = 0.0f; float   rotateY = 0.0f; float   rotateZ = 0.0f;
+    float   axisRotX = 0.0f; float axisRotY = 0.0f; float axisRotZ = 0.0f;
     float   hitSphereRadius = 8.5f;
-    Color   myColor    = {255,255,255,255};
-    Matrix  cubeMatrix = MatrixIdentity();
+    Color   myColor         = {255,255,255,255};
+    Matrix  cubeMatrix      = MatrixIdentity();
     Matrix  worldMatrix;
-    bool    toggleMySkin = false;
-    bool    textureLoaded = false;
-    bool    hit = false;
-    int     hitCount = 0;
-    bool    timeToDie = false;
-    Color   rockColor = {255,255,255,255};
+    bool    toggleMySkin    = false;
+    bool    textureLoaded   = false;
+    bool    hit             = false;
+    bool    planeCube       = false;
+    bool    drwNormls       = false;
+    bool    skin_1          = false;
+    bool    skin_2          = false;
+    bool    skin_3          = false;
+    bool    stationary      = false;
+    bool    timeToDie       = false;
+    bool    rotationChose   = false;
+    int     hitCount        = 0;
+    Color   rockColor       = {255,255,255,255};
 
-    Model rock = LoadModel("C:\\Users\\Hoyos\\OneDrive\\Desktop\\C++ Runner\\raylib_quaternion_example\\home\\src\\assets\\rock_2.obj");
+
+    Model     rock = LoadModel("C:\\Users\\Hoyos\\OneDrive\\Desktop\\C++ Runner\\raylib_quaternion_example\\home\\src\\assets\\rock_2.obj");
     Texture2D rockTexture = LoadTexture("C:\\Users\\Hoyos\\OneDrive\\Desktop\\C++ Runner\\raylib_quaternion_example\\home\\src\\assets\\rock_2.png");
     Texture2D rockTexture_hit = LoadTexture("C:\\Users\\Hoyos\\OneDrive\\Desktop\\C++ Runner\\raylib_quaternion_example\\home\\src\\assets\\rock_2_hit.png");
 
-    reflectiveCube(Vector3 passedPosition, bool skinToggle)
-    : myPosition(passedPosition), toggleMySkin(skinToggle)
+    // //Randomaize rotations
+    // /*[x]*/ random_device rd_1; mt19937 gen_1(rd_1()); uniform_real_distribution<float> dis_1(-1.0f, 1.0f); 
+    // /*[y]*/ random_device rd_2; mt19937 gen_2(rd_2()); uniform_real_distribution<float> dis_2(-1.0f, 1.0f); 
+    // /*[z]*/ random_device rd_3; mt19937 gen_3(rd_3()); uniform_real_distribution<float> dis_3(-1.0f, 1.0f); 
+
+    reflectiveCube(Vector3 passedPosition, bool skinToggle, bool isPlaneCube, bool showNormals, bool isStationary)
+    : myPosition(passedPosition), toggleMySkin(skinToggle), planeCube(isPlaneCube), drwNormls(showNormals), stationary(isStationary)
     {
         cubeMatrix.m12 = myPosition.x; cubeMatrix.m13 = myPosition.y; cubeMatrix.m14 = myPosition.z;
         topFaceCenter  = { 00.0f, 05.0f, 00.0f}; topFaceNormal  = { 00.0f, 10.0f, 00.0f};
@@ -41,27 +55,23 @@ class reflectiveCube
 
     void drawNormals()
     {
-        /*******************
-        **                **
-        ** Visualizations **
-        ** for reflect    **
-        ** math           **
-        **                **
-        **                **
-        *******************/
-        // DrawLine3D(topFaceCenter,topFaceNormal,GREEN);
-        // DrawLine3D(botFaceCenter,botFaceNormal,PURPLE);
-        // DrawLine3D(lefFaceCenter,lefFaceNormal,RED);
-        // DrawLine3D(ritFaceCenter,ritFaceNormal,RED);
-        // DrawLine3D(fwdFaceCenter,fwdFaceNormal,BLUE);
-        // DrawLine3D(bckFaceCenter,bckFaceNormal,BLUE);
+        if(drwNormls)
+        {
+            DrawLine3D(topFaceCenter,topFaceNormal,GREEN);
+            DrawLine3D(botFaceCenter,botFaceNormal,PURPLE);
+            DrawLine3D(lefFaceCenter,lefFaceNormal,RED);
+            DrawLine3D(ritFaceCenter,ritFaceNormal,RED);
+            DrawLine3D(fwdFaceCenter,fwdFaceNormal,BLUE);
+            DrawLine3D(bckFaceCenter,bckFaceNormal,BLUE);
+        }
     }
 
     void calcRotations()
     {
-         rotateX -= 1.0f;  rlRotatef(rotateX, 1.0f, 0.0f, 0.0f);  if (rotateX <= -360 || rotateX >= 360) { rotateX = 0; }
-        //rotateY -= 1.0;  rlRotatef(rotateY, 0.0f, 1.0f, 0.0f);  if (rotateY <= -360 || rotateX >= 360) { rotateY = 0; }
-        //rotateZ -= 1.0f;  rlRotatef(rotateZ, 0.0f, 0.0f, 1.0f); if (rotateZ <= -360 || rotateX >= 360) { rotateZ = 0; }
+
+        rotateX += axisRotX;  rlRotatef(rotateX, 1.0f, 0.0f, 0.0f);  if (rotateX <= -360 || rotateX >= 360) { rotateX = 0; }
+        rotateY += axisRotY;  rlRotatef(rotateY, 0.0f, 1.0f, 0.0f);  if (rotateY <= -360 || rotateX >= 360) { rotateY = 0; }
+        rotateZ += axisRotZ;  rlRotatef(rotateZ, 0.0f, 0.0f, 1.0f);  if (rotateZ <= -360 || rotateX >= 360) { rotateZ = 0; }
         Matrix rotationMatrix = MatrixRotateXYZ({DEG2RAD * rotateX, DEG2RAD * rotateY, DEG2RAD * rotateZ});
         getTopFaceCenter = Vector3Transform(topFaceCenter, rotationMatrix); getTopFaceNormal = Vector3Transform(topFaceNormal, rotationMatrix);
         getBotFaceCenter = Vector3Transform(botFaceCenter, rotationMatrix); getBotFaceNormal = Vector3Transform(botFaceNormal, rotationMatrix);
@@ -73,12 +83,16 @@ class reflectiveCube
 
     void draw()
     {
+        chooseRotation();
         loadTexture();
         rlPushMatrix();
         calcRotations();
         rlMultMatrixf(MatrixToFloat(cubeMatrix));
-        //DrawCubeV({0.0f,0.0f,0.0f},{10.0f,10.0f,10.0f},WHITE);
-        //DrawCubeWiresV({0.0f,0.0f,0.0f}, {10.0f, 10.0f, 10.0f}, RED);
+        if (planeCube)
+        {
+            DrawCubeV({0.0f,0.0f,0.0f},{10.0f,10.0f,10.0f},WHITE);
+            DrawCubeWiresV({0.0f,0.0f,0.0f}, {10.0f, 10.0f, 10.0f}, RED);
+        }
         drawNormals();
         topFaceCenterInWorldSpace = Vector3Transform(getTopFaceCenter, cubeMatrix); topFaceNormalInWorldSpace = Vector3Transform(getTopFaceNormal, cubeMatrix);
         botFaceCenterInWorldSpace = Vector3Transform(getBotFaceCenter, cubeMatrix); botFaceNormalInWorldSpace = Vector3Transform(getBotFaceNormal, cubeMatrix);
@@ -86,25 +100,24 @@ class reflectiveCube
         ritFaceCenterInWorldSpace = Vector3Transform(getRitFaceCenter, cubeMatrix); ritFaceNormalInWorldSpace = Vector3Transform(getRitFaceNormal, cubeMatrix);
         fwdFaceCenterInWorldSpace = Vector3Transform(getFwdFaceCenter, cubeMatrix); fwdFaceNormalInWorldSpace = Vector3Transform(getFwdFaceNormal, cubeMatrix);
         bckFaceCenterInWorldSpace = Vector3Transform(getBckFaceCenter, cubeMatrix); bckFaceNormalInWorldSpace = Vector3Transform(getBckFaceNormal, cubeMatrix);
-        toggleSkin();                                                                                                                                // Determine which face was hit
         hitAnimation();
-        cubeMatrix.m14 -= 0.9f;
+        if (!stationary)
+        {
+            cubeMatrix.m14 -= 0.9f;
+        }
+
         myPosition.z = cubeMatrix.m14;
         rlPopMatrix();
-        /*******************
-        **                **
-        ** Visualizations **
-        ** for reflect    **
-        ** math           **
-        **                **
-        **                **
-        *******************/
-        // DrawSphere(topFaceCenterInWorldSpace,1.0f,GREEN);   //DrawSphere(topFaceNormalInWorldSpace,1.0f,PURPLE);
-        // DrawSphere(botFaceCenterInWorldSpace,1.0f,DARKGREEN);    //DrawSphere(botFaceNormalInWorldSpace,1.0f,GREEN);
-        // DrawSphere(lefFaceCenterInWorldSpace,1.0f,DARKRED);      //DrawSphere(lefFaceNormalInWorldSpace,1.0f,RED);
-        // DrawSphere(ritFaceCenterInWorldSpace,1.0f,RED);      //DrawSphere(ritFaceNormalInWorldSpace,1.0f,RED);
-        // DrawSphere(fwdFaceCenterInWorldSpace,1.0f,DARKBLUE);     //DrawSphere(fwdFaceNormalInWorldSpace,1.0f,BLUE);
-        // DrawSphere(bckFaceCenterInWorldSpace,1.0f,BLUE);     //DrawSphere(bckFaceNormalInWorldSpace,1.0f,BLUE);
+        if (drwNormls)
+        {
+            DrawSphere(topFaceCenterInWorldSpace,1.0f,GREEN);       DrawSphere(topFaceNormalInWorldSpace,1.0f,GREEN);
+            DrawSphere(botFaceCenterInWorldSpace,1.0f,DARKGREEN);   DrawSphere(botFaceNormalInWorldSpace,1.0f,DARKGREEN);
+            DrawSphere(lefFaceCenterInWorldSpace,1.0f,DARKRED);     DrawSphere(lefFaceNormalInWorldSpace,1.0f,DARKRED);
+            DrawSphere(ritFaceCenterInWorldSpace,1.0f,RED);         DrawSphere(ritFaceNormalInWorldSpace,1.0f,RED);
+            DrawSphere(fwdFaceCenterInWorldSpace,1.0f,DARKBLUE);    DrawSphere(fwdFaceNormalInWorldSpace,1.0f,DARKBLUE);
+            DrawSphere(bckFaceCenterInWorldSpace,1.0f,BLUE);        DrawSphere(bckFaceNormalInWorldSpace,1.0f,BLUE);
+            DrawSphereWires(myPosition, hitSphereRadius, 10, 10, DARKGREEN);  
+        }
         cubeNormals[0].x  = topFaceCenterInWorldSpace.x; cubeNormals[0].y  = topFaceCenterInWorldSpace.y; cubeNormals[0].z  = topFaceCenterInWorldSpace.z; // Top       face normal start
         cubeNormals[1].x  = topFaceNormalInWorldSpace.x; cubeNormals[1].y  = topFaceNormalInWorldSpace.y; cubeNormals[1].z  = topFaceNormalInWorldSpace.z; // Top       face normal end
         cubeNormals[2].x  = botFaceCenterInWorldSpace.x; cubeNormals[2].y  = botFaceCenterInWorldSpace.y; cubeNormals[2].z  = botFaceCenterInWorldSpace.z; // Bottom    face normal start
@@ -117,15 +130,6 @@ class reflectiveCube
         cubeNormals[9].x  = fwdFaceNormalInWorldSpace.x; cubeNormals[9].y  = fwdFaceNormalInWorldSpace.y; cubeNormals[9].z  = fwdFaceNormalInWorldSpace.z; // Foward    face normal end
         cubeNormals[10].x = bckFaceCenterInWorldSpace.x; cubeNormals[10].y = bckFaceCenterInWorldSpace.y; cubeNormals[10].z = bckFaceCenterInWorldSpace.z; // Back      face normal start
         cubeNormals[11].x = bckFaceNormalInWorldSpace.x; cubeNormals[11].y = bckFaceNormalInWorldSpace.y; cubeNormals[11].z = bckFaceNormalInWorldSpace.z; // Back      face normal end
-        /*******************
-        **                **
-        ** Visualizations **
-        ** for reflect    **
-        ** math           **
-        **                **
-        **                **
-        *******************/
-        //DrawSphereWires(myPosition, hitSphereRadius, 10, 10, DARKGREEN);                                                                                // Sphere representing hit box
         detectCollisions();
         selfDestruct();                                                                                                                   // Determine which face was hit
     }
@@ -168,40 +172,22 @@ class reflectiveCube
         }
     }
 
-    void toggleSkin()
-    {
-        if (IsKeyDown(KEY_T))
-        {
-            if (toggleMySkin)
-            {
-                toggleMySkin = false;
-            } else {
-                toggleMySkin = true;
-            }
-        }
-
-        if (toggleMySkin)
-        {
-            // void DrawModel(Model model, Vector3 position, float scale, Color tint);               // Draw a model (with texture if set)
-            // void DrawModelEx(Model model, Vector3 position, Vector3 rotationAxis, float rotationAngle, Vector3 scale, Color tint); // Draw a model with extended parameters
-            // void DrawModelWires(Model model, Vector3 position, float scale, Color tint);          // Draw a model wires (with texture if set)
-            // void DrawModelWiresEx(Model model, Vector3 position, Vector3 rotationAxis, float rotationAngle, Vector3 scale, Color tint); // Draw a model wires (with texture if set) with extended parameters
-            //DrawSphereWires({0.0f,0.0f,0.0f}, hitSphereRadius, 10, 10, DARKGREEN);
-            DrawModel(rock, {0.0f,0.0f,0.0f}, 8.0f, rockColor);
-            if (!hit || !textureLoaded)
-            {
-               rock.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = rockTexture;
-            }
-        }
-    }
-
     void loadTexture()
     {
-        if(!textureLoaded){ rock.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = rockTexture; textureLoaded = true;};
+        if(!textureLoaded)
+        {
+            rock.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = rockTexture;
+            textureLoaded = true;
+        }
     }
 
     void hitAnimation()
     {
+        if (!hit || !textureLoaded)
+        {
+            rock.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = rockTexture;
+        }
+
         if (hit)
         {
             rock.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = rockTexture_hit;
@@ -220,6 +206,10 @@ class reflectiveCube
             timeToDie = true;
         }
 
+        if(!planeCube)
+        {
+            DrawModel(rock, {0.0f,0.0f,0.0f}, 8.0f, rockColor);
+        }
     }
 
     void selfDestruct()
@@ -231,6 +221,18 @@ class reflectiveCube
                 cubeList.erase(cube);
                 break;
             }
+        }
+    }
+
+    void chooseRotation()
+    {
+        if(!rotationChose)
+        {
+            //Randomaize rotations
+            /*[x]*/ random_device rd_1; mt19937 gen_1(rd_1()); uniform_real_distribution<float> dis_1(-2.0f, 2.0f); axisRotX = dis_1(gen_1); 
+            /*[y]*/ random_device rd_2; mt19937 gen_2(rd_2()); uniform_real_distribution<float> dis_2(-2.0f, 2.0f); axisRotY = dis_2(gen_2);
+            /*[z]*/ random_device rd_3; mt19937 gen_3(rd_3()); uniform_real_distribution<float> dis_3(-2.0f, 2.0f); axisRotZ = dis_3(gen_3);
+            rotationChose = true; 
         }
     }
 
