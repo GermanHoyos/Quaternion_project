@@ -115,7 +115,6 @@ int main()
    reflectiveCube refCube_all_Normals = reflectiveCube({-5.0f, 20.0f, -20.0f}, false, true, true, true);
    reflectiveCube refCube_all_skin = reflectiveCube({-15.0f, 40.0f, -40.0f}, true, false, false, true);
 
-
    // Main game loop
    while (!WindowShouldClose())    // Detect window close button or ESC key
    {
@@ -216,6 +215,11 @@ int main()
       // Draw arenas
       drawStrip();
 
+      // Draw explosions
+      for(auto& xplode : explosionsList)
+      {
+         xplode.draw();
+      }
 
       rlPushMatrix();
       rlTranslatef(0.0f,-20.0f,0.0f);

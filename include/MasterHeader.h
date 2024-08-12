@@ -46,6 +46,8 @@ float normalizedLerp(float a, float b, float t, float minT, float maxT)
    vector<lasers> lasersList;
    class reflectiveCube;
    vector<reflectiveCube> cubeList;
+   class explosions;
+   vector<explosions> explosionsList;
    Vector3 playerPosition;
    Vector3 playerRotation;
    Camera camera = { 0 };
@@ -58,6 +60,7 @@ float normalizedLerp(float a, float b, float t, float minT, float maxT)
    #include "rlights.h"
    #include "reasings.h"
    #include "timeManager.h"
+      #include "../objects/explosions.h"
    #include "../objects/lasers.h"
    #include "../objects/reflectiveCube.h"
    #include "../objects/myPlayer.h"
@@ -67,6 +70,7 @@ float normalizedLerp(float a, float b, float t, float minT, float maxT)
    #include "../objects/wave.h"
    #include "../objects/boundery.h"
    #include "../objects/arenaStrip.h"
+
 
 
 

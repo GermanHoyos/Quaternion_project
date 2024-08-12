@@ -176,7 +176,7 @@ class myPlayer
    void rotate_z_axis()
    {
       // If a joystick max value is needed then convert it to int and check against a value of "1"
-      if (IsKeyDown(KEY_A) || (float)(GetGamepadAxisMovement(gamepad, GAMEPAD_AXIS_RIGHT_X)) < 0.0f )
+      if (IsKeyDown(KEY_Q) || (float)(GetGamepadAxisMovement(gamepad, GAMEPAD_AXIS_RIGHT_X)) < 0.0f )
       {
          // if (rz > -1.4f) 
          // {
@@ -184,7 +184,7 @@ class myPlayer
          // }
          rz -= 0.5f;
       } 
-      if (IsKeyDown(KEY_D) || (float)(GetGamepadAxisMovement(gamepad, GAMEPAD_AXIS_RIGHT_X)) > 0.0f )
+      if (IsKeyDown(KEY_E) || (float)(GetGamepadAxisMovement(gamepad, GAMEPAD_AXIS_RIGHT_X)) > 0.0f )
       {
          // if (rz < 1.4f)
          // {
@@ -229,27 +229,32 @@ class myPlayer
    {
       // Determine strafe direction based on input
 
-      if (IsKeyDown(KEY_LEFT))
-      {
-         strafe += 0.01f;
-      }
+      // if (IsKeyDown(KEY_A))
+      // {
+      //    strafe += 0.01f;
+      // }
 
-      if (IsKeyDown(KEY_RIGHT))
-      {
-         strafe -= 0.01f;
-      }
+      // if (IsKeyDown(KEY_D))
+      // {
+      //    strafe -= 0.01f;
+      // }
 
-      if ((float)(GetGamepadAxisMovement(gamepad, GAMEPAD_AXIS_LEFT_X)) < 0.0f )
+      if (IsKeyDown(KEY_A) ||(float)(GetGamepadAxisMovement(gamepad, GAMEPAD_AXIS_LEFT_X)) < 0.0f )
       {
          if (strafe < 0.9f)  strafe += 0.01f;
       } 
-      if ((float)(GetGamepadAxisMovement(gamepad, GAMEPAD_AXIS_LEFT_X)) > 0.0f )
+      if (IsKeyDown(KEY_D) || (float)(GetGamepadAxisMovement(gamepad, GAMEPAD_AXIS_LEFT_X)) > 0.0f )
       {
          if (strafe > -0.9f) strafe -= 0.01f;
       } 
       
       //Brakes for strafing on x axis 
-      if ((float)(GetGamepadAxisMovement(gamepad, GAMEPAD_AXIS_LEFT_X)) == 0.0f) 
+      if 
+      (
+         (float)(GetGamepadAxisMovement(gamepad, GAMEPAD_AXIS_LEFT_X)) == 0.0f &&
+         !IsKeyDown(KEY_A) &&
+         !IsKeyDown(KEY_D)
+      ) 
       {
          if (strafe > 0.01f) {
             strafe -= 0.01f;
@@ -333,7 +338,7 @@ class myPlayer
          // Calculate forward direction vector based on quaternions
 
          // Create and store the laser with an initial speed (e.g., 0.5f)
-         float laserSpeed = 1.5f; // Set the desired speed of the laser
+         float laserSpeed = 3.5f; // Set the desired speed of the laser
          lasers laser = lasers(shipWorldPos, forwardDirection, laserSpeed);
          lasersList.push_back(laser);
       }

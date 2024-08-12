@@ -168,6 +168,8 @@ class reflectiveCube
                 // The vector passed here will be the travel vector of the laser
                 laser.changeDirection(cubeNormals[indexOfShortestD], cubeNormals[indexOfShortestD + 1]);
                 hit = true;
+                explosions explosion = explosions(laser.currentPos);
+                explosionsList.push_back(explosion);
             }
         }
     }
@@ -196,7 +198,7 @@ class reflectiveCube
 
         hit = false;
 
-        if (hitCount > 20)
+        if (hitCount > 10)
         {
             timeToDie = true;
         }

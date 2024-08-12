@@ -8,6 +8,7 @@ public:
     Quaternion collectRotations = QuaternionIdentity();
     Quaternion rotationDelta    = QuaternionIdentity();
     Quaternion reflectionVector = QuaternionIdentity();
+    Matrix     laserMatrix      = MatrixIdentity();
     Vector3    currentPos; 
     Vector3    startPos; 
     Vector3    endPos;
@@ -18,9 +19,9 @@ public:
     Color      myColor     = GREEN;
     Color      changed     = GREEN;
     int        myLaserId;
-    float      laserLength = 20.0f;
+    float      laserLength = 30.0f;
     bool       collidedWithObject = false;
-    float      elongationDistance = 2.0f;  // How much farther you want to move endPos
+    float      elongationDistance = 8.0f;  // How much farther you want to move endPos
 
     // Arguments passed at invocation
     lasers(Vector3 currentPos, Vector3 forwardDirection, float speed)
@@ -86,27 +87,59 @@ public:
 
     void draw() 
     {
+        // Randomize colors (including alpha)
+        random_device rd_1; mt19937 gen_1(rd_1()); uniform_real_distribution<float> dist_r(0.0f, 255.0f);
+        random_device rd_2; mt19937 gen_2(rd_2()); uniform_real_distribution<float> dist_g(0.0f, 255.0f);
+        random_device rd_3; mt19937 gen_3(rd_3()); uniform_real_distribution<float> dist_b(0.0f, 255.0f);
+        random_device rd_a; mt19937 gen_a(rd_a()); uniform_real_distribution<float> dist_a(0.0f, 255.0f);
+
+        unsigned char r = static_cast<unsigned char>(dist_r(gen_1));
+        unsigned char g = static_cast<unsigned char>(dist_g(gen_2));
+        unsigned char b = static_cast<unsigned char>(dist_b(gen_3));
+        unsigned char a = static_cast<unsigned char>(dist_a(gen_a));
+
+
         // Get 3D line points
-        currentPos = Vector3Add(currentPos, velocity);   // Ultimately velocity is the direction vector
-        endPos = Vector3Add(currentPos, velocity);       // Get the end point of the 3D line
+        currentPos = Vector3Add(currentPos, velocity);   // Update the current position
+        endPos = Vector3Add(currentPos, velocity);       // Calculate the end position
 
         // Extend the endPos by elongationDistance
         Vector3 direction = Vector3Normalize(Vector3Subtract(endPos, currentPos));
         Vector3 extendedEndPos = Vector3Add(endPos, Vector3Scale(direction, elongationDistance));
 
-        // Draw a 3D line
-        //DrawLine3D(currentPos, extendedEndPos, GREEN);
+        // Calculate the cylinder's orientation matrix
+        Vector3 axis = Vector3Normalize(Vector3Subtract(extendedEndPos, currentPos));
+        float length = Vector3Length(Vector3Subtract(extendedEndPos, currentPos));
+        
+        // Default axis of the cylinder in model space is along the Y-axis (0, 1, 0)
+        Vector3 defaultAxis = {0.0f, 1.0f, 0.0f};
+        Vector3 rotationAxis = Vector3CrossProduct(defaultAxis, axis);
+        float rotationAngle = acosf(Vector3DotProduct(defaultAxis, axis));
 
-        // Draw small capsule
-        DrawCapsule(currentPos, extendedEndPos, 0.07f, 20, 20, GREEN);
+        Matrix laserMatrix = MatrixIdentity();
+
+        if (Vector3Length(rotationAxis) != 0)  // Check if we actually need to rotate
+        {
+            laserMatrix = MatrixRotate(rotationAxis, rotationAngle);
+        }
+
+        // Move the cylinder to startPos
+        Matrix translationMatrix = MatrixTranslate(currentPos.x, currentPos.y, currentPos.z);
+        laserMatrix = MatrixMultiply(laserMatrix, translationMatrix);
+
+        // Draw the cylinder with the tip at the start point
+        rlPushMatrix();
+        rlMultMatrixf(MatrixToFloat(laserMatrix));
+        DrawCylinder((Vector3){0, 0, 0}, 0.2f, 0.0f, length, 6, {r,g,255,a});  // Swap base and top radii
+        DrawCylinderWires((Vector3){0,0,0},0.2f, 0.0f, length, 6, {255,255,255,a});
+        rlPopMatrix();
 
         // Check for self destruct
         selfDestruct();
-    }
+}
+
+
 };
-
-
-
 
 
 
