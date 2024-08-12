@@ -24,8 +24,10 @@ class myPlayer
    public:
  
    // MODEL + BLENDER BAKE
-   Model ship = LoadModel("C:\\Users\\Hoyos\\OneDrive\\Desktop\\C++ Runner\\raylib_quaternion_example\\home\\src\\assets\\ship.obj");
-   Texture2D texture = LoadTexture("C:\\Users\\Hoyos\\OneDrive\\Desktop\\C++ Runner\\raylib_quaternion_example\\home\\src\\assets\\t1.png");
+   // Model ship = LoadModel("C:\\Users\\Hoyos\\OneDrive\\Desktop\\C++ Runner\\raylib_quaternion_example\\home\\src\\assets\\ship.obj");
+   // Texture2D texture = LoadTexture("C:\\Users\\Hoyos\\OneDrive\\Desktop\\C++ Runner\\raylib_quaternion_example\\home\\src\\assets\\t1.png");
+   Model ship = LoadModel("./src/assets/ship.obj");
+   Texture2D texture = LoadTexture("./src/assets/t1.png");
    Vector3 ship_init_pos = {0.0f, 0.0f, 0.0f};
    Vector3 shipWorldPos;
    Vector3 forwardDirection;

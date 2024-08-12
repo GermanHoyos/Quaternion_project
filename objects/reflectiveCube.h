@@ -32,9 +32,13 @@ class reflectiveCube
     Color   rockColor       = {255,255,255,255};
 
 
-    Model     rock = LoadModel("C:\\Users\\Hoyos\\OneDrive\\Desktop\\C++ Runner\\raylib_quaternion_example\\home\\src\\assets\\rock_2.obj");
-    Texture2D rockTexture = LoadTexture("C:\\Users\\Hoyos\\OneDrive\\Desktop\\C++ Runner\\raylib_quaternion_example\\home\\src\\assets\\rock_2.png");
-    Texture2D rockTexture_hit = LoadTexture("C:\\Users\\Hoyos\\OneDrive\\Desktop\\C++ Runner\\raylib_quaternion_example\\home\\src\\assets\\rock_2_hit.png");
+    // Model     rock = LoadModel("C:\\Users\\Hoyos\\OneDrive\\Desktop\\C++ Runner\\raylib_quaternion_example\\home\\src\\assets\\rock_2.obj");
+    // Texture2D rockTexture = LoadTexture("C:\\Users\\Hoyos\\OneDrive\\Desktop\\C++ Runner\\raylib_quaternion_example\\home\\src\\assets\\rock_2.png");
+    // Texture2D rockTexture_hit = LoadTexture("C:\\Users\\Hoyos\\OneDrive\\Desktop\\C++ Runner\\raylib_quaternion_example\\home\\src\\assets\\rock_2_hit.png");
+
+    Model     rock = LoadModel("./src/assets/rock_2.obj");
+    Texture2D rockTexture = LoadTexture("./src/assets/rock_2.png");
+    Texture2D rockTexture_hit = LoadTexture("./src./assets./rock_2_hit.png");
 
     // //Randomaize rotations
     // /*[x]*/ random_device rd_1; mt19937 gen_1(rd_1()); uniform_real_distribution<float> dis_1(-1.0f, 1.0f); 

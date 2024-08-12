@@ -106,9 +106,9 @@ int main()
    bool gameStarted = false;
 
    // Axis visualization inits
-   Texture2D texture_x = LoadTexture("C:\\Users\\Hoyos\\OneDrive\\Desktop\\C++ Runner\\raylib_quaternion_example\\home\\src\\assets\\x_axis.png");
-   Texture2D texture_y = LoadTexture("C:\\Users\\Hoyos\\OneDrive\\Desktop\\C++ Runner\\raylib_quaternion_example\\home\\src\\assets\\y_axis.png");
-   Texture2D texture_z = LoadTexture("C:\\Users\\Hoyos\\OneDrive\\Desktop\\C++ Runner\\raylib_quaternion_example\\home\\src\\assets\\z_axis.png");
+   Texture2D texture_x = LoadTexture("./src/assets/x_axis.png");
+   Texture2D texture_y = LoadTexture("./src/assets/y_axis.png");
+   Texture2D texture_z = LoadTexture("./src/assets/z_axis.png");
 
    // Reflective cube inits
    reflectiveCube refCube_plane = reflectiveCube({-25.0f, 20.0f, -20.0f}, false, true, false, true);
