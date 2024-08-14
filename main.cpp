@@ -237,7 +237,7 @@ int main()
       DrawText (player_rot.c_str(), 2, 60, 10, GREEN);
       string distString = "Distance from snapshot:\nVector3 dist = " + to_string(derivedDistance); 
       DrawText (distString.c_str(), 2, 118, 10, GREEN);
-
+      player.printValues();
 
 
 

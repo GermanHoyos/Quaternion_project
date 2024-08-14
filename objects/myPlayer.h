@@ -16,36 +16,11 @@
 // [12][X] = (+)right  (-)left
 // [14][Z] = (-)foward (+)back
 ////////////////////////////////////////////////////////////////////////////////////
-
 #include "../include/MasterHeader.h"
 
 class myPlayer 
 {
    public:
- 
-   // MODEL + BLENDER BAKE
-   // Model ship = LoadModel("C:\\Users\\Hoyos\\OneDrive\\Desktop\\C++ Runner\\raylib_quaternion_example\\home\\src\\assets\\ship.obj");
-   // Texture2D texture = LoadTexture("C:\\Users\\Hoyos\\OneDrive\\Desktop\\C++ Runner\\raylib_quaternion_example\\home\\src\\assets\\t1.png");
-   Model ship = LoadModel("./src/assets/ship.obj");
-   Texture2D texture = LoadTexture("./src/assets/t1.png");
-   Vector3 ship_init_pos = {0.0f, 0.0f, 0.0f};
-   Vector3 shipWorldPos;
-   Vector3 forwardDirection;
-   Vector3 rotationAxis = {0.0f, 0.0f, 1.0f}; // Z axis rot
-   double shotClock = 0;
-   double shotTimer = 0;
-   bool   shot = false;
-   float    x, y, z, dx, dy, dz, rx, ry, rz;
-   float speed1 = 1.0f; float speed2 = 0.5f;
-   float speed3 = 0.0f; float thrus1 = 0.0f;
-   float thrus2 = 0.3f; float thrus3 = 3.4f;
-   float radis1 = 0.3f; float radis2 = 0.0f;
-   float negPos =-1.0f; float strfSp = 0.0f;
-   float strafe = 0.0f; float rotAng = 0.0f * (3.1415f / 180.0f);
-   float rotationIncrementer = 0.0f;
-   int cR = 255; int cG     = 255; 
-   int cB = 255; int cAlpha = 255; 
-   Color      myRGB = {255,255,255,255};
    Quaternion rotation         = QuaternionIdentity();
    Quaternion rotationDelta    = QuaternionIdentity();
    Quaternion strafeDelta      = QuaternionIdentity();
@@ -53,14 +28,45 @@ class myPlayer
    Matrix     cubeSpace        = MatrixIdentity();
    Matrix     animMatrx        = MatrixIdentity();
    Matrix     tiltMatrix       = MatrixIdentity();
-   bool       textureLoaded    = false;
+   Matrix     aimMatrix1       = MatrixIdentity();
+   Matrix     aimMatrix2       = MatrixIdentity();
+   Color      myRGB = {255,255,255,255};
+   Model      ship = LoadModel("./src/assets/ship.obj");
+   Texture2D  texture = LoadTexture("./src/assets/t1.png");
+   Vector3    ship_init_pos = {0.0f, 0.0f, 0.0f};
+   Vector3    shipWorldPos;
+   Vector3    forwardDirection;
+   Vector3    rotationAxis = {0.0f, 0.0f, 1.0f}; // Z axis rot
+   bool       shot = false;
+   bool       textureLoaded = false;
+   double     shotClock = 0;
+   double     shotTimer = 0;
+   int        cR = 255; 
+   int        cG = 255; 
+   int        cB = 255;
+   int        cAlpha = 255; 
+   float      x, y, z, dx, dy, dz, rx, ry, rz;
+   float      animMatrixDeg  = 0.0f;
+   float      animMatrixAlpa = 0.0f;
+   float      offSet = 0.0f;
+   float      speed1 = 1.0f; 
+   float      speed2 = 0.5f;
+   float      speed3 = 0.0f;
+   float      thrus1 = 0.0f;
+   float      thrus2 = 0.3f;
+   float      thrus3 = 3.4f;
+   float      radis1 = 0.3f;
+   float      radis2 = 0.0f;
+   float      negPos =-1.0f;
+   float      strfSp = 0.0f;
+   float      strafe = 0.0f;
+   float      rotAng = 0.0f * (3.1415f / 180.0f);
+   float      rotationIncrementer = 0.0f;
+   float      turnSpeedX = 0.5f;
+   float      turnSpeedY = 0.5f;
+  
    myPlayer(float x, float y, float z, float dx = 0.0f, float dy = 0.0f, float dz = 0.0f, float rx = 0.0f, float ry = 0.0f, float rz = 0.0f)
    : x(x), y(y), z(z), dx(dx), dy(dy), dz(dz), rx(rx), ry(ry), rz(rz) {}
-
-   void idle()
-   {
-      // Anything that manipulates the player game state
-   }
 
    void draw()
    { 
@@ -80,7 +86,79 @@ class myPlayer
       Quaternion resultRotation = QuaternionMultiply(rotation, collectRotations);   // store above quaternion in a variable
       cubeSpace = QuaternionToMatrix(resultRotation);                               // calculate how to apply quaternion to this current matrix
 
-      // Tilt conditional
+      // 1) apply rotation calculations 2) apply acceleration calculations 3) apply quaternion rotation applications
+      cubeSpace.m12 += dx;                                                          // [x] axis acceleration
+      cubeSpace.m13 += dy;                                                          // [y] axis acceleration
+      cubeSpace.m14 += dz;                                                          // [z] axis acceleration
+
+      // apply strafing
+      strafe_x_axis(); 
+      strafe_y_axis();
+
+      // apply tilts
+      cubeSpace = MatrixMultiply(tiltMatrix, cubeSpace);
+      
+      // take all above calculations and finally apply to matrix
+      rlMultMatrixf(MatrixToFloat(cubeSpace));                                      // apply all above culculations to this current matrix
+      
+      // draw models and thruster effects
+      DrawModel(ship, ship_init_pos, 3.0f,  WHITE);                                 // blender made model
+      DrawSphere({thrus1, thrus2, thrus3}, radis1, {static_cast<unsigned char>(cR), static_cast<unsigned char>(cG), static_cast<unsigned char>(cB), static_cast<unsigned char>(cAlpha)});
+      drawAimBox();
+      
+
+      // pop matrix
+      rlPopMatrix();                                                                // revert back to state before [push]
+
+      // reset to default values [0.00f]
+      rotationDelta    = QuaternionIdentity();
+      collectRotations = QuaternionIdentity();                                     // reset the collectRotations quaternion to 0 0 0 
+      rotation         = QuaternionIdentity();
+      strafeDelta      = QuaternionIdentity();
+      thrus1 = 0.0f; thrus2 = 0.3f;
+      makeGlobal();
+   }
+
+   void rotate_y_axis() /* [Y] */
+   {
+      float axisMovementY = GetGamepadAxisMovement(gamepad, GAMEPAD_AXIS_RIGHT_Y);
+
+      // If a joystick max value is needed then convert it to int and check against a value of "1"
+      if (IsKeyDown(KEY_Q) || axisMovementY < 0.0f)
+      {
+         ry += axisMovementY; // Add directly (axisMovementX will be negative)
+      } 
+      else if (IsKeyDown(KEY_E) || axisMovementY > 0.0f)
+      {
+         ry += axisMovementY; // Add directly (axisMovementX will be positive)
+      } 
+      // Convert the X-axis rotation to a quaternion and apply it
+      rotationDelta = QuaternionFromAxisAngle({ -1.0f, 0.0f, 0.0f }, DEG2RAD * ry);
+      collectRotations = QuaternionMultiply(collectRotations, rotationDelta);
+   }
+
+   void rotate_x_axis() /* [X] */
+   {
+      float axisMovementX = GetGamepadAxisMovement(gamepad, GAMEPAD_AXIS_RIGHT_X);
+
+      // If a joystick max value is needed then convert it to int and check against a value of "1"
+      if (IsKeyDown(KEY_Q) || axisMovementX < 0.0f)
+      {
+         rx += axisMovementX; // Add directly (axisMovementX will be negative)
+      } 
+      else if (IsKeyDown(KEY_E) || axisMovementX > 0.0f)
+      {
+         rx += axisMovementX; // Add directly (axisMovementX will be positive)
+      } 
+
+      // Convert the X-axis rotation to a quaternion and apply it
+      rotationDelta = QuaternionFromAxisAngle({ 0.0f, -1.0f, 0.0f }, DEG2RAD * rx);
+      collectRotations = QuaternionMultiply(collectRotations, rotationDelta);
+   }
+
+   void apply_tilt_animation()
+   {
+   // Tilt conditional
       if ((float)(GetGamepadAxisMovement(gamepad, GAMEPAD_AXIS_LEFT_X)) > 0.2f )
       {
          if (rotationIncrementer > -15.0f)
@@ -114,133 +192,10 @@ class myPlayer
             rotAng = rotationIncrementer * (3.1415f / 180.0f);
          }
       }
-
-      // 1) apply rotation calculations 2) apply acceleration calculations 3) apply quaternion rotation applications
-      cubeSpace.m12 += dx;                                                          // [x] axis acceleration
-      cubeSpace.m13 += dy;                                                          // [y] axis acceleration
-      cubeSpace.m14 += dz;                                                          // [z] axis acceleration
-
-      // apply strafing
-      strafe_x_axis(); 
-      strafe_y_axis();
-
-      // apply tilts
-      cubeSpace = MatrixMultiply(tiltMatrix, cubeSpace);
-      
-      // take all above calculations and finally apply to matrix
-      rlMultMatrixf(MatrixToFloat(cubeSpace));                                      // apply all above culculations to this current matrix
-      
-      // draw models and thruster effects
-      DrawModel(ship, ship_init_pos, 3.0f,  WHITE);                                 // blender made model
-      DrawSphere({thrus1, thrus2, thrus3}, radis1, {static_cast<unsigned char>(cR), static_cast<unsigned char>(cG), static_cast<unsigned char>(cB), static_cast<unsigned char>(cAlpha)});
-
-      // POP MATRIX // REVERT BACK TO WORLD SPACE MATRIX
-      rlPopMatrix();                                                                // revert back to state before [push]
-
-      // RESETS
-      rotationDelta    = QuaternionIdentity();
-      //collectRotations = QuaternionIdentity();                                      // reset the collectRotations quaternion to 0 0 0
-      quaternion_brakes();
-      rotation         = QuaternionIdentity();
-      strafeDelta      = QuaternionIdentity();
-      thrus1 = 0.0f; thrus2 = 0.3f;
-      makeGlobal();
    }
-
-   void rotate_x_axis()
-   {
-      // If a joystick max value is needed then convert it to int and check against a value of "1"
-      if (IsKeyDown(KEY_W) || (float)(GetGamepadAxisMovement(gamepad, GAMEPAD_AXIS_RIGHT_Y)) < 0.0f )
-      {
-         // if (rx < 1.4)
-         // {
-         //    rx += 0.3f;
-         // }
-         rx += 0.5f;
-      } 
-      if (IsKeyDown(KEY_S) || (float)(GetGamepadAxisMovement(gamepad, GAMEPAD_AXIS_RIGHT_Y)) > 0.0f )
-      {
-         // if (rx > -1.4)
-         // {
-         //    rx -= 0.3f;
-         // }
-         rx -= 0.5f;
-      } 
-      rotationDelta = QuaternionFromAxisAngle({ 1.0f, 0.0f, 0.0f }, DEG2RAD * rx );
-      collectRotations = QuaternionMultiply(collectRotations, rotationDelta);
-   }
-
-   void rotate_y_axis()
-   {
-      // implement
-   }
-
-   void rotate_z_axis()
-   {
-      // If a joystick max value is needed then convert it to int and check against a value of "1"
-      if (IsKeyDown(KEY_Q) || (float)(GetGamepadAxisMovement(gamepad, GAMEPAD_AXIS_RIGHT_X)) < 0.0f )
-      {
-         // if (rz > -1.4f) 
-         // {
-         //    rz -= 0.03f;
-         // }
-         rz -= 0.5f;
-      } 
-      if (IsKeyDown(KEY_E) || (float)(GetGamepadAxisMovement(gamepad, GAMEPAD_AXIS_RIGHT_X)) > 0.0f )
-      {
-         // if (rz < 1.4f)
-         // {
-         //    rz += 0.03f;
-         // }
-         rz += 0.5f;
-      } 
-      rotationDelta = QuaternionFromAxisAngle({ 0.0f, -1.0f, 0.0f }, DEG2RAD * rz );
-      collectRotations = QuaternionMultiply(collectRotations, rotationDelta);
-   }
-
-   void quaternion_brakes()
-   {
-      collectRotations = QuaternionIdentity();
-
-      // if ((float)(GetGamepadAxisMovement(gamepad, GAMEPAD_AXIS_RIGHT_X)) == 0.0f)
-      // {
-      //    if (rz > 0.01f) {
-      //       rz -= 0.01f;
-      //    } else if (rz < -0.01f) {
-      //       rz += 0.01f;
-      //    } else {
-      //       rz = 0.0f;
-      //    }
-      // }
-
-      // // if ((float)(GetGamepadAxisMovement(gamepad, GAMEPAD_AXIS_RIGHT_Y)) == 0.0f)
-      // // {
-      // //    if (rx > 0.01f) {
-      // //       rx -= 0.01f;
-      // //    } else if (rx < -0.01f) {
-      // //       rx += 0.01f;
-      // //    } else {
-      // //       rx = 0.0f;
-      // //    }
-      // // }
-      // collectRotations.x = 0.0f;
-   }
-
 
    void strafe_x_axis() // slide left and right but maintain quaternion rotation
    {
-      // Determine strafe direction based on input
-
-      // if (IsKeyDown(KEY_A))
-      // {
-      //    strafe += 0.01f;
-      // }
-
-      // if (IsKeyDown(KEY_D))
-      // {
-      //    strafe -= 0.01f;
-      // }
-
       if (IsKeyDown(KEY_A) ||(float)(GetGamepadAxisMovement(gamepad, GAMEPAD_AXIS_LEFT_X)) < 0.0f )
       {
          if (strafe < 0.9f)  strafe += 0.01f;
@@ -319,17 +274,15 @@ class myPlayer
       dx += fowardDirection.x * speed3; 
       dy += fowardDirection.y * speed3; 
       dz += fowardDirection.z * speed3; 
-
    }
 
    void apply_rotation_axis()
    {
-      rotate_z_axis(); rotate_x_axis(); rotate_y_axis(); shootLasers(); 
+      rotate_x_axis(); rotate_y_axis(); apply_tilt_animation(); shootLasers(); //drawAimBox(); 
    }
 
    void shootLasers() 
    {
-      double elapsed = GetTime();
       forwardDirection = Vector3Transform({0.0f, 0.0f, -1.0f}, QuaternionToMatrix(collectRotations));
       forwardDirection = Vector3Normalize(forwardDirection);
 
@@ -346,6 +299,38 @@ class myPlayer
       }
    }
 
+   void drawAimBox()
+   {
+      animMatrixDeg    += 2.5f;
+      animMatrixAlpa   += 0.01f;  // Adjust increment rate as needed
+      offSet           += 0.01f;
+
+      // Calculate alpha value using sin and map it to a range 20 to 255
+      float myAlpha = animMatrixAlpa + offSet;
+      float alphaSin = sin(myAlpha);             // Sin value oscillates between -1 and 1
+      float alphaNormalized = (alphaSin + 1.0f) * 0.5f;  // Map to 0 to 1 range
+      float alphaFinal1 = 10.0f + alphaNormalized * (155.0f - 120.0f); // Scale to range 20 to 255
+      float alphaFinal2 = 40.0f + alphaNormalized * (255.0f - 40.0f); // Scale to range 20 to 255
+
+      // First, draw the larger box
+      rlPushMatrix();
+         rlRotatef(animMatrixDeg, 0.0f, 0.0f, 1.0f);  // Rotate around Z-axis
+         DrawLine3D((Vector3){-1.5f,-1.5f,-15.0f}, (Vector3){-1.5f, 1.5f,-15.0f}, {255,255,255,(unsigned char)alphaFinal1}); // Double the size
+         DrawLine3D((Vector3){ 1.5f,-1.5f,-15.0f}, (Vector3){ 1.5f, 1.5f,-15.0f}, {255,255,255,(unsigned char)alphaFinal1});
+         DrawLine3D((Vector3){-1.5f,-1.5f,-15.0f}, (Vector3){ 1.5f,-1.5f,-15.0f}, {255,255,255,(unsigned char)alphaFinal1});
+         DrawLine3D((Vector3){-1.5f, 1.5f,-15.0f}, (Vector3){ 1.5f, 1.5f,-15.0f}, {255,255,255,(unsigned char)alphaFinal1});
+      rlPopMatrix();
+
+      // Then, draw the smaller box
+      rlPushMatrix();
+         rlRotatef(animMatrixDeg, 0.0f, 0.0f, -1.0f);  // Rotate around Z-axis
+         DrawLine3D((Vector3){-1.0f,-1.0f,-27.0f}, (Vector3){-1.0f,1.0f,-27.0f},  {255,255,255,(unsigned char)alphaFinal2}); // Original size
+         DrawLine3D((Vector3){ 1.0f,-1.0f,-27.0f}, (Vector3){ 1.0f,1.0f,-27.0f},  {255,255,255,(unsigned char)alphaFinal2});
+         DrawLine3D((Vector3){-1.0f,-1.0f,-27.0f}, (Vector3){ 1.0f,-1.0f,-27.0f}, {255,255,255,(unsigned char)alphaFinal2});
+         DrawLine3D((Vector3){-1.0f, 1.0f,-27.0f}, (Vector3){ 1.0f,1.0f,-27.0f},  {255,255,255,(unsigned char)alphaFinal2});
+      rlPopMatrix();
+   }
+
    void display_coord_data()
    {
       // print to screen [x] [y] [z] world space coords
@@ -360,6 +345,17 @@ class myPlayer
    {
       playerPosition = {cubeSpace.m12, cubeSpace.m13, cubeSpace.m14};
       playerRotation = forwardDirection;
+   }
+
+   void printValues()
+   {
+    // Create a string containing the x, y, and z values
+    std::string collectRotationsQuat = "x: " + std::to_string(collectRotations.x) +
+                                       " y: " + std::to_string(collectRotations.y) +
+                                       " z: " + std::to_string(collectRotations.z);
+
+    // Print the string on the screen
+    DrawText(collectRotationsQuat.c_str(), 2, 200, 10, GREEN);
    }
 
 };
