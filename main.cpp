@@ -249,8 +249,9 @@ int main()
          terrainVert.draw();
       }
       //Center Sphere
-      Vector3 myMiddle = {2.5f,0.0f,0.0f};
-      //DrawSphereWires(Vector3Add(globalTranlsatedPosition,myMiddle), 2.0f, 4, 8, WHITE );
+      moveTerrain();
+
+
 
       // /***************
       // **            **
