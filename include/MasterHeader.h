@@ -70,6 +70,7 @@ float normalizedLerp(float a, float b, float t, float minT, float maxT)
    #include "../objects/wave.h"
    #include "../objects/boundery.h"
    #include "../objects/arenaStrip.h"
+   #include "../objects/terrainVerts.h"
 
 
 

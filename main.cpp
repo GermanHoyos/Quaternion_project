@@ -129,7 +129,16 @@ int main()
    reflectiveCube refCube_all_Normals = reflectiveCube({-5.0f, 20.0f, -20.0f}, false, true, true, true);
    reflectiveCube refCube_all_skin = reflectiveCube({-15.0f, 40.0f, -40.0f}, true, false, false, true);
 
-   // Main game loop
+   // Terrain Creation
+   createTerrain();
+
+   /*****************
+   **              **
+   **              **
+   ** MAIN LOOP    **
+   **              **
+   **              **
+   *****************/
    while (!WindowShouldClose())    // Detect window close button or ESC key
    {
 
@@ -234,6 +243,14 @@ int main()
       {
          xplode.draw();
       }
+
+      for(auto& terrainVert : tField)
+      {
+         terrainVert.draw();
+      }
+      //Center Sphere
+      Vector3 myMiddle = {2.5f,0.0f,0.0f};
+      //DrawSphereWires(Vector3Add(globalTranlsatedPosition,myMiddle), 2.0f, 4, 8, WHITE );
 
       // /***************
       // **            **

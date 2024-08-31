@@ -19,10 +19,6 @@
 
 #include "../include/MasterHeader.h"
 
-
-
-
-
 class particleField;
 
 vector<particleField> pField;
