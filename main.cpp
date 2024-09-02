@@ -129,8 +129,11 @@ int main()
    reflectiveCube refCube_all_Normals = reflectiveCube({-5.0f, 20.0f, -20.0f}, false, true, true, true);
    reflectiveCube refCube_all_skin = reflectiveCube({-15.0f, 40.0f, -40.0f}, true, false, false, true);
 
-   // Terrain Creation
+   // terrainVert TEST
    createTerrain();
+
+   // terrainMesh TEST
+   createMeshGrid();
 
    /*****************
    **              **
@@ -244,7 +247,7 @@ int main()
          xplode.draw();
       }
 
-      // Draw Terrain
+      // Draw "terrainVerts"
       for(auto& terrainVert : tField)
       {
          terrainVert.draw();
@@ -252,7 +255,11 @@ int main()
       //Center Sphere
       moveTerrain();
 
-
+      // Draw "terrainMesh"
+      for(auto& terrainMesh : meshList)
+      {
+         terrainMesh.draw();
+      }
 
 
       // /***************

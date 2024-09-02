@@ -101,6 +101,9 @@ void moveTerrain()
 
 void drawSurfaces()
 {
-    DrawTriangle3D(tField[0].myPosition, tField[1].myPosition, tField[10].myPosition, RED );
+    // Check if the vector has at least 11 elements (since indexing starts at 0)
+    if (tField.size() > 10)
+    {
+        DrawTriangle3D(tField[0].myPosition, tField[1].myPosition, tField[10].myPosition, RED);
+    }
 }
-
