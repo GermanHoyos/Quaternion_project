@@ -244,12 +244,14 @@ int main()
          xplode.draw();
       }
 
+      // Draw Terrain
       for(auto& terrainVert : tField)
       {
          terrainVert.draw();
       }
       //Center Sphere
       moveTerrain();
+
 
 
 
@@ -606,6 +608,8 @@ int main()
       string distString = "Distance from snapshot:\nVector3 dist = " + to_string(derivedDistance); 
       DrawText (distString.c_str(), 2, 118, 10, GREEN);
       player.printValues();
+      string cm_str = to_string(countMe);
+      DrawText(cm_str.c_str(), 2, 200, 20, GREEN);
 
 
 
