@@ -260,6 +260,9 @@ int main()
       {
          terrainMesh.draw();
       }
+      DrawSphere({380.0f, 0.0f, 0.0f }, 2, WHITE);
+      DrawSphere({380.0f, 0.0f, -1900.0f }, 2, WHITE);
+
 
 
       // /***************
@@ -616,7 +619,10 @@ int main()
       DrawText (distString.c_str(), 2, 118, 10, GREEN);
       player.printValues();
       string cm_str = to_string(countMe);
-      DrawText(cm_str.c_str(), 2, 200, 20, GREEN);
+      DrawText(cm_str.c_str(), 2, 220, 20, GREEN);
+      DrawText(display_0.c_str(), 2, 260, 20, GREEN);
+      DrawText(display_1.c_str(), 2, 290, 20, GREEN);
+
 
 
 
