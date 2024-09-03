@@ -83,8 +83,8 @@ class terrainMesh
             if(myMeshId == 1) {rlMultMatrixf(MatrixToFloat(myPlane_mesh1));}
 
 
-            if (myMeshId == 0) {DrawSphere({myPosition.x, myPosition.y, myPosition.z}, 5.0f, RED);}
-            if (myMeshId == 1) {DrawSphere({myPosition.x - 1.0f, myPosition.y, myPosition.z}, 6.0f, GREEN);}
+            // if (myMeshId == 0) {DrawSphere({myPosition.x, myPosition.y, myPosition.z}, 5.0f, RED);}
+            // if (myMeshId == 1) {DrawSphere({myPosition.x - 1.0f, myPosition.y, myPosition.z}, 6.0f, GREEN);}
             
             
 
@@ -130,7 +130,7 @@ class terrainMesh
         
         random_device rd_1;
         mt19937 gen_1(rd_1());
-        uniform_real_distribution<float> dis_1(myPosition.y, myPosition.y + 60.0f);
+        uniform_real_distribution<float> dis_1(myPosition.y, myPosition.y + 110.0f);
 
         for (int row = 0; row < rows; ++row)
         {
@@ -149,15 +149,15 @@ class terrainMesh
     void moveGrid()
     {
         //moveZ += 4.0f;
-        if(myMeshId == 0) {moveZ_mesh0 += 4.0;}
-        if(myMeshId == 1) {moveZ_mesh1 += 4.0;}
+        if(myMeshId == 0) {moveZ_mesh0 += 6.0;}
+        if(myMeshId == 1) {moveZ_mesh1 += 6.0;}
 
         if (myMeshId == 0) 
         {
             // Reset moveZ when it exceeds the length of one mesh
             if (moveZ_mesh0 >= 1900)
             {
-                moveZ_mesh0 = -1900;
+                moveZ_mesh0 = -1900 + 4.0f;
             }
         }
 
@@ -165,22 +165,22 @@ class terrainMesh
         {
             if (moveZ_mesh1 >= 1900 * 2)
             {
-                moveZ_mesh1 = 0;
+                moveZ_mesh1 = 0 + 4.0f;
             }
         }
 
         // print locations
-        mesh_0_z = moveZ_mesh0;
-        if(myMeshId == 0)
-        {
-            display_0 = "RED " + to_string(mesh_0_z);
-        }
+        // mesh_0_z = moveZ_mesh0;
+        // if(myMeshId == 0)
+        // {
+        //     display_0 = "RED " + to_string(mesh_0_z);
+        // }
 
-        mesh_1_z = moveZ_mesh1;
-        if(myMeshId == 1)
-        {
-            display_1 = "GREEN " + to_string(mesh_1_z);
-        }
+        // mesh_1_z = moveZ_mesh1;
+        // if(myMeshId == 1)
+        // {
+        //     display_1 = "GREEN " + to_string(mesh_1_z);
+        // }
 
     }
 
