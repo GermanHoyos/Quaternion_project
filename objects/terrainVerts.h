@@ -38,7 +38,7 @@ public:
 
     void draw()
     {   
-        //DrawSphere(myPosition,0.1f,GREEN);
+        DrawSphere(myPosition,1.0f,GREEN);
         DrawSphereWires(globalTranlsatedPosition, 2.0f, 8, 8, WHITE);
         myPosition.z += zSpeed;
         

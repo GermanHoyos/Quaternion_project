@@ -107,7 +107,7 @@ class reflectiveCube
         hitAnimation();
         if (!stationary)
         {
-            cubeMatrix.m14 -= 0.9f;
+            cubeMatrix.m14 += 3.5f;
         }
 
         myPosition.z = cubeMatrix.m14;
@@ -207,7 +207,7 @@ class reflectiveCube
             timeToDie = true;
         }
 
-        if (myPosition.z  <= -20.0f)
+        if (myPosition.z  >= 0.0f)
         {
             timeToDie = true;
         }

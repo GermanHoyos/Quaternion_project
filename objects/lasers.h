@@ -130,7 +130,7 @@ public:
         // Draw the cylinder with the tip at the start point
         rlPushMatrix();
         rlMultMatrixf(MatrixToFloat(laserMatrix));
-        DrawCylinder((Vector3){0, 0, 0}, 0.2f, 0.0f, length, 6, {r,g,255,a});  // Swap base and top radii
+        //DrawCylinder((Vector3){0, 0, 0}, 1.0f, 0.0f, length, 6, {255,0,0,255});  // Swap base and top radii
         DrawCylinderWires((Vector3){0,0,0},0.2f, 0.0f, length, 6, {255,255,255,a});
         rlPopMatrix();
 

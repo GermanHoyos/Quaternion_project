@@ -46,6 +46,7 @@ float normalizedLerp(float a, float b, float t, float minT, float maxT)
    vector<lasers> lasersList;
    class reflectiveCube;
    vector<reflectiveCube> cubeList;
+   vector<reflectiveCube> aboveTerrainList;
    class explosions;
    vector<explosions> explosionsList;
    Vector3 playerPosition;

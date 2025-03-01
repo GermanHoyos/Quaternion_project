@@ -36,7 +36,7 @@ class terrainMesh
     float moveZ_mesh0 = 0.0f;
     float moveZ_mesh1 = 0.0f;
 
-    Color myColor = {255,255,255,255};
+    Color myColor = {41, 41, 61, 255};
 
     bool specialCase = true;
     bool mesh_0_switch = false;
@@ -73,51 +73,39 @@ class terrainMesh
 
             //rlTranslatef(0.0f,0.0f, moveZ);
             if(myMeshId == 0){rlTranslatef(0.0f,0.0f, moveZ_mesh0);}
-
             if(myMeshId == 1){rlTranslatef(0.0f,0.0f, moveZ_mesh1);}
-
-
             
             if(myMeshId == 0) {rlMultMatrixf(MatrixToFloat(myPlane_mesh0));}
-            
             if(myMeshId == 1) {rlMultMatrixf(MatrixToFloat(myPlane_mesh1));}
 
 
             // if (myMeshId == 0) {DrawSphere({myPosition.x, myPosition.y, myPosition.z}, 5.0f, RED);}
             // if (myMeshId == 1) {DrawSphere({myPosition.x - 1.0f, myPosition.y, myPosition.z}, 6.0f, GREEN);}
-            
-            
 
-
-
-
-
-
-                DrawTriangle3D(
-                    {myGridVerts[i].x, myGridVerts[i].y, myGridVerts[i].z},
-                    {myGridVerts[i + 1].x, myGridVerts[i + 1].y, myGridVerts[i + 1].z},
-                    {myGridVerts[i + 11].x, myGridVerts[i + 11].y, myGridVerts[i+ 11].z},
-                DARKGRAY);
-                DrawTriangle3D(
-                    {myGridVerts[i + 1].x, myGridVerts[i + 1].y,myGridVerts[i + 1].z},
-                    {myGridVerts[i + 12].x, myGridVerts[i + 12].y,myGridVerts[i + 12].z},
-                    {myGridVerts[i + 11].x, myGridVerts[i + 11].y,myGridVerts[i+ 11].z},
-                DARKGRAY);
-                DrawLine3D(
-                    {myGridVerts[i].x, myGridVerts[i].y + 0.1f,myGridVerts[i].z},
-                    {myGridVerts[i + 1].x, myGridVerts[i + 1].y + 0.1f,myGridVerts[i + 1].z},
-                BLUE);
-                DrawLine3D(
-                    {myGridVerts[i + 1].x, myGridVerts[i + 1].y + 0.1f,myGridVerts[i + 1].z},
-                    {myGridVerts[i + 12].x, myGridVerts[i + 12].y + 0.1f,myGridVerts[i + 12].z},
-                BLUE);
-                DrawLine3D(
-                    {myGridVerts[i + 1].x, myGridVerts[i + 1].y, myGridVerts[i + 1].z},
-                    {myGridVerts[i + 11].x, myGridVerts[i + 11].y, myGridVerts[i + 11].z},
-                BLUE);
+            DrawTriangle3D(
+                {myGridVerts[i].x,       myGridVerts[i].y,              myGridVerts[i].z},
+                {myGridVerts[i + 1].x,   myGridVerts[i + 1].y,          myGridVerts[i + 1].z},
+                {myGridVerts[i + 11].x,  myGridVerts[i + 11].y,         myGridVerts[i+ 11].z},
+            myColor);
+            DrawTriangle3D(
+                {myGridVerts[i + 1].x,   myGridVerts[i + 1].y,          myGridVerts[i + 1].z},
+                {myGridVerts[i + 12].x,  myGridVerts[i + 12].y,         myGridVerts[i + 12].z},
+                {myGridVerts[i + 11].x,  myGridVerts[i + 11].y,         myGridVerts[i+ 11].z},
+            myColor);
+            DrawLine3D(
+                {myGridVerts[i].x,       myGridVerts[i].y + 0.5f,       myGridVerts[i].z},
+                {myGridVerts[i + 1].x,   myGridVerts[i + 1].y + 0.5f,   myGridVerts[i + 1].z},
+            WHITE);
+            DrawLine3D(
+                {myGridVerts[i + 1].x,   myGridVerts[i + 1].y + 0.5f,   myGridVerts[i + 1].z},
+                {myGridVerts[i + 12].x,  myGridVerts[i + 12].y + 0.5f,  myGridVerts[i + 12].z},
+            WHITE);
+            DrawLine3D(
+                {myGridVerts[i + 1].x,   myGridVerts[i + 1].y + 0.5f,   myGridVerts[i + 1].z},
+                {myGridVerts[i + 11].x,  myGridVerts[i + 11].y + 0.5f,  myGridVerts[i + 11].z},
+            WHITE);
 
             rlPopMatrix();
-
         }
 
         moveGrid();
@@ -149,8 +137,8 @@ class terrainMesh
     void moveGrid()
     {
         //moveZ += 4.0f;
-        if(myMeshId == 0) {moveZ_mesh0 += 6.0;}
-        if(myMeshId == 1) {moveZ_mesh1 += 6.0;}
+        if(myMeshId == 0) {moveZ_mesh0 += 3.0;}
+        if(myMeshId == 1) {moveZ_mesh1 += 3.0;}
 
         if (myMeshId == 0) 
         {

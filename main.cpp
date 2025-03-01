@@ -1,6 +1,8 @@
 
 // THE  SOURCE   - WHO WAS, WHO IS, WHO IS COMING: YHWH
 //
+// Run via vscode: ./runme.bat
+//
 // GERMAN HOYOS - IMAGINATION AND WILLPOWER ARE THE ONLY TWO CODING SKILLS THAT MATTER. TWITTER||X: //https://x.com/EvangelizerH
 //
 // GAME START   - [X][Y][Z]: FROM THE PERSPECTIVE OF THE INIT SCREEN START, ZOOM AND ROTATE WITH "P" KEY 
@@ -75,8 +77,8 @@ int main()
    asteroids myAsteroids_2 = asteroids({0.0f,0.0f,-20.0f});
    asteroids myAsteroids_3 = asteroids({10.0f,0.0f,-20.0f});
 
-   const int rows = 10;
-   const int cols = 10;
+   const int rows = 100;
+   const int cols = 100;
    const float spacing = 4.5f;
    float startX = 22.0f;
    float startY = -22.0f;
@@ -617,9 +619,9 @@ int main()
       DrawText (player_rot.c_str(), 2, 60, 10, GREEN);
       string distString = "Distance from snapshot:\nVector3 dist = " + to_string(derivedDistance); 
       DrawText (distString.c_str(), 2, 118, 10, GREEN);
-      player.printValues();
+      //player.printValues();
       string cm_str = to_string(countMe);
-      DrawText(cm_str.c_str(), 2, 220, 20, GREEN);
+      //DrawText(cm_str.c_str(), 2, 220, 20, GREEN);
       DrawText(display_0.c_str(), 2, 260, 20, GREEN);
       DrawText(display_1.c_str(), 2, 290, 20, GREEN);
 

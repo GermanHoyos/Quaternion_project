@@ -397,6 +397,7 @@ void shootLasers()
  
       // First, draw the larger box
       rlPushMatrix();
+         rlTranslatef(0.0f, 3.5f, -10.0f);
          rlRotatef(animMatrixDeg, 0.0f, 0.0f, 1.0f);  // Rotate around Z-axis
          DrawLine3D((Vector3){-1.5f,-1.5f,-15.0f}, (Vector3){-1.5f, 1.5f,-15.0f}, {255,255,255,(unsigned char)alphaFinal1}); // Double the size
          DrawLine3D((Vector3){ 1.5f,-1.5f,-15.0f}, (Vector3){ 1.5f, 1.5f,-15.0f}, {255,255,255,(unsigned char)alphaFinal1});
@@ -406,6 +407,7 @@ void shootLasers()
  
       // Then, draw the smaller box
       rlPushMatrix();
+         rlTranslatef(0.0f, 4.5f, -20.0f);
          rlRotatef(animMatrixDeg, 0.0f, 0.0f, -1.0f);  // Rotate around Z-axis
          DrawLine3D((Vector3){-1.0f,-1.0f,-27.0f}, (Vector3){-1.0f,1.0f,-27.0f},  {255,255,255,(unsigned char)alphaFinal2}); // Original size
          DrawLine3D((Vector3){ 1.0f,-1.0f,-27.0f}, (Vector3){ 1.0f,1.0f,-27.0f},  {255,255,255,(unsigned char)alphaFinal2});

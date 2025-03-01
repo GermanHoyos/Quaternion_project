@@ -66,12 +66,12 @@ class particleField
       if (distance_p < 350.0f)
       {
          alpha = 0.0f;
-      }      
-
+      }  else 
+      {
+         DrawBillboard(camera, texture_p, {position.x,position.y,position.z}, 1.0f, my_tint);
+      }     
       // Update the tint color with the new alpha value
       my_tint.a = static_cast<unsigned char>(alpha);
-
-      DrawBillboard(camera, texture_p, {position.x,position.y,position.z}, 1.0f, my_tint);
    }
 
 };
